@@ -105,10 +105,58 @@ const analytics = getAnalytics(app);
 <script>
 function calculate() {
     function calculate() {
+
+  let name = document.getElementById("name").value;
+  let liters = document.getElementById("liters").value;
+  let fuel = document.getElementById("fuelType").value;
+
+  let lat = localStorage.getItem("lat");
+  let lon = localStorage.getItem("lon");
+
+  db.collection("orders").add({
+    name: name,
+    fuel: fuel,
+    liters: Number(liters),
+    latitude: Number(lat),
+    longitude: Number(lon),
+    time: new Date().toLocaleString()
+  })
+  .then(() => {
+    alert("🚚 Order placed successfully!");
+    showData(); // auto refresh
+  })
+  .catch((error) => {
+    alert("Error: " + error.message);
+  });
+}
+    function calculate() {
   alert("Order placed 🚚");
 }
 
 function showData() {
+    function showData() {
+
+  db.collection("orders").get().then((snapshot) => {
+
+    let html = "";
+
+    snapshot.forEach((doc) => {
+      let data = doc.data();
+
+      html += `
+        <div style="border:1px solid black; padding:10px; margin:5px;">
+          <b>${data.name}</b><br>
+          Fuel: ${data.fuel}<br>
+          Liters: ${data.liters}<br>
+          Location: ${data.latitude}, ${data.longitude}<br>
+          Time: ${data.time}
+        </div>
+      `;
+    });
+
+    document.getElementById("history").innerHTML = html;
+  });
+}
   console.log("Orders show here 📦");
 }
     let name = document.getElementById("name").value;

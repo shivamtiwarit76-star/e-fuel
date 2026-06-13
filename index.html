@@ -92,7 +92,29 @@ const analytics = getAnalytics(app);
 </select>
 
     <button onclick="calculate()" style="background-color:#007BFF; color:white; border:none; padding:12px 20px; border-radius:10px; font-size:16px; cursor:pointer;">Calculate & Save</button>
-<button onclick="getLocation()">📍 Get My Location<function getLocation() {
+<button onclick="getLocation()">📍 Get My Locationfunction getLocation() {
+
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+
+      let lat = position.coords.latitude;
+      let lon = position.coords.longitude;
+
+      alert("📍 Latitude: " + lat + "\nLongitude: " + lon);
+
+      // save for later use
+      localStorage.setItem("lat", lat);
+      localStorage.setItem("lon", lon);
+
+    },
+    function(error) {
+      alert("❌ Location allow karo");
+    }
+  );
+
+}<function getLocation()<button onclick="getLocation()">📍 Get My Location</button>
+
+<p id="locationText"></p> {
   alert("Button click ho raha hai ✔");
 }/button>function getLocation() {
 

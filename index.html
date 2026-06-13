@@ -85,7 +85,19 @@ function calculate() {
     let name = document.getElementById("name").value;
     let litres = document.getElementById("litres").value;
 
-    let price = litres * 100;
+    let fuelType = document.getElementById("fuelType").value;
+
+let pricePerLitre;
+
+if (fuelType === "Petrol") {
+    pricePerLitre = 100;  // Petrol ki price yahan change kar sakte ho
+} else if (fuelType === "Diesel") {
+    pricePerLitre = 90;   // Diesel ki price yahan change kar sakte ho
+} else {
+    pricePerLitre = 75;   // CNG ki price yahan change kar sakte ho
+}
+
+let price = litres * pricePerLitre;
 
     document.getElementById("result").innerText =
         "Total Price: ₹ " + price;

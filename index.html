@@ -51,6 +51,7 @@
         </select>
 
         <button onclick="calculate()">🚚 Book Fuel</button>
+        <button onclick="payUPI()">💳 Pay via UPI</button>
 
         <h3 id="result"></h3>
 
@@ -58,7 +59,30 @@
         <ul id="history"></ul>
     </div>
 
-    <script>
+    <scriptfunction payUPI() {
+
+    let name = document.getElementById("name").value;
+    let litres = parseFloat(document.getElementById("litres").value);
+    let fuelType = document.getElementById("fuelType").value;
+
+    if (!name || !litres) {
+        alert("Please fill details first!");
+        return;
+    }
+
+    let price;
+
+    if (fuelType === "Petrol") price = litres * 150;
+    else if (fuelType === "Diesel") price = litres * 120;
+    else price = litres * 105;
+
+    // 👇 Replace with your UPI ID
+    let upiID = 6202307387-n456@ybl
+
+    let url = `upi://pay?pa=${upiID}&pn=E.Fuel&am=${price}&cu=INR`;
+
+    window.location.href = url;
+}>
         function calculate() {
 
     let name = document.getElementById("name").value;

@@ -143,7 +143,16 @@
         `;
 
         list.appendChild(li);
-    });
+    });function deleteOrder(index) {
+
+    let data = JSON.parse(localStorage.getItem("fuel")) || [];
+
+    data.splice(index, 1);
+
+    localStorage.setItem("fuel", JSON.stringify(data));
+
+    showData();
+}
 }
 
         showData();

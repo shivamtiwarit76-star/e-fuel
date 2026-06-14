@@ -61,70 +61,58 @@
     <script>
         function calculate() {
 
-            let name = document.getElementById("name").value;
-            let litres = parseFloat(document.getElementById("litres").value);
-            let fuelType = document.getElementById("fuelType").value;
+    let name = document.getElementById("name").value;
+    let litres = parseFloat(document.getElementById("litres").value);
+    let fuelType = document.getElementById("fuelType").value;
 
-            if (!name || !litres) {
-                alert("Please fill all details.");
-                return;
-            }
+    if (!name || !litres) {
+        alert("Please fill all details.");
+        return;
+    }
 
-            let pricePerLitre;
+    let pricePerLitre;
 
-            if (fuelType === "Petrol") {
-                pricePerLitre = 150;
-            } else if (fuelType === "Diesel") {
-                pricePerLitre = 120;
-            } else {
-                pricePerLitre = 105;
-            }
+    if (fuelType === "Petrol") pricePerLitre = 150;
+    else if (fuelType === "Diesel") pricePerLitre = 120;
+    else pricePerLitre = 105;
 
-            let price = litres * pricePerLitre;
+    let price = litres * pricePerLitre;
 
-            document.getElementById("result").innerText =
-                "Total Price: ₹" + price;
-            alert("✅ Booking Successful!");
+    document.getElementById("result").innerText =
+        "Total Price: ₹" + price;
 
-            let data = JSON.parse(localStorage.getItem("fuel")) || [];
+    alert("Booking Successful!");
 
-            data.push({
-                name,
-                litres,
-                fuelType,
-                pricesetTimeout(() => {
-    document.getElementById("splash").style.display = "none";
-}, 2000);
-            });
+    let data = JSON.parse(localStorage.getItem("fuel")) || [];
 
-            localStorage.setItem("fuel", JSON.stringify(data));
+    data.push({ name, litres, fuelType, price });
 
-            showData();
-        }
+    localStorage.setItem("fuel", JSON.stringify(data));
 
-        function showData() {
+    showData();
+}
 
-            let list = document.getElementById("history");
+function showData() {
 
-            list.innerHTML = "";
+    let list = document.getElementById("history");
+    list.innerHTML = "";
 
-            let data = JSON.parse(localStorage.getItem("fuel")) || [];
+    let data = JSON.parse(localStorage.getItem("fuel")) || [];
 
-            data.forEach(item => {
+    data.forEach(item => {
+        let li = document.createElement("li");
 
-                let li = document.createElement("li");
+        li.innerText =
+            item.name + " | " +
+            item.litres + "L | " +
+            item.fuelType + " | ₹" +
+            item.price;
 
-                li.innerText =
-                    item.name + " | " +
-                    item.litres + "L | " +
-                    item.fuelType + " | ₹" +
-                    item.price;
+        list.appendChild(li);
+    });
+}
 
-                list.appendChild(li);
-            });
-        }
-
-        showData();
+showData();
     </script>
 
 </body>

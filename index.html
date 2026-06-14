@@ -60,7 +60,7 @@
     </div>
 
     <script>
-    function payUPI() {
+        function payUPI() {
 
     let name = document.getElementById("name").value;
     let litres = document.getElementById("litres").value;
@@ -73,22 +73,24 @@
 
     let price = litres * (fuelType === "Petrol" ? 150 : fuelType === "Diesel" ? 120 : 105);
 
-    let upiID = "YOUR_REAL_UPI_ID";
+    let upiID = 6202307387-n456@ybl
 
-    let upiURL =
-        "upi://pay?pa=" + upiID +
-        "&pn=E.Fuel" +
-        "&am=" + price +
-        "&cu=INR";
+    let upiLink = `upi://pay?pa=${upiID}&pn=6202307387-n4562ybl E.Fuel&am= mr shivam kumar ${price}&cu=150 rupees INR`;
 
-    // 🔥 try open UPI app
-    window.location.href = upiURL;
+    // 🔥 better open method
+    window.location.assign(upiLink);
 
-    // 🔥 fallback (important fix)
+    // fallback
     setTimeout(() => {
-        window.open(upiURL, "_blank");
+        window.open(upiLink, "_blank");
     }, 500);
 }
+    
+
+    
+
+
+
 
  
 

@@ -153,6 +153,96 @@ function showData() {
 showData();
 
 </script>
+        <script>
+
+function calculate() {
+
+    let name = document.getElementById("name").value;
+    let litres = document.getElementById("litres").value;
+    let fuelType = document.getElementById("fuelType").value;
+
+    if (!name || !litres) {
+        alert("Please fill all details");
+        return;
+    }
+
+    let price;
+
+    if (fuelType == "Petrol") {
+        price = litres * 150;
+    } else if (fuelType == "Diesel") {
+        price = litres * 120;
+    } else {
+        price = litres * 105;
+    }
+
+    document.getElementById("result").innerText =
+        "Total Price: ₹" + price;
+
+    alert("Booking Successful");
+
+    let data = JSON.parse(localStorage.getItem("fuel")) || [];
+
+    data.push({
+        name: name,
+        litres: litres,
+        fuelType: fuelType,
+        price: price
+    });
+
+    localStorage.setItem("fuel", JSON.stringify(data));
+
+    showData();
+}
+
+function showData() {
+
+    let list = document.getElementById("history");
+    list.innerHTML = "";
+
+    let data = JSON.parse(localStorage.getItem("fuel")) || [];
+
+    data.forEach(item => {
+
+        let li = document.createElement("li");
+
+        li.innerText =
+            item.name + " | " +
+            item.litres + "L | " +
+            item.fuelType + " | ₹" +
+            item.price;
+
+        list.appendChild(li);
+    });
+}
+
+function payUPI() {
+
+    let name = document.getElementById("name").value;
+    let litres = parseFloat(document.getElementById("litres").value);
+    let fuelType = document.getElementById("fuelType").value;
+
+    if (!name || !litres) {
+        alert("Please fill details first!");
+        return;
+    }
+
+    let price;
+
+    if (fuelType == "Petrol") price = litres * 150;
+    else if (fuelType == "Diesel") price = litres * 120;
+    else price = litres * 105;
+
+    let upiID = "yourupi@upi"; // 🔴 apna UPI ID yaha daalo
+
+    let url = `upi://pay?pa=${upiID}&pn=E.Fuel&am=${price}&cu=INR`;
+
+    window.location.href = url;
+}
+
+showData();
+
+</script>
 </body>
 </html>
 ```

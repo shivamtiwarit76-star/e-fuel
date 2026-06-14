@@ -135,21 +135,34 @@
         let li = document.createElement("li");
 
         li.innerHTML = `
-            <b>${item.name}</b> | 
-            ${item.litres}L | 
-            ${item.fuelType} | 
-            ₹${item.price}
+            <b>${item.name}</b> | ${item.litres}L | ${item.fuelType} | ₹${item.price}
             <button onclick="deleteOrder(${index})">❌</button>
         `;
 
         list.appendChild(li);
-    });function deleteOrder(index) {
+    });
+}
+
+    
+            <button onclick="deleteOrder(${index})">❌</button>
+            function deleteOrder(index) {
 
     let data = JSON.parse(localStorage.getItem("fuel")) || [];
+
+    console.log("Before delete:", data);
 
     data.splice(index, 1);
 
     localStorage.setItem("fuel", JSON.stringify(data));
+
+    console.log("After delete:", data);
+
+    showData();
+}
+        `;
+
+        list.appendChild(li);
+    });
 
     showData();
 }

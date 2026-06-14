@@ -81,62 +81,11 @@
 
     let url = `upi://pay?pa=${upiID}&pn=E.Fuel&am=${price}&cu=INR`;
 
-    window.location.href = url;
-}>
-        function calculate() {
+    window.location.href 
 
-    let name = document.getElementById("name").value;
-    let litres = parseFloat(document.getElementById("litres").value);
-    let fuelType = document.getElementById("fuelType").value;
 
-    if (!name || !litres) {
-        alert("Please fill all details.");
-        return;
-    }
 
-    let pricePerLitre;
-
-    if (fuelType === "Petrol") pricePerLitre = 150;
-    else if (fuelType === "Diesel") pricePerLitre = 120;
-    else pricePerLitre = 105;
-
-    let price = litres * pricePerLitre;
-
-    document.getElementById("result").innerText =
-        "Total Price: ₹" + price;
-
-    alert("Booking Successful!");
-
-    let data = JSON.parse(localStorage.getItem("fuel")) || [];
-
-    data.push({ name, litres, fuelType, price });
-
-    localStorage.setItem("fuel", JSON.stringify(data));
-
-    showData();
-}
-
-function showData() {
-
-    let list = document.getElementById("history");
-    list.innerHTML = "";
-
-    let data = JSON.parse(localStorage.getItem("fuel")) || [];
-
-    data.forEach(item => {
-        let li = document.createElement("li");
-
-        li.innerText =
-            item.name + " | " +
-            item.litres + "L | " +
-            item.fuelType + " | ₹" +
-            item.price;
-
-        list.appendChild(li);
-    });
-}
-
-showData();
+    
     </script>
 <script>
 

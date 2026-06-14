@@ -125,48 +125,25 @@
 
         function showData() {
 
-    let list = document.getElementById("history");
-    list.innerHTML = "";
+            let list = document.getElementById("history");
 
-    let data = JSON.parse(localStorage.getItem("fuel")) || [];
+            list.innerHTML = "";
 
-    data.forEach((item, index) => {
+            let data = JSON.parse(localStorage.getItem("fuel")) || [];
 
-        let li = document.createElement("li");
+            data.forEach(item => {
 
-        li.innerHTML = `
-            <b>${item.name}</b> | ${item.litres}L | ${item.fuelType} | ₹${item.price}
-            <button onclick="deleteOrder(${index})">❌</button>
-        `;
+                let li = document.createElement("li");
 
-        list.appendChild(li);
-    });
-}
+                li.innerText =
+                    item.name + " | " +
+                    item.litres + "L | " +
+                    item.fuelType + " | ₹" +
+                    item.price;
 
-    
-            <button onclick="deleteOrder(${index})">❌</button>
-            function deleteOrder(index) {
-
-    let data = JSON.parse(localStorage.getItem("fuel")) || [];
-
-    console.log("Before delete:", data);
-
-    data.splice(index, 1);
-
-    localStorage.setItem("fuel", JSON.stringify(data));
-
-    console.log("After delete:", data);
-
-    showData();
-}
-        `;
-
-        list.appendChild(li);
-    });
-
-    showData();
-}
-}
+                list.appendChild(li);
+            });
+        }
 
         showData();
     </script>

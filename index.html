@@ -85,7 +85,7 @@
 <script>
 function calculate()function calculate()address: localStorage.getItem("address"),
 lat: localStorage.getItem("lat"),
-lon: localStorage.getItem("lon"), {
+lon: localStorage.getItem("lon"), 
 
   db.collection("orders").add({
     name: "Test",
@@ -96,7 +96,7 @@ lon: localStorage.getItem("lon"), {
 
   alert("Try ho raha hai ✔");
 } {
-    function calculate() {
+    function calculate() 
 
   let name = document.getElementById("name").value;
   let liters = document.getElementById("liters").value;
@@ -112,15 +112,15 @@ lon: localStorage.getItem("lon"), {
     latitude: Number(lat),
     longitude: Number(lon),
     time: new Date().toLocaleString()
-  })
+  
   .then(() => {
     alert("🚚 Order placed successfully!");
     showData(); // auto refresh
   })
-  .catch((error) => {
+  .catch((error) => 
     alert("Error: " + error.message);
   });
-}
+
     function calculate() {
   alert("Order placed 🚚");
 }
@@ -213,11 +213,10 @@ function getLocation() {
     localStorage.setItem("lat", lat);
     localStorage.setItem("lon", lon);
 
-  });
-}
+  
 </script>
 
-</body<button onclick="alert('BUTTON WORKING')"/button><button onclick="getLocation()button>
+</body<button onclick="alert('BUTTON WORKING')"/button><button onclick="getLocation()button
 
 <p id="locationText"></p>>
     <script>
@@ -291,10 +290,7 @@ function getLocation() {
     },
     function(error) {
       alert("❌ Location allow karo");
-    }
-  );
 
-}
 </script>>
 </html>       
 

@@ -74,6 +74,26 @@
 
     let price = litres * (fuelType === "Petrol" ? 150 : fuelType === "Diesel" ? 120 : 105);
 
+    let upiID = 6202307387-n456@ybl
+
+    let upiLink = `upi://pay?pa=${upiID}&pn=E.Fuel&am=${price}&cu=INR`;
+
+    // 🔥 most stable method
+    window.location.href = upiLink;
+}
+        function payUPI() {
+
+    let name = document.getElementById("name").value;
+    let litres = document.getElementById("litres").value;
+    let fuelType = document.getElementById("fuelType").value;
+
+    if (!name || !litres) {
+        alert("Please fill all details first!");
+        return;
+    }
+
+    let price = litres * (fuelType === "Petrol" ? 150 : fuelType === "Diesel" ? 120 : 105);
+
     let upiID = shivamtiwaritpandit098765@okhdfcbank
 
     // 🔥 safe UPI link

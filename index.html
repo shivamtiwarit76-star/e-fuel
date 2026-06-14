@@ -66,7 +66,7 @@
     let fuelType = document.getElementById("fuelType").value;
 
     if (!name || !litres) {
-        alert("Please fill details first!");
+        alert("Please fill all details first!");
         return;
     }
 
@@ -76,12 +76,19 @@
     else if (fuelType === "Diesel") price = litres * 120;
     else price = litres * 105;
 
-    // 👇 Replace with your UPI ID
+    // 🔴 IMPORTANT: apna real UPI ID yaha daalo
     let upiID = 6202307387-n456@ybl
 
-    let url = `upi://pay?pa=${upiID}&pn=E.Fuel&am=${price}&cu=INR`;
+    let upiUrl =
+        "upi://pay?pa=" + upiID +
+        "&pn=E.Fuel" +
+        "&am=" + price +
+        "&cu=INR";
 
-    window.location.href 
+    window.location.href = upiUrl;
+}
+    
+    
 
 
 

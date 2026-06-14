@@ -77,37 +77,6 @@
 <!-- 🚚 Book button -->
 <button onclick="calculate()">🚚 Book Fuel</button>
 
-function getLocation() {
-
-  navigator.geolocation.getCurrentPosition(async function(position) {
-
-    let lat = position.coords.latitude;
-    let lon = position.coords.longitude;
-
-    // OpenStreetMap Reverse Geocoding API
-    let url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
-
-    let response = await fetch(url);
-    let data = await response.json();
-
-    let address = data.display_name;
-
-    document.getElementById("locationText").innerHTML =
-      "📍 Address: " + address;
-
-    // save for booking
-    localStorage.setItem("lat", lat);
-    localStorage.setItem("lon", lon);
-    localStorage.setItem("address", address);
-
-  },
-  function(error) {
-    alert("❌ Location allow karo");
-  });
-
-}
-
-
 
     
 

@@ -124,7 +124,21 @@ const analytics = getAnalytics(app);
     <option value="Petrol">Petrol</option>
     <option value="Diesel">Diesel</option>
     <option value="CNG">CNG</option>
+<input id="name" placeholder="Name">
+<input id="liters" placeholder="Liters">
 
+<select id="fuelType">
+  <option>Petrol</option>
+  <option>Diesel</option>
+</select>
+
+<!-- 🚚 Book button -->
+<button onclick="calculate()">🚚 Book Fuel</button>
+
+<!-- 📍 Location button (yahi neeche aayega) -->
+<button onclick="getLocation()">📍 Get My Location</button>
+
+<p id="locationText"></p>
 
 <script>
 function calculate()function calculate() {

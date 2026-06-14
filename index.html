@@ -125,25 +125,26 @@
 
         function showData() {
 
-            let list = document.getElementById("history");
+    let list = document.getElementById("history");
+    list.innerHTML = "";
 
-            list.innerHTML = "";
+    let data = JSON.parse(localStorage.getItem("fuel")) || [];
 
-            let data = JSON.parse(localStorage.getItem("fuel")) || [];
+    data.forEach((item, index) => {
 
-            data.forEach(item => {
+        let li = document.createElement("li");
 
-                let li = document.createElement("li");
+        li.innerHTML = `
+            <b>${item.name}</b> | 
+            ${item.litres}L | 
+            ${item.fuelType} | 
+            ₹${item.price}
+            <button onclick="deleteOrder(${index})">❌</button>
+        `;
 
-                li.innerText =
-                    item.name + " | " +
-                    item.litres + "L | " +
-                    item.fuelType + " | ₹" +
-                    item.price;
-
-                list.appendChild(li);
-            });
-        }
+        list.appendChild(li);
+    });
+}
 
         showData();
     </script>

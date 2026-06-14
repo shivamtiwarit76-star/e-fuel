@@ -77,15 +77,44 @@
 <!-- 🚚 Book button -->
 <button onclick="calculate()">🚚 Book Fuel</button>
 
-<!-- 📍 Location button (yahi neeche aayega) -->
-<button onclick="getLocation()">📍 Get My Location</
+function getLocation() {
+
+  navigator.geolocation.getCurrentPosition(async function(position) {
+
+    let lat = position.coords.latitude;
+    let lon = position.coords.longitude;
+
+    // OpenStreetMap Reverse Geocoding API
+    let url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+
+    let response = await fetch(url);
+    let data = await response.json();
+
+    let address = data.display_name;
+
+    document.getElementById("locationText").innerHTML =
+      "📍 Address: " + address;
+
+    // save for booking
+    localStorage.setItem("lat", lat);
+    localStorage.setItem("lon", lon);
+    localStorage.setItem("address", address);
+
+  },
+  function(error) {
+    alert("❌ Location allow karo");
+  });
+
+}
 
 
 
     
 
 <script>
-function calculate()function calculate() {
+function calculate()function calculate()address: localStorage.getItem("address"),
+lat: localStorage.getItem("lat"),
+lon: localStorage.getItem("lon"), {
 
   db.collection("orders").add({
     name: "Test",

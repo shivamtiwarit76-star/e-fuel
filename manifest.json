@@ -1,0 +1,16 @@
+{
+  "name": "E.Fuel Booking App",
+  "short_name": "E.Fuel",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "description": "Smart Fuel Booking System",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

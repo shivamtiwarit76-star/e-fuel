@@ -122,28 +122,9 @@ const analytics = getAnalytics(app);
 <!-- 📍 Location button (yahi neeche aayega) -->
 <button onclick="getLocation()">📍 Get My Location</button>function getLocation(
 
-function getLocation() {
 
-  navigator.geolocation.getCurrentPosition(
-    function(position) {
 
-      let lat = position.coords.latitude;
-      let lon = position.coords.longitude;
-
-      document.getElementById("locationText").innerHTML =
-        "";
-
-      document.getElementById("locationText").innerHTML =
-        "📍 Latitude: " + lat + "<br>Longitude: " + lon;
-
-    },
-    function(error) {
-      document.getElementById("locationText").innerHTML =
-        "❌ Location allow karo";
-    }
-  );
-
-}
+    
 
 <script>
 function calculate()function calculate() {

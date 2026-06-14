@@ -207,7 +207,28 @@ function showData() {
 }
 
 showData();
+</script><!-- HTML content ऊपर होगा -->
+
+<script>
+function getLocation() {
+  alert("Location button clicked ✔");
+
+  navigator.geolocation.getCurrentPosition(function(position) {
+
+    let lat = position.coords.latitude;
+    let lon = position.coords.longitude;
+
+    document.getElementById("locationText").innerText =
+      "Lat: " + lat + " | Lon: " + lon;
+
+    localStorage.setItem("lat", lat);
+    localStorage.setItem("lon", lon);
+
+  });
+}
 </script>
+
+</body>
     <script>
   // Firebase config (तुम्हारा वाला यहाँ होगा)
   const firebaseConfig = {

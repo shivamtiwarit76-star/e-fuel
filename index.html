@@ -239,7 +239,33 @@ function getLocation() {
     time: new Date()
   });
 </script>
+function getLocation() {
 
+  navigator.geolocation.getCurrentPosition(async function(position) {
+
+    let lat = position.coords.latitude;
+    let lon = position.coords.longitude;
+
+    let url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+
+    let response = await fetch(url);
+    let data = await response.json();
+
+    let address = data.display_name;
+
+    document.getElementById("locationText").innerHTML =
+      "🏠 Address: " + address;
+
+    localStorage.setItem("lat", lat);
+    localStorage.setItem("lon", lon);
+    localStorage.setItem("address", address);
+
+  },
+  function(error) {
+    alert("❌ Location allow karo");
+  });
+
+}
 </body<button onclick="getLocation()📍 Get My Location/button>
 
 <div id="locationText"></div>

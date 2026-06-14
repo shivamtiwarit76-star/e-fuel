@@ -126,7 +126,27 @@ lon: localStorage.getItem("lon"),
 }
 
 function showData() {
-    function showData() {
+
+    db.collection("orders").get().then((snapshot) => {
+
+        let html = "";
+
+        snapshot.forEach((doc) => {
+            let data = doc.data();
+
+            html += `
+                <b>${data.name}</b><br>
+                Fuel: ${data.fuel}<br>
+                Liters: ${data.liters}<br>
+                Location: ${data.latitude}, ${data.longitude}<br>
+                Time: ${data.time}<br><hr>
+            `;
+        });
+
+        document.getElementById("history").innerHTML = html;
+    });
+
+}
 
   db.collection("orders").get().then((snapshot) 
 

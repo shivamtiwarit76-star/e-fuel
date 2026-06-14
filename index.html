@@ -240,7 +240,33 @@ function getLocation() {
   });
 </script>
 
-</body>
+</body<button onclick="getLocation()">📍 Get My Location</button>
+
+<div id="locationText"></div>
+
+<script>
+function getLocation() {
+
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+
+      let lat = position.coords.latitude;
+      let lon = position.coords.longitude;
+
+      document.getElementById("locationText").innerHTML =
+        "📍 Latitude: " + lat + "<br>Longitude: " + lon;
+
+      localStorage.setItem("lat", lat);
+      localStorage.setItem("lon", lon);
+
+    },
+    function(error) {
+      alert("❌ Location allow karo");
+    }
+  );
+
+}
+</script>>
 </html>       
 
 

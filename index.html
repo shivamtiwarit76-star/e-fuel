@@ -9,10 +9,18 @@
     <style>
         body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    color: white;
-    text-align: center;
+    font-family: 'Segoe ul {
+    text-align: left;
+    padding: 0;
+    list-style: none;
+}
+
+ul li {
+    background: #f1f5f9;
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 8px;
+}
 }
 
 /* Header */
@@ -23,41 +31,47 @@
 }
 
 /* Card */
-.card {
+
+    .card {
     background: white;
     color: black;
-    width: 340px;
+    width: 90%;
+    max-width: 380px;
     margin: 30px auto;
     padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+}
 }
 
 /* Inputs */
 input, select {
-    width: 90%;
+    width: 100%;
     padding: 12px;
     margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    outline: none;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 15px;
+}
 }
 
 /* Button */
-button {
-    padding: 12px;
-    width: 95%;
+        button {
+    width: 100%;
+    padding: 14px;
     background: linear-gradient(90deg, #2563eb, #1e40af);
     border: none;
     color: white;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 16px;
+    font-weight: bold;
     transition: 0.3s;
 }
 
 button:hover {
-    transform: scale(1.03);
+    transform: translateY(-2px);
+}
 }
 
 /* History */

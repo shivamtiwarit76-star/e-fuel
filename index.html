@@ -1,305 +1,153 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>E.Fuel</title
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E.Fuel</title>
 
-    
-
-    
-  
-            font-family: Arial;
+    <style>
+        body {
+            font-family: Arial, sans-serif;
             background: #1c1c1c;
             color: white;
             text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
 
         .card {
             background: white;
             color: black;
-            width: 300px;
-            margin: 50px auto;
+            width: 320px;
+            margin: auto;
             padding: 20px;
             border-radius: 10px;
         }
 
-        input {
+        input, select {
             width: 90%;
             padding: 10px;
             margin: 10px 0;
         }
 
         button {
-            padding: 10px;
-            width: 100%;
-            background: orange;
+            padding: 12px;
+            width: 95%;
+            background: #007BFF;
             border: none;
             color: white;
             cursor: pointer;
+            border-radius: 10px;
+            margin: 5px 0;
         }
 
         ul {
             text-align: left;
         }
     </style>
-</head> 
+</head>
 
+<body>
 
-<p id="locationText"></p
-    <div style="background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
-            color: white;
-            text-align: center;
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 20px;">
-    
-    <h1>⛽ E.Fuel</h1
-    <p>Smart Fuel Booking Platform</p
-    <p><strong>Created by Shivam Tiwari</strong></p>
+    <div class="header">
+        <h1>⛽ E.Fuel</h1>
+        <p>Smart Fuel Booking Platform</p>
+        <p><strong>Created by Shivam Tiwari</strong></p>
+    </div>
 
-</div>
-<h2 style="text-align: center;">
-    E.Fuel - Created by Shivam Tiwari
-</h2>
-<h1>⛽ E.Fuel Advanced</h1>
+    <div class="card">
+        <input type="text" id="name" placeholder="Apna Naam">
 
-<div class="card">
+        <input type="number" id="litres" placeholder="Litres">
 
-    <input type="text" id="name" placeholder="Apna Naam">
-    <input type="number" id="litres" placeholder="Litres">
-    <select id="fuelType">
-    <option value="Petrol">Petrol</option>
-    <option value="Diesel">Diesel</option>
-    <option value="CNG">CNG</option>
+        <select id="fuelType">
+            <option value="Petrol">Petrol</option>
+            <option value="Diesel">Diesel</option>
+            <option value="CNG">CNG</option>
+        </select>
 
-</select>
+        <button onclick="calculate()">🚚 Book Fuel</button>
 
-<!-- 🚚 Book button -->
-<button onclick="calculate()">🚚 Book Fuel</button>
-<button onclick="getLocation()">📍 Get My Location</button>
+        <h3 id="result"></h3>
 
-<div id="locationText"></div
+        <h3>Booking History</h3>
+        <ul id="history"></ul>
+    </div>
 
-    
-
-<script>
-function calculate()function calculate()address: localStorage.getItem("address"),
-lat: localStorage.getItem("lat"),
-lon: localStorage.getItem("lon"), 
-
-  db.collection("orders").add({
-    name: "Test",
-    fuel: "Petrol",
-    liters: 5,
-    time: "now"
-  });
-
-  alert("Try ho raha hai ✔");
-} {
-    function calculate() 
-
-  let name = document.getElementById("name").value;
-  let liters = document.getElementById("liters").value;
-  let fuel = document.getElementById("fuelType").value;
-
-  let lat = localStorage.getItem("lat");
-  let lon = localStorage.getItem("lon");
-
-  db.collection("orders").add({
-    name: name,
-    fuel: fuel,
-    liters: Number(liters),
-    latitude: Number(lat),
-    longitude: Number(lon),
-    time: new Date().toLocaleString()
-  
-  .then(() 
-    alert("🚚 Order placed successfully!");
-    showData(); // auto refresh
-  })
-  .catch((error) => 
-    alert("Error: " + error.message);
-  });
-
-    function calculate() {
-  alert("Order placed 🚚");
-}
-
-function showData() {
-
-    db.collection("orders").get().then((snapshot) => {
-
-        let html = "";
-
-        snapshot.forEach((doc) => {
-            let data = doc.data();
-
-            html += `
-                <b>${data.name}</b><br>
-                Fuel: ${data.fuel}<br>
-                Liters: ${data.liters}<br>
-                Location: ${data.latitude}, ${data.longitude}<br>
-                Time: ${data.time}<br><hr>
-            `;
-        });
-
-        document.getElementById("history").innerHTML = html;
-    });
-
-}
-
-  db.collection("orders").get().then((snapshot) 
-
-    let html = "";
-
-    snapshot.forEach((doc) =
-      let data = doc.data();
-
-      html += `
-        <div style="border:1px solid black; padding:10px; margin:5px;">
-          <b>${data.name}</b><br>
-          Fuel: ${data.fuel}<br>
-          Liters: ${data.liters}<br>
-          Location: ${data.latitude}, ${data.longitude}<br>
-          Time: ${data.time}
-        </div>
-      `;
-    });
-
-    document.getElementById("history").innerHTML = html;
-  });
-}
-  console.log("Orders show here 📦");
-}
-    let name = document.getElementById("name").value;
-    let litres = document.getElementById("litres").value;
-
-    let fuelType = document.getElementById("fuelType").value;
-let litres = parseFloat(document.getElementById("litres").value);
-let pricePerLitre;
-
-if (fuelType === "Petrol") {
-    pricePerLitre = 150;  // Petrol ki price yahan change kar sakte ho
-} else if (fuelType === "Diesel") {
-    pricePerLitre = 120;   // Diesel ki price yahan change kar sakte ho
-} else {
-    pricePerLitre = 105;   // CNG ki price yahan change kar sakte ho
-}
-
-let price = litres * pricePerLitre;
-
-    document.getElementById("result").innerText =
-        "Total Price: ₹ " + price;
-
-    let data = JSON.parse(localStorage.getItem("fuel")) || [];
-
-    data.push({name, litres, price});
-
-    localStorage.setItem("fuel", JSON.stringify(data));
-
-    showData();
-}
-
-function showData() {
-    let list = document.getElementById("history");
-    list.innerHTML = "";
-
-    let data = JSON.parse(localStorage.getItem("fuel")) || [];
-
-    data.forEach(item => {
-        let li = document.createElement("li");
-        li.innerText = item.name + " | " + item.litres + "L | ₹" + item.price;
-        list.appendChild(li);
-    });
-}
-
-showData();
-</script><!-- HTML content ऊपर होगा -->
-
-<script>
-function getLocation() {
-  alert("Location button clicked ✔");function getLocation() {
-  alert("CLICK WORKING ✔");
-
-
-  navigator.geolocation.getCurrentPosition(function(position) {
-
-    let lat = position.coords.latitude;
-    let lon = position.coords.longitude;
-
-    document.getElementById("locationText").innerText =
-      "Lat: " + lat + " | Lon: " + lon;
-
-    localStorage.setItem("lat", lat);
-    localStorage.setItem("lon", lon);
-
-  
-</script>
-
-</body<button onclick="alert('BUTTON WORKING')"/buttonbutton onclick="getLocation()button
-
-<p id="locationText"></p
     <script>
-  // Firebase config (तुम्हारा वाला यहाँ होगा)
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
+        function calculate() {
 
-  // Firebase start
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+            let name = document.getElementById("name").value;
+            let litres = parseFloat(document.getElementById("litres").value);
+            let fuelType = document.getElementById("fuelType").value;
 
-  // TEST (check working)
-  db.collection("test").add({
-    message: "E-Fuel connected 🚀",
-    time: new Date()
-  });
-</script>
+            if (!name || !litres) {
+                alert("Please fill all details.");
+                return;
+            }
 
+            let pricePerLitre;
 
-</bodfunction getLocation() {
+            if (fuelType === "Petrol") {
+                pricePerLitre = 150;
+            } else if (fuelType === "Diesel") {
+                pricePerLitre = 120;
+            } else {
+                pricePerLitre = 105;
+            }
 
-  navigator.geolocation.getCurrentPosition(async function(position) {
+            let price = litres * pricePerLitre;
 
-    let lat = position.coords.latitude;
-    let lon = position.coords.longitude;
+            document.getElementById("result").innerText =
+                "Total Price: ₹" + price;
 
-    let url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+            let data = JSON.parse(localStorage.getItem("fuel")) || [];
 
-    let response = await fetch(url);
-    let data = await response.json();
+            data.push({
+                name,
+                litres,
+                fuelType,
+                price
+            });
 
-    let address = data.display_name;
+            localStorage.setItem("fuel", JSON.stringify(data));
 
-    document.getElementById("locationText").innerHTML =
-      "🏠 Address: " + address;
+            showData();
+        }
 
-    localStorage.setItem("lat", lat);
-    localStorage.setItem("lon", lon);
-    localStorage.setItem("address", address);
+        function showData() {
 
-  },
-  function(error) {
-    alert("❌ Location allow karo");
-  });
+            let list = document.getElementById("history");
 
-}y<button onclick="getLocation()📍 Get My Location/button>
+            list.innerHTML = "";
 
-<div id="locationText"></div>
+            let data = JSON.parse(localStorage.getItem("fuel")) || [];
 
+            data.forEach(item => {
 
+                let li = document.createElement("li");
 
-    
+                li.innerText =
+                    item.name + " | " +
+                    item.litres + "L | " +
+                    item.fuelType + " | ₹" +
+                    item.price;
 
-</script>>
-      </body>
-</html>       
+                list.appendChild(li);
+            });
+        }
 
+        showData();
+    </script>
 
-
-
+</body>
+</html>
+```

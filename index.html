@@ -59,10 +59,12 @@
         <ul id="history"></ul>
     </div>
 
-    <scriptfunction payUPI() {
+    <script>
+    
+   function payUPI() {
 
     let name = document.getElementById("name").value;
-    let litres = parseFloat(document.getElementById("litres").value);
+    let litres = document.getElementById("litres").value;
     let fuelType = document.getElementById("fuelType").value;
 
     if (!name || !litres) {
@@ -70,25 +72,23 @@
         return;
     }
 
-    let price;
+    let price = litres * (fuelType === "Petrol" ? 150 : fuelType === "Diesel" ? 120 : 105);
 
-    if (fuelType === "Petrol") price = litres * 150;
-    else if (fuelType === "Diesel") price = litres * 120;
-    else price = litres * 105;
+    let upiID = 6202307387-n456@ybl // 6202307387-n456@ybl
 
-    // 🔴 IMPORTANT: apna real UPI ID yaha daalo
-    let upiID = 6202307387-n456@ybl
-
-    let upiUrl =
+    let upiLink =
         "upi://pay?pa=" + upiID +
         "&pn=E.Fuel" +
         "&am=" + price +
         "&cu=INR";
 
-    window.location.href = upiUrl;
-}
-    
-    
+    // 🔥 safer open method
+    let a = document.createElement("a");
+    a.href = upiLink;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+} 
 
 
 

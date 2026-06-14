@@ -45,7 +45,7 @@
 </head> 
 
 
-<p id="locationText"></p>
+<p id="locationText"></p
     <div style="background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
             color: white;
             text-align: center;
@@ -53,8 +53,8 @@
             border-radius: 10px;
             margin-bottom: 20px;">
     
-    <h1>⛽ E.Fuel</h1>
-    <p>Smart Fuel Booking Platform</p>
+    <h1>⛽ E.Fuel</h1
+    <p>Smart Fuel Booking Platform</p
     <p><strong>Created by Shivam Tiwari</strong></p>
 
 </div>
@@ -78,7 +78,7 @@
 <button onclick="calculate()">🚚 Book Fuel</button>
 <button onclick="getLocation()">📍 Get My Location</button>
 
-<div id="locationText"></div>
+<div id="locationText"></div
 
     
 
@@ -113,7 +113,7 @@ lon: localStorage.getItem("lon"),
     longitude: Number(lon),
     time: new Date().toLocaleString()
   
-  .then(() => {
+  .then(() 
     alert("🚚 Order placed successfully!");
     showData(); // auto refresh
   })
@@ -128,11 +128,11 @@ lon: localStorage.getItem("lon"),
 function showData() {
     function showData() {
 
-  db.collection("orders").get().then((snapshot) => {
+  db.collection("orders").get().then((snapshot) 
 
     let html = "";
 
-    snapshot.forEach((doc) => {
+    snapshot.forEach((doc) =
       let data = doc.data();
 
       html += `
@@ -200,7 +200,7 @@ showData();
 function getLocation() {
   alert("Location button clicked ✔");function getLocation() {
   alert("CLICK WORKING ✔");
-}
+
 
   navigator.geolocation.getCurrentPosition(function(position) {
 
@@ -216,9 +216,9 @@ function getLocation() {
   
 </script>
 
-</body<button onclick="alert('BUTTON WORKING')"/button><button onclick="getLocation()button
+</body<button onclick="alert('BUTTON WORKING')"/buttonbutton onclick="getLocation()button
 
-<p id="locationText"></p>>
+<p id="locationText"></p
     <script>
   // Firebase config (तुम्हारा वाला यहाँ होगा)
   const firebaseConfig = {

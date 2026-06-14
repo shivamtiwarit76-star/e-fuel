@@ -73,18 +73,20 @@
 
     let price = litres * (fuelType === "Petrol" ? 150 : fuelType === "Diesel" ? 120 : 105);
 
-    let upiID = 6202307387-n456@ybl
+    let upiID = shivamtiwaritpandit098765@okhdfcbank
 
-    let upiLink = `upi://pay?pa=${upiID}&pn=6202307387-n4562ybl E.Fuel&am= mr shivam kumar ${price}&cu=150 rupees INR`;
+    // 🔥 safe UPI link
+    let upiLink = `upi://pay?pa=${upiID}&pn=E.Fuel&am=${price}&cu=INR`;
 
-    // 🔥 better open method
-    window.location.assign(upiLink);
-
-    // fallback
-    setTimeout(() => {
-        window.open(upiLink, "_blank");
-    }, 500);
+    // 🔥 best possible open method
+    let a = document.createElement("a");
+    a.href = upiLink;
+    a.target = "_self";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
+        
     
 
     

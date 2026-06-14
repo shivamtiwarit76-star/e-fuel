@@ -97,37 +97,7 @@ const analytics = getAnalytics(app);
 
       
 
-}<function getLocation()<button onclick="getLocation()">📍 Get My Location</button>
-
-<p id="locationText"></p> {
-  alert("Button click ho raha hai ✔");
-}/button>function getLocation() {
-
-  if (navigator.geolocation) {
-
-    navigator.geolocation.getCurrentPosition(
-      function(position) {
-
-        let lat = position.coords.latitude;
-        let lon = position.coords.longitude;
-
-        alert("📍 Location मिल गया!");
-        alert("Latitude: " + lat + " | Longitude: " + lon);
-
-        // save for booking system
-        localStorage.setItem("lat", lat);
-        localStorage.setItem("lon", lon);
-
-      },
-      function(error) {
-        alert("❌ Location permission allow karo");
-      }
-    );
-
-  } else {
-    alert("❌ Browser location support nahi karta");
-  }
-}
+}<function getLocation()<button onclick="getLocation()">📍 Get My Location
 
 <p id="locationText"></p>
     <h3 id="result"></h3>

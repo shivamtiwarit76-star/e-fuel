@@ -153,7 +153,17 @@ const analytics = getAnalytics(app);
 </div>
 
 <script>
-function calculate() {
+function calculate()function calculate() {
+
+  db.collection("orders").add({
+    name: "Test",
+    fuel: "Petrol",
+    liters: 5,
+    time: "now"
+  });
+
+  alert("Try ho raha hai ✔");
+} {
     function calculate() {
 
   let name = document.getElementById("name").value;

@@ -9,7 +9,36 @@
     <style>
         body<button onclick="getLocation()">📍 Get My Location</button>
 
-<p id="locationText"></p>function getLocation() {
+<p id="locationText"></p>function getLocation()function getLocation() {
+
+  alert("Location button clicked ✔");
+
+  if (navigator.geolocation) {
+
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+
+        let lat = position.coords.latitude;
+        let lon = position.coords.longitude;
+
+        alert("📍 Latitude: " + lat + "\nLongitude: " + lon);
+
+        document.getElementById("locationText").innerText =
+          "Latitude: " + lat + " | Longitude: " + lon;
+
+        localStorage.setItem("lat", lat);
+        localStorage.setItem("lon", lon);
+
+      },
+      function(error) {
+        alert("❌ Location permission allow karo");
+      }
+    );
+
+  } else {
+    alert("❌ Browser location support nahi karta");
+  }
+} {
   alert("Location button clicked ✔");
 } {
             font-family: Arial;

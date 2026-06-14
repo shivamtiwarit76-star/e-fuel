@@ -221,30 +221,31 @@ function showData() {
 
         list.appendChild(li);
     });
-}
-
 function payUPI() {
 
     let name = document.getElementById("name").value;
-    let litres = parseFloat(document.getElementById("litres").value);
+    let litres = document.getElementById("litres").value;
     let fuelType = document.getElementById("fuelType").value;
 
     if (!name || !litres) {
-        alert("Please fill details first!");
+        alert("Please fill all details first!");
         return;
     }
 
-    let price;
+    let price = litres * (fuelType === "Petrol" ? 150 : fuelType === "Diesel" ? 120 : 105);
 
-    if (fuelType == "Petrol") price = litres * 150;
-    else if (fuelType == "Diesel") price = litres * 120;
-    else price = litres * 105;
+    let upiID = 6202307387-n456@ybl // 🔴 apna real UPI ID daalo
 
-    let upiID = 6202307387-n456@ybl // 🔴 apna UPI ID yaha daalo
+    // 👉 Simple safe UPI link
+    let upiLink =
+        "upi://pay?pa=" + upiID +
+        "&pn=E.Fuel" +
+        "&am=" + price +
+        "&cu=INR";
 
-    let url = `upi://pay?pa=${upiID}&pn=E.Fuel&am=${price}&cu=INR`;
-
-    window.location.href = url;
+    // 🔥 open UPI app
+    window.location.href = upiLink;
+}
 }
 
 showData();

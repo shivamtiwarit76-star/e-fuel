@@ -120,9 +120,9 @@ const analytics = getAnalytics(app);
 <button onclick="calculate()">🚚 Book Fuel</button>
 
 <!-- 📍 Location button (yahi neeche aayega) -->
-<button onclick="getLocation()">📍 Get My Location</button>function getLocation() {
+<button onclick="getLocation()">📍 Get My Location</button>function getLocation(
 
-  alert("Location clicked ✔");
+function getLocation() {
 
   navigator.geolocation.getCurrentPosition(
     function(position) {
@@ -130,23 +130,20 @@ const analytics = getAnalytics(app);
       let lat = position.coords.latitude;
       let lon = position.coords.longitude;
 
-      console.log("Lat:", lat, "Lon:", lon);
+      document.getElementById("locationText").innerHTML =
+        "";
 
       document.getElementById("locationText").innerHTML =
         "📍 Latitude: " + lat + "<br>Longitude: " + lon;
 
-      localStorage.setItem("lat", lat);
-      localStorage.setItem("lon", lon);
-
     },
     function(error) {
-      alert("❌ Location allow karo");
+      document.getElementById("locationText").innerHTML =
+        "❌ Location allow karo";
     }
   );
 
 }
-
-<p id="locationText"></p>
 
 <script>
 function calculate()function calculate() {

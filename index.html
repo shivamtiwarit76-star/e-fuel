@@ -1,70 +1,60 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head><style>
-body {
-    font-family: Arial;
-    background: #1c1c1c;
-    color: white;
-    text-align: center;
-}
-
-.card {
-    background: white;
-    color: black;
-    padding: 20px;
-    border-radius: 10px;
-    width: 320px;
-    margin: auto;
-}
-
-button {
-    background: #007BFF;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-}
-</style>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E.Fuel</title>
 
-    <style><style>
-body {
-    font-family: Arial;
-    background: #1c1c1c;
-    color: white;
-    text-align: center;
-}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1c1c1c;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
 
-.card {
-    background: white;
-    color: black;
-    padding: 20px;
-    border-radius: 10px;
-    width: 320px;
-    margin: auto;
-}
+        .header {
+            background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
 
-button {
-    background: #007BFF;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius:
-</style>
-        
+        .card {
+            background: white;
+            color: black;
+            width: 320px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+        }
 
-    
-        
-        
+        input, select {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            width: 95%;
+            padding: 12px;
+            margin: 5px 0;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        ul {
+            text-align: left;
+        }
     </style>
-    
 </head>
 
-
-</div>
+<body>
 
     <div class="header">
         <h1>⛽ E.Fuel</h1>
@@ -73,6 +63,7 @@ button {
     </div>
 
     <div class="card">
+
         <input type="text" id="name" placeholder="Apna Naam">
 
         <input type="number" id="litres" placeholder="Litres">
@@ -84,169 +75,145 @@ button {
         </select>
 
         <button onclick="calculate()">🚚 Book Fuel</button>
+
         <button onclick="getLocation()">📍 Get My Location</button>
 
-<p id="locationText"></p>
+        <p id="locationText"></p>
+
         <button onclick="payUPI()">💳 Pay via UPI</button>
 
         <h3 id="result"></h3>
 
         <h3>Booking History</h3>
         <ul id="history"></ul>
+
     </div>
 
     <script>
+
+        function calculate() {
+
+            let name = document.getElementById("name").value;
+            let litres = parseFloat(document.getElementById("litres").value);
+            let fuelType = document.getElementById("fuelType").value;
+
+            if (!name || !litres) {
+                alert("Please fill all details.");
+                return;
+            }
+
+            let price;
+
+            if (fuelType === "Petrol") {
+                price = litres * 150;
+            } else if (fuelType === "Diesel") {
+                price = litres * 120;
+            } else {
+                price = litres * 105;
+            }
+
+            document.getElementById("result").innerText =
+                "Total Price: ₹" + price;
+
+            let data = JSON.parse(localStorage.getItem("fuel")) || [];
+
+            data.push({
+                name: name,
+                litres: litres,
+                fuelType: fuelType,
+                price: price
+            });
+
+            localStorage.setItem("fuel", JSON.stringify(data));
+
+            showData();
+
+            alert("Booking Successful 🚚");
+        }
+
+        function showData() {
+
+            let list = document.getElementById("history");
+
+            list.innerHTML = "";
+
+            let data = JSON.parse(localStorage.getItem("fuel")) || [];
+
+            data.forEach(item => {
+
+                let li = document.createElement("li");
+
+                li.innerText =
+                    item.name + " | " +
+                    item.litres + "L | " +
+                    item.fuelType + " | ₹" +
+                    item.price;
+
+                list.appendChild(li);
+            });
+        }
+
+        function getLocation() {
+
+            if (navigator.geolocation) {
+
+                navigator.geolocation.getCurrentPosition(
+
+                    function(position) {
+
+                        document.getElementById("locationText").innerText =
+                            "📍 Latitude: " +
+                            position.coords.latitude +
+                            " | Longitude: " +
+                            position.coords.longitude;
+                    },
+
+                    function() {
+
+                        alert("Location access allow karo.");
+                    }
+                );
+
+            } else {
+
+                alert("Geolocation is not supported.");
+            }
+        }
+
         function payUPI() {
 
-    let name = document.getElementById("name").value;
-    let litres = document.getElementById("litres").value;
-    let fuelType = document.getElementById("fuelType").value;
+            let litres = parseFloat(document.getElementById("litres").value);
+            let fuelType = document.getElementById("fuelType").value;
 
-    if (!name || !litres) {
-        alert("Fill all details first!");
-        return;
-    }
+            if (!litres) {
+                alert("Please enter litres first.");
+                return;
+            }
 
-    let price = litres * (fuelType === "Petrol" ? 150 : fuelType === "Diesel" ? 120 : 105);
+            let price;
 
-    let upiID = 6202307387-n456@ybl
-    let link = `upi://pay?pa=${upiID}&pn=E.Fuel&am=${price}&cu=INR`;
+            if (fuelType === "Petrol") {
+                price = litres * 150;
+            } else if (fuelType === "Diesel") {
+                price = litres * 120;
+            } else {
+                price = litres * 105;
+            }
 
-    
-  window.location.href = upiLink;
-}
+            let upiID = "6202307387-n456@ybl";
 
+            let upiLink =
+                "upi://pay?pa=" + upiID +
+                "&pn=E.Fuel" +
+                "&am=" + price +
+                "&cu=INR";
 
-
-    }
-}      
-        
-    
-
-    
-
-
-
-
- 
-
-
-
-    
-    </script>
-<script>
-
-function calculate() {
-
-    let name = document.getElementById("name").value;
-    let litres = document.getElementById("litres").value;
-    let fuelType = document.getElementById("fuelType").value;
-
-    if (!name || !litres) {
-        alert("Please fill all details");
-        return;
-    }
-
-    let price;
-
-    if (fuelType == "Petrol") {
-        price = litres * 150;
-    } else if (fuelType == "Diesel") {
-        price = litres * 120;
-    } else {
-        price = litres * 105;
-    }
-
-    document.getElementById("result").innerText =
-        "Total Price: ₹" + price;
-
-    alert("Booking Successful");
-
-    let data = JSON.parse(localStorage.getItem("fuel")) || [];
-
-    data.push({
-        name: name,
-        litres: litres,
-        fuelType: fuelType,
-        price: price
-    });
-
-    localStorage.setItem("fuel", JSON.stringify(data));
-
-    showData();
-function getLocation() {
-    navigator.geolocation.getCurrentPosition(
-        function(position) {
-            document.getElementById("locationText").innerText =
-                "📍 Latitude: " + position.coords.latitude +
-                " | Longitude: " + position.coords.longitude;
-        },
-        function(error) {
-            alert("Location access allow karo.");
+            window.location.href = upiLink;
         }
-    );
-}
 
-function showData() {
+        showData();
 
-    let list = document.getElementById("history");
-    list.innerHTML = "";
+    </script>
 
-    let data = JSON.parse(localStorage.getItem("fuel")) || [];
-
-    data.forEach(item => {
-
-        let li = document.createElement("li");
-
-        li.innerText =
-            item.name + " | " +
-            item.litres + "L | " +
-            item.fuelType + " | ₹" +
-            item.price;
-
-        list.appendChild(li);
-    });
-}
-
-showData();
-
-</script>
-        <script>
-
-
-function payUPI() {
-
-    let name = document.getElementById("name").value;
-    let litres = document.getElementById("litres").value;
-    let fuelType = document.getElementById("fuelType").value;
-
-    if (!name || !litres) {
-        alert("Please fill all details first!");
-        return;
-    }
-
-    let price = litres * (fuelType === "Petrol" ? 150 : fuelType === "Diesel" ? 120 : 105);
-
-    let upiID = 6202307387-n456@ybl // 🔴 apna real UPI ID daalo
-
-    // 👉 Simple safe UPI link
-    let upiLink =
-        "upi://pay?pa=" + upiID +
-        "&pn=E.Fuel" +
-        "&am=" + price +
-        "&cu=INR";
-
-    // 🔥 open UPI app
-    window.location.href = upiLink;
-}
-}
-
-showData();
-            
-    }
-}
-
-</script>
 </body>
 </html>
-```

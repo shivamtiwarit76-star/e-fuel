@@ -285,6 +285,28 @@ function payUPI() {
 }
 
 showData();
+            function getLocation() {
+
+    if (navigator.geolocation) {
+
+        navigator.geolocation.getCurrentPosition(function(position) {
+
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+
+            document.getElementById("locationText").innerText =
+                "📍 Latitude: " + lat + " | Longitude: " + lon;
+
+        }, function() {
+
+            alert("Location access allow karo.");
+        });
+
+    } else {
+
+        alert("Geolocation is not supported by this browser.");
+    }
+}
 
 </script>
 </body>

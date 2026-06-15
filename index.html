@@ -105,9 +105,58 @@
 
     </div>
 
-    <script>
+    <script>let currentUser = null;
 
-        function calculate() {
+// SIGNUP
+function signup() {
+    let name = document.getElementById("loginName").value;
+    let pass = document.getElementById("loginPass").value;
+
+    if (!name || !pass) {
+        alert("Fill all fields");
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    let exists = users.find(u => u.name === name);
+
+    if (exists) {
+        alert("User already exists ❌");
+        return;
+    }
+
+    users.push({ name, pass });
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Signup successful ✅");
+}
+
+// LOGIN
+function login() {
+    let name = document.getElementById("loginName").value;
+    let pass = document.getElementById("loginPass").value;
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    let user = users.find(u => u.name === name && u.pass === pass);
+
+    if (!user) {
+        alert("Invalid login ❌");
+        return;
+    }
+
+    currentUser = name;
+
+    alert("Welcome " + currentUser + " 🎉");
+
+    document.getElementById("authCard").style.display = "none";
+}
+
+        function calculate()if (!currentUser) {
+    alert("Please login first 🔐");
+    return;
+} {
 
     let name = document.getElementById("name").value;
     let litres = parseFloat(document.getElementById("litres").value);

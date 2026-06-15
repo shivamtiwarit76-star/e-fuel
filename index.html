@@ -99,38 +99,62 @@
 
         function calculate() {
 
-            let name = document.getElementById("name").value;
-            let litres = parseFloat(document.getElementById("litres").value);
-            let fuelType = document.getElementById("fuelType").value;
+    let name = document.getElementById("name").value;
+    let litres = parseFloat(document.getElementById("litres").value);
+    let fuelType = document.getElementById("fuelType").value;
 
-            if (!name || !litres) {
-                alert("Please fill all details.");
-                return;
-            }
+    if (!name || !litres) {
+        alert("Please fill all details.");
+        return;
+    }
 
-            let price;
+    let price;
 
-            if (fuelType === "Petrol") {
-                price = litres * 150;
-            } else if (fuelType === "Diesel") {
-                price = litres * 120;
-            } else {
-                price = litres * 105;
-            }
+    if (fuelType === "Petrol") {
+        price = litres * 150;
+    } else if (fuelType === "Diesel") {
+        price = litres * 120;
+    } else {
+        price = litres * 105;
+    }
 
-            document.getElementById("result").innerText =
-                "Total Price: ₹" + price;
+    document.getElementById("result").innerText =
+        "Total Price: ₹" + price;
 
-            let data = JSON.parse(localStorage.getItem("fuel")) || [];
+    let data = JSON.parse(localStorage.getItem("fuel")) || [];
 
-            data.push({
-                name: name,
-                litres: litres,
-                fuelType: fuelType,
-                price: price
-            });
+    data.push({
+        name: name,
+        litres: litres,
+        fuelType: fuelType,
+        price: price
+    });
 
-            localStorage.setItem("fuel", JSON.stringify(data));
+    localStorage.setItem("fuel", JSON.stringify(data));
+
+    showData();
+
+    // Order status tracking
+    document.getElementById("orderStatus").innerText =
+        "📦 Order Status: Order Received";
+
+    setTimeout(function() {
+        document.getElementById("orderStatus").innerText =
+            "⛽ Order Status: Fuel Dispatching";
+    }, 5000);
+
+    setTimeout(function() {
+        document.getElementById("orderStatus").innerText =
+            "🚚 Order Status: Rider On The Way";
+    }, 10000);
+
+    setTimeout(function() {
+        document.getElementById("orderStatus").innerText =
+            "✅ Order Status: Delivered";
+    }, 15000);
+
+    alert("Booking Successful 🚚");
+}
 
             showData();
             document.getElementById("orderStatus").innerText =

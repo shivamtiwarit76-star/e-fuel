@@ -3,68 +3,116 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>E-Fuel</title>
+<title>E-Fuel Pro App</title>
 
 <style>
 body{
-    font-family:Arial;
-    background:#1c1c1c;
-    color:white;
-    text-align:center;
-    margin:0;
-    padding:20px;
+margin:0;
+font-family:Arial;
+transition:0.3s;
 }
+
+/* THEMES */
+.dark{
+background:#1c1c1c;
+color:white;
+}
+.light{
+background:#f2f2f2;
+color:black;
+}
+
+/* HEADER */
 .header{
-    background:linear-gradient(90deg,#0f2027,#203a43,#2c5364);
-    padding:20px;
-    border-radius:10px;
-    margin-bottom:20px;
+padding:15px;
+background:linear-gradient(90deg,#0f2027,#203a43,#2c5364);
+color:white;
+text-align:center;
 }
+
+/* CARD */
 .card{
-    background:white;
-    color:black;
-    max-width:350px;
-    margin:auto;
-    padding:15px;
-    border-radius:10px;
-    margin-bottom:15px;
+background:white;
+color:black;
+max-width:360px;
+margin:10px auto;
+padding:15px;
+border-radius:10px;
 }
+
+/* INPUT */
 input,select,button{
-    width:95%;
-    padding:10px;
-    margin:8px 0;
+width:95%;
+padding:10px;
+margin:6px 0;
 }
+
+/* BUTTON */
 button{
-    background:#007BFF;
-    color:white;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
+background:#007BFF;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
 }
+
+/* SIDE MENU */
+#menu{
+position:fixed;
+top:0;
+left:-250px;
+width:220px;
+height:100%;
+background:#333;
+color:white;
+padding:10px;
+transition:0.3s;
+}
+
+#menu button{
+background:none;
+border:1px solid white;
+}
+
+/* HIDDEN */
+.hidden{display:none;}
+
 ul{text-align:left;}
 </style>
 </head>
 
-<body>
+<body class="dark">
 
 <div class="header">
-<h2>⛽ E-Fuel</h2>
-<p>Smart Fuel Booking System</p>
+<h2>⛽ E-Fuel App</h2>
+<button onclick="toggleTheme()">🌗 Theme</button>
+<button onclick="openMenu()">☰</button>
+</div>
+
+<!-- SIDE MENU -->
+<div id="menu">
+<h3>Menu</h3>
+<button onclick="logout()">Logout</button>
+<button onclick="closeMenu()">Close</button>
 </div>
 
 <!-- LOGIN -->
 <div class="card" id="authCard">
 <h3>🔐 Login / Signup</h3>
-<input id="loginName" placeholder="Username">
-<input id="loginPass" type="password" placeholder="Password">
+
+<input id="name" placeholder="Name">
+<input id="email" placeholder="Email">
+<input id="phone" placeholder="Phone">
+<input id="pass" type="password" placeholder="Password">
+
 <button onclick="signup()">Signup</button>
 <button onclick="login()">Login</button>
-<button onclick="logout()">Logout</button>
 </div>
 
 <!-- BOOKING -->
-<div class="card">
-<input id="name" placeholder="Name">
+<div class="card hidden" id="bookCard">
+
+<input id="fuelName" placeholder="Name">
 <input id="litres" type="number" placeholder="Litres">
 
 <select id="fuelType">
@@ -73,80 +121,98 @@ ul{text-align:left;}
 <option>CNG</option>
 </select>
 
-<button onclick="calculate()">🚚 Book Fuel</button>
-<button onclick="getLocation()">📍 Get My Location</button>
+<button onclick="bookFuel()">🚚 Book Fuel</button>
+<button onclick="getLocation()">📍 Get Location</button>
 <button onclick="payUPI()">💳 Pay via UPI</button>
 
 <h3 id="result"></h3>
-<p id="locationText"></p>
-<p id="deliveryTime"></p>
+<p id="loc"></p>
+<p id="eta"></p>
 
-<h3>📜 Booking History</h3>
+<h3>📜 History</h3>
+<button onclick="clearHistory()">🗑 Delete History</button>
 <ul id="history"></ul>
 </div>
 
 <script>
 
-let currentUser = null;
+let currentUser=null;
 
-/* ---------- SIGNUP ---------- */
+/* THEME */
+function toggleTheme(){
+document.body.classList.toggle("light");
+document.body.classList.toggle("dark");
+}
+
+/* MENU */
+function openMenu(){
+document.getElementById("menu").style.left="0";
+}
+function closeMenu(){
+document.getElementById("menu").style.left="-250px";
+}
+
+/* SIGNUP */
 function signup(){
-let u=document.getElementById("loginName").value;
-let p=document.getElementById("loginPass").value;
+let n=document.getElementById("name").value;
+let e=document.getElementById("email").value;
+let p=document.getElementById("phone").value;
+let pass=document.getElementById("pass").value;
 
-if(!u||!p){alert("Fill all");return;}
+if(!n||!e||!p||!pass){
+alert("Fill all fields");return;
+}
 
 let users=JSON.parse(localStorage.getItem("users"))||[];
 
-if(users.find(x=>x.name===u)){
-alert("User exists");return;
-}
-
-users.push({name:u,pass:p});
+users.push({n,e,p,pass});
 localStorage.setItem("users",JSON.stringify(users));
 
-alert("Signup done");
+alert("Signup success");
 }
 
-/* ---------- LOGIN ---------- */
+/* LOGIN */
 function login(){
-let u=document.getElementById("loginName").value;
-let p=document.getElementById("loginPass").value;
+let n=document.getElementById("name").value;
+let pass=document.getElementById("pass").value;
 
 let users=JSON.parse(localStorage.getItem("users"))||[];
 
-let user=users.find(x=>x.name===u&&x.pass===p);
+let user=users.find(u=>u.n===n&&u.pass===pass);
 
-if(!user){alert("Wrong login");return;}
-
-currentUser=u;
-document.getElementById("authCard").style.display="none";
-
-alert("Welcome "+u);
-}
-
-/* ---------- LOGOUT ---------- */
-function logout(){
-currentUser=null;
-document.getElementById("authCard").style.display="block";
-alert("Logged out");
-}
-
-/* ---------- BOOK ---------- */
-function calculate(){
-
-if(!currentUser){
-alert("Login first");
+if(!user){
+alert("Wrong login");
 return;
 }
 
-let name=document.getElementById("name").value;
-let litres=parseFloat(document.getElementById("litres").value);
+currentUser=n;
+
+document.getElementById("authCard").classList.add("hidden");
+document.getElementById("bookCard").classList.remove("hidden");
+
+alert("Welcome "+n);
+}
+
+/* LOGOUT */
+function logout(){
+currentUser=null;
+document.getElementById("authCard").classList.remove("hidden");
+document.getElementById("bookCard").classList.add("hidden");
+closeMenu();
+}
+
+/* BOOK */
+function bookFuel(){
+
+if(!currentUser){alert("Login first");return;}
+
+let name=document.getElementById("fuelName").value;
+let litres=document.getElementById("litres").value;
 let fuel=document.getElementById("fuelType").value;
 
 if(!name||!litres){alert("Fill details");return;}
 
-let price= fuel=="Petrol"?litres*150: fuel=="Diesel"?litres*120:litres*105;
+let price=fuel=="Petrol"?litres*150:fuel=="Diesel"?litres*120:litres*105;
 
 document.getElementById("result").innerText="₹"+price;
 
@@ -156,13 +222,13 @@ data.push({user:currentUser,name,litres,fuel,price});
 
 localStorage.setItem("fuel",JSON.stringify(data));
 
-showData();
+showHistory();
 
 alert("Booked");
 }
 
-/* ---------- HISTORY ---------- */
-function showData(){
+/* HISTORY */
+function showHistory(){
 let list=document.getElementById("history");
 list.innerHTML="";
 
@@ -175,33 +241,36 @@ list.appendChild(li);
 });
 }
 
-/* ---------- LOCATION ---------- */
-function getLocation(){
+/* DELETE HISTORY */
+function clearHistory(){
+localStorage.removeItem("fuel");
+showHistory();
+}
 
+/* LOCATION */
+function getLocation(){
 navigator.geolocation.getCurrentPosition(async pos=>{
 
 let lat=pos.coords.latitude;
 let lon=pos.coords.longitude;
 
-document.getElementById("locationText").innerText=
-"Lat: "+lat+" | Lon: "+lon;
+document.getElementById("loc").innerText="Lat:"+lat+" Lon:"+lon;
 
-try{
 let res=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
 let data=await res.json();
 
-document.getElementById("locationText").innerText=
-"📍 "+data.display_name;
+document.getElementById("loc").innerText=data.display_name;
 
-}catch(e){}
+/* ETA */
+let dist=Math.sqrt(lat*lat+lon*lon);
+let eta=dist<5?"10-20 min":"30-40 min";
 
-document.getElementById("deliveryTime").innerText=
-"ETA: 20-40 min";
+document.getElementById("eta").innerText="ETA: "+eta;
 
 });
 }
 
-/* ---------- UPI ---------- */
+/* UPI */
 function payUPI(){
 
 let litres=document.getElementById("litres").value;
@@ -209,14 +278,14 @@ let fuel=document.getElementById("fuelType").value;
 
 if(!litres){alert("Enter litres");return;}
 
-let price= fuel=="Petrol"?litres*150: fuel=="Diesel"?litres*120:litres*105;
+let price=fuel=="Petrol"?litres*150:fuel=="Diesel"?litres*120:litres*105;
 
 let upi="upi://pay?pa=6202307387-n456@ybl&pn=E-Fuel&am="+price+"&cu=INR";
 
 window.location.href=upi;
 }
 
-showData();
+showHistory();
 
 </script>
 

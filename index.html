@@ -169,9 +169,21 @@
                 let lat = position.coords.latitude;
                 let lon = position.coords.longitude;
 
-                document.getElementById("locationText").innerText =
-                    "📍 Latitude: " + lat +
-                    " | Longitude: " + lon;
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+    .then(response => response.json())
+    .then(data => {
+
+        let address = data.display_name;
+
+        document.getElementById("locationText").innerText =
+            "🏠 Delivery Address: " + address;
+    })
+    .catch(() => {
+
+        document.getElementById("locationText").innerText =
+            "📍 Latitude: " + lat +
+            " | Longitude: " + lon;
+    });
 
                 // Rana Bigha depot coordinates (testing)
                 let depotLat = 25.489;

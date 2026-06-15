@@ -160,30 +160,57 @@
 
         function getLocation() {
 
-            if (navigator.geolocation) {
+    if (navigator.geolocation) {
 
-                navigator.geolocation.getCurrentPosition(
+        navigator.geolocation.getCurrentPosition(
 
-                    function(position) {
+            function(position) {
 
-                        document.getElementById("locationText").innerText =
-                            "📍 Latitude: " +
-                            position.coords.latitude +
-                            " | Longitude: " +
-                            position.coords.longitude;
-                    },
+                let lat = position.coords.latitude;
+                let lon = position.coords.longitude;
 
-                    function() {
+                document.getElementById("locationText").innerText =
+                    "📍 Latitude: " + lat +
+                    " | Longitude: " + lon;
 
-                        alert("Location access allow karo.");
-                    }
-                );
+                // Rana Bigha depot coordinates (testing)
+                let depotLat = 25.489;
+                let depotLon = 85.710;
 
-            } else {
+                // Approximate distance calculation
+                let distance = Math.sqrt(
+                    Math.pow(lat - depotLat, 2) +
+                    Math.pow(lon - depotLon, 2)
+                ) * 111;
 
-                alert("Geolocation is not supported.");
+                let eta;
+
+                if (distance <= 2) {
+                    eta = "10 minutes";
+                } else if (distance <= 5) {
+                    eta = "20 minutes";
+                } else if (distance <= 10) {
+                    eta = "30 minutes";
+                } else {
+                    eta = "45 minutes";
+                }
+
+                document.getElementById("deliveryTime").innerText =
+                    "🚚 Estimated Delivery Time: " + eta;
+
+            },
+
+            function() {
+
+                alert("Location access allow karo.");
             }
-        }
+        );
+
+    } else {
+
+        alert("Geolocation is not supported.");
+    }
+}
 
         function payUPI() {
 

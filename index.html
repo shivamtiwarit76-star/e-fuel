@@ -1,325 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.Fuel</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Fuel</title>
 
-    <style>
-        body {
-    font-family: Arial, sans-serif;
-    background: #1c1c1c;
-    color: white;
-    text-align: center;
-    margin: 0;
-    padding: 20px;
-    overflow-x: hidden;
+<style>
+body{
+    font-family:Arial;
+    background:#1c1c1c;
+    color:white;
+    text-align:center;
+    margin:0;
+    padding:20px;
 }
-        
-
-        .header {
-            background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .card {
-    background: white;
-    color: black;
-    max-width: 320px;
-    width: 90%;
-    margin: auto;
-    padding: 20px;
-    border-radius: 10px;
-    box-sizing: border-box;
+.header{
+    background:linear-gradient(90deg,#0f2027,#203a43,#2c5364);
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:20px;
 }
-
-        input, select {
-            width: 90%;
-            padding: 10px;
-            margin: 10px 0;
-        }
-
-        button {
-            width: 95%;
-            padding: 12px;
-            margin: 5px 0;
-            background: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        ul {
-            text-align: left;
-        }
-    </style>
+.card{
+    background:white;
+    color:black;
+    max-width:350px;
+    margin:auto;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+input,select,button{
+    width:95%;
+    padding:10px;
+    margin:8px 0;
+}
+button{
+    background:#007BFF;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+ul{text-align:left;}
+</style>
 </head>
 
 <body>
 
-    <div class="header">
-        <h1>⛽ E.Fuel</h1>
-        <p>Smart Fuel Booking Platform</p>
-        <p><strong>Created by Shivam Tiwari</strong></p>
-    </div>
-<div class="card" id="authCard">
-
-    <h3>🔐 Login / Signup</h3>
-
-    <input type="text" id="loginName" placeholder="Username">
-    <input type="password" id="loginPass" placeholder="Password">
-
-    <button onclick="signup()">🆕 Signup</button>
-    <button onclick="login()">🔓 Login</button>
-
+<div class="header">
+<h2>⛽ E-Fuel</h2>
+<p>Smart Fuel Booking System</p>
 </div>
-    <div class="card">
 
-        <input type="text" id="name" placeholder="Apna Naam">
+<!-- LOGIN -->
+<div class="card" id="authCard">
+<h3>🔐 Login / Signup</h3>
+<input id="loginName" placeholder="Username">
+<input id="loginPass" type="password" placeholder="Password">
+<button onclick="signup()">Signup</button>
+<button onclick="login()">Login</button>
+<button onclick="logout()">Logout</button>
+</div>
 
-        <input type="number" id="litres" placeholder="Litres">
+<!-- BOOKING -->
+<div class="card">
+<input id="name" placeholder="Name">
+<input id="litres" type="number" placeholder="Litres">
 
-        <select id="fuelType">
-            <option value="Petrol">Petrol</option>
-            <option value="Diesel">Diesel</option>
-            <option value="CNG">CNG</option>
-        </select>
+<select id="fuelType">
+<option>Petrol</option>
+<option>Diesel</option>
+<option>CNG</option>
+</select>
 
-        <button onclick="calculate()">🚚 Book Fuel</button>
+<button onclick="calculate()">🚚 Book Fuel</button>
+<button onclick="getLocation()">📍 Get My Location</button>
+<button onclick="payUPI()">💳 Pay via UPI</button>
 
-        <button onclick="getLocation()">📍 Get My Location</button>
+<h3 id="result"></h3>
+<p id="locationText"></p>
+<p id="deliveryTime"></p>
 
-        <p id="locationText"></p>
+<h3>📜 Booking History</h3>
+<ul id="history"></ul>
+</div>
 
-        <button onclick="payUPI()">💳 Pay via UPI</button>
+<script>
 
-        <h3 id="result"></h3>
-        <p id="orderStatus"></p>
-        <p id="deliveryTime"></p>
+let currentUser = null;
 
-        <h3>Booking History</h3>
-        <ul id="history"></ul>
+/* ---------- SIGNUP ---------- */
+function signup(){
+let u=document.getElementById("loginName").value;
+let p=document.getElementById("loginPass").value;
 
-    </div>
+if(!u||!p){alert("Fill all");return;}
 
-    <script>let currentUser = null;
+let users=JSON.parse(localStorage.getItem("users"))||[];
 
-// SIGNUP
-function signup() {
-    let name = document.getElementById("loginName").value;
-    let pass = document.getElementById("loginPass").value;
-
-    if (!name || !pass) {
-        alert("Fill all fields");
-        return;
-    }
-
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-
-    let exists = users.find(u => u.name === name);
-
-    if (exists) {
-        alert("User already exists ❌");
-        return;
-    }
-
-    users.push({ name, pass });
-    localStorage.setItem("users", JSON.stringify(users));
-
-    alert("Signup successful ✅");
+if(users.find(x=>x.name===u)){
+alert("User exists");return;
 }
 
-// LOGIN
-function login() {
-    let name = document.getElementById("loginName").value;
-    let pass = document.getElementById("loginPass").value;
+users.push({name:u,pass:p});
+localStorage.setItem("users",JSON.stringify(users));
 
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-
-    let user = users.find(u => u.name === name && u.pass === pass);
-
-    if (!user) {
-        alert("Invalid login ❌");
-        return;
-    }
-
-    currentUser = name;
-
-    alert("Welcome " + currentUser + " 🎉");
-
-    document.getElementById("authCard").style.display = "none";
+alert("Signup done");
 }
 
+/* ---------- LOGIN ---------- */
+function login(){
+let u=document.getElementById("loginName").value;
+let p=document.getElementById("loginPass").value;
 
-    let name = document.getElementById("name").value;
-    let litres = parseFloat(document.getElementById("litres").value);
-    let fuelType = document.getElementById("fuelType").value;
+let users=JSON.parse(localStorage.getItem("users"))||[];
 
-    if (!name || !litres) {
-        alert("Please fill all details.");
-        return;
-    }
+let user=users.find(x=>x.name===u&&x.pass===p);
 
-    let price;
+if(!user){alert("Wrong login");return;}
 
-    if (fuelType === "Petrol") {
-        price = litres * 5;
-    } else if (fuelType === "Diesel") {
-        price = litres * 120;
-    } else {
-        price = litres * 105;
-    }
+currentUser=u;
+document.getElementById("authCard").style.display="none";
 
-    document.getElementById("result").innerText =
-        "Total Price: ₹" + price;
-
-    let data = JSON.parse(localStorage.getItem("fuel")) || [];
-
-    data.push({
-        name: name,
-        litres: litres,
-        fuelType: fuelType,
-        price: price
-    });
-
-    localStorage.setItem("fuel", JSON.stringify(data));
-
-    
-
-    
-
-    
-
-
-
-            alert("Booking Successful 🚚");
-        }
-
-        function showData() {
-
-            let list = document.getElementById("history");
-
-            list.innerHTML = "";
-
-            let data = JSON.parse(localStorage.getItem("fuel")) || [];
-
-            data.forEach(item => {
-
-                let li = document.createElement("li");
-
-                li.innerText =
-                    item.name + " | " +
-                    item.litres + "L | " +
-                    item.fuelType + " | ₹" +
-                    item.price;
-
-                list.appendChild(li);
-            });
-        }
-
-        function getLocation() {
-
-    if (navigator.geolocation) {
-
-        navigator.geolocation.getCurrentPosition(
-
-            function(position) {
-
-                let lat = position.coords.latitude;
-                let lon = position.coords.longitude;
-
-                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
-    .then(response => response.json())
-    .then(data => {
-
-        let address = data.display_name;
-
-        document.getElementById("locationText").innerText =
-            "🏠 Delivery Address: " + address;
-    })
-    .catch(() => {
-
-        document.getElementById("locationText").innerText =
-            "📍 Latitude: " + lat +
-            " | Longitude: " + lon;
-    });
-
-                // Rana Bigha depot coordinates (testing)
-                let depotLat = 25.489;
-                let depotLon = 85.710;
-
-                // Approximate distance calculation
-                let distance = Math.sqrt(
-                    Math.pow(lat - depotLat, 2) +
-                    Math.pow(lon - depotLon, 2)
-                ) * 111;
-
-                let eta;
-
-                if (distance <= 2) {
-                    eta = "10 minutes";
-                } else if (distance <= 5) {
-                    eta = "20 minutes";
-                } else if (distance <= 10) {
-                    eta = "30 minutes";
-                } else {
-                    eta = "45 minutes";
-                }
-
-                document.getElementById("deliveryTime").innerText =
-                    "🚚 Estimated Delivery Time: " + eta;
-
-            },
-
-            function() {
-
-                alert("Location access allow karo.");
-            }
-        );
-
-    } else {
-
-        alert("Geolocation is not supported.");
-    }
+alert("Welcome "+u);
 }
 
-        function payUPI() {
+/* ---------- LOGOUT ---------- */
+function logout(){
+currentUser=null;
+document.getElementById("authCard").style.display="block";
+alert("Logged out");
+}
 
-            let litres = parseFloat(document.getElementById("litres").value);
-            let fuelType = document.getElementById("fuelType").value;
+/* ---------- BOOK ---------- */
+function calculate(){
 
-            if (!litres) {
-                alert("Please enter litres first.");
-                return;
-            }
+if(!currentUser){
+alert("Login first");
+return;
+}
 
-            let price;
+let name=document.getElementById("name").value;
+let litres=parseFloat(document.getElementById("litres").value);
+let fuel=document.getElementById("fuelType").value;
 
-            if (fuelType === "Petrol") {
-                price = litres * 5;
-            } else if (fuelType === "Diesel") {
-                price = litres * 120;
-            } else {
-                price = litres * 105;
-            }
+if(!name||!litres){alert("Fill details");return;}
 
-            let upiID = "6202307387-n456@ybl";
+let price= fuel=="Petrol"?litres*150: fuel=="Diesel"?litres*120:litres*105;
 
-            let upiLink =
-                "upi://pay?pa=" + upiID +
-                "&pn=E.Fuel" +
-                "&am=" + price +
-                "&cu=INR";
+document.getElementById("result").innerText="₹"+price;
 
-            window.location.href = upiLink;
-        }
+let data=JSON.parse(localStorage.getItem("fuel"))||[];
 
-        showData();
+data.push({user:currentUser,name,litres,fuel,price});
 
-    </script>
+localStorage.setItem("fuel",JSON.stringify(data));
+
+showData();
+
+alert("Booked");
+}
+
+/* ---------- HISTORY ---------- */
+function showData(){
+let list=document.getElementById("history");
+list.innerHTML="";
+
+let data=JSON.parse(localStorage.getItem("fuel"))||[];
+
+data.forEach(i=>{
+let li=document.createElement("li");
+li.innerText=i.user+" → "+i.name+" | "+i.litres+"L | "+i.fuel+" | ₹"+i.price;
+list.appendChild(li);
+});
+}
+
+/* ---------- LOCATION ---------- */
+function getLocation(){
+
+navigator.geolocation.getCurrentPosition(async pos=>{
+
+let lat=pos.coords.latitude;
+let lon=pos.coords.longitude;
+
+document.getElementById("locationText").innerText=
+"Lat: "+lat+" | Lon: "+lon;
+
+try{
+let res=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+let data=await res.json();
+
+document.getElementById("locationText").innerText=
+"📍 "+data.display_name;
+
+}catch(e){}
+
+document.getElementById("deliveryTime").innerText=
+"ETA: 20-40 min";
+
+});
+}
+
+/* ---------- UPI ---------- */
+function payUPI(){
+
+let litres=document.getElementById("litres").value;
+let fuel=document.getElementById("fuelType").value;
+
+if(!litres){alert("Enter litres");return;}
+
+let price= fuel=="Petrol"?litres*150: fuel=="Diesel"?litres*120:litres*105;
+
+let upi="upi://pay?pa=6202307387-n456@ybl&pn=E-Fuel&am="+price+"&cu=INR";
+
+window.location.href=upi;
+}
+
+showData();
+
+</script>
 
 </body>
 </html>

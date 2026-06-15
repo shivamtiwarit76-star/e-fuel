@@ -110,12 +110,36 @@ button {
     let price = litres * (fuelType === "Petrol" ? 150 : fuelType === "Diesel" ? 120 : 105);
 
     let upiID = 6202307387-n456@ybl
-
     let link = `upi://pay?pa=${upiID}&pn=E.Fuel&am=${price}&cu=INR`;
 
-    window.location.href = link;
+    
+  window.location.href = upiLink;
 }
-        
+
+function getLocation() {
+
+    if (navigator.geolocation) {
+
+        navigator.geolocation.getCurrentPosition(function(position) {
+
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+
+            document.getElementById("locationText").innerText =
+                "📍 Latitude: " + lat + " | Longitude: " + lon;
+
+        }, function() {
+
+            alert("Location access allow karo.");
+
+        });
+
+    } else {
+
+        alert("Geolocation is not supported by this browser.");
+
+    }
+}      
         
     
 

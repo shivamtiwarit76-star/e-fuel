@@ -123,7 +123,6 @@ setTimeout(()=>show('onboard'),2000);
 const AUTH_KEY = "532531ARDDbXW56a31158eP1";
 const TEMPLATE_ID = "6a311a02df1da373b006ed93";
 
-/* SEND OTP */
 function sendOTP(){
 
     let phone = document.getElementById("phone").value;
@@ -133,15 +132,22 @@ function sendOTP(){
         return;
     }
 
-    fetch("https://control.msg91.com/api/v5/otp?template_id="+TEMPLATE_ID+"&mobile=91"+phone, {
-        method: "GET",
+    fetch("https://control.msg91.com/api/v5/otp", {
+        method: "POST",
         headers: {
+            "Content-Type": "application/json",
             "authkey": AUTH_KEY
-        }
+        },
+        body: JSON.stringify({
+            template_id: TEMPLATE_ID,
+            mobile: "91" + phone,
+            otp_length: 6,
+            otp_expiry: 10
+        })
     })
-    .then(res=>res.json())
-    .then(data=>{
-        console.log("SEND OTP RESPONSE:", data);
+    .then(res => res.json())
+    .then(data => {
+        console.log("SEND RESPONSE:", data);
 
         if(data.type === "success"){
             alert("OTP Sent 📩");
@@ -149,36 +155,9 @@ function sendOTP(){
             alert(JSON.stringify(data));
         }
     })
-    .catch(err=>{
+    .catch(err => {
         console.log(err);
         alert("OTP Error");
-    });
-}
-function verifyOTP(){
-
-    let phone = document.getElementById("phone").value;
-    let otp = document.getElementById("otp").value;
-
-    fetch("https://control.msg91.com/api/v5/otp/verify?mobile=91"+phone+"&otp="+otp, {
-        method: "GET",
-        headers: {
-            "authkey": AUTH_KEY
-        }
-    })
-    .then(res=>res.json())
-    .then(data=>{
-        console.log("VERIFY RESPONSE:", data);
-
-        if(data.type === "success"){
-            alert("Login Success ✅");
-            show('profile');
-        } else {
-            alert(JSON.stringify(data));
-        }
-    })
-    .catch(err=>{
-        console.log(err);
-        alert("Verification Error");
     });
 }
 /* LOCATION */

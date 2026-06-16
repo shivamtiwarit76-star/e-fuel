@@ -1,24 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>E-Fuel Startup App</title>
+<title>E-Fuel SaaS MVP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <style>
 
-/* ===== BASIC THEME ===== */
 body{
 margin:0;
 font-family:Arial;
-background:#050816;
+background:#0b1220;
 color:white;
-overflow:hidden;
 }
 
 .screen{
@@ -31,90 +28,40 @@ flex-direction:column;
 
 .active{display:flex;}
 
-/* ===== SPLASH ===== */
-#splash h1{
-font-size:40px;
-color:#38bdf8;
-animation:glow 1.5s infinite;
-}
-
-@keyframes glow{
-0%{opacity:0.3;}
-50%{opacity:1;}
-100%{opacity:0.3;}
-}
-
-/* LOADING */
-.bar{
-width:200px;
-height:5px;
-background:#1e293b;
-border-radius:10px;
-overflow:hidden;
-}
-.bar div{
-width:0%;
-height:100%;
-background:#38bdf8;
-animation:load 2s linear forwards;
-}
-@keyframes load{100%{width:100%;}}
-
-/* CARD */
 .card{
 background:#111827;
 padding:20px;
-border-radius:15px;
+border-radius:12px;
 width:90%;
-max-width:360px;
+max-width:350px;
 text-align:center;
 }
 
-/* INPUT */
 input{
 width:90%;
 padding:10px;
-margin:8px;
-border-radius:10px;
+margin:8px 0;
+border-radius:8px;
 border:none;
 }
 
-/* BUTTON */
 button{
 width:95%;
 padding:12px;
-border:none;
-border-radius:10px;
 background:#22c55e;
+border:none;
+border-radius:8px;
 font-weight:bold;
 cursor:pointer;
 margin-top:10px;
 }
 
-/* DASHBOARD */
-.fuelCard{
+.fuelBox{
 background:#1f2937;
 padding:15px;
 margin:10px;
-border-radius:12px;
+border-radius:10px;
 cursor:pointer;
-}
-
-.activeFuel{
-transform:scale(1.1);
-background:#334155;
-}
-
-/* NAV */
-.nav{
-position:fixed;
-bottom:0;
-width:100%;
-display:flex;
-justify-content:space-around;
-background:#0f172a;
-padding:10px;
-font-size:12px;
 }
 
 </style>
@@ -122,19 +69,13 @@ font-size:12px;
 
 <body>
 
-<!-- SPLASH -->
-<div id="splash" class="screen active">
-<h1>⛽ E-FUEL</h1>
-<div class="bar"><div></div></div>
-</div>
-
 <!-- LOGIN -->
-<div id="login" class="screen">
+<div id="login" class="screen active">
 <div class="card">
-<h2>Login</h2>
+<h2>E-Fuel Login</h2>
 <input id="phone" placeholder="+91XXXXXXXXXX">
-<button onclick="sendOTP()">Send OTP</button>
 <div id="recaptcha"></div>
+<button onclick="sendOTP()">Send OTP</button>
 </div>
 </div>
 
@@ -147,64 +88,24 @@ font-size:12px;
 </div>
 </div>
 
-<!-- PROFILE -->
-<div id="profile" class="screen">
-<div class="card">
-<h2>Profile</h2>
-<input placeholder="Full Name">
-<input placeholder="Email">
-<input placeholder="Vehicle No">
-<button onclick="goDashboard()">Continue</button>
-</div>
-</div>
-
 <!-- DASHBOARD -->
 <div id="dashboard" class="screen">
+<h2>Select Fuel</h2>
 
-<h2>Fuel Selection</h2>
+<div class="fuelBox" onclick="selectFuel('Petrol')">Petrol ₹105</div>
+<div class="fuelBox" onclick="selectFuel('Diesel')">Diesel ₹95</div>
 
-<div style="display:flex;gap:10px;">
-<div class="fuelCard" onclick="selectFuel(this)">Petrol ₹105</div>
-<div class="fuelCard" onclick="selectFuel(this)">Diesel ₹95</div>
-</div>
-
-<button onclick="goTracking()">Proceed</button>
-
-</div>
-
-<!-- TRACKING -->
-<div id="tracking" class="screen">
-<h2>Live Tracking</h2>
-<p>🚚 Tanker is coming...</p>
-<button onclick="goPayment()">Checkout</button>
-</div>
-
-<!-- PAYMENT -->
-<div id="payment" class="screen">
-<div class="card">
-<h2>Payment</h2>
-<p>UPI / Card / Wallet</p>
-<button onclick="success()">Pay Now</button>
-</div>
+<button onclick="placeOrder()">Place Order</button>
 </div>
 
 <!-- SUCCESS -->
 <div id="success" class="screen">
-<h2>✅ Order Success</h2>
-<button onclick="restart()">Home</button>
-</div>
-
-<!-- NAV -->
-<div class="nav">
-<div>Home</div>
-<div>Orders</div>
-<div>Wallet</div>
-<div>Profile</div>
+<h2>Order Placed ✅</h2>
+<p>Thank you for using E-Fuel</p>
 </div>
 
 <script>
 
-/* ===== FIREBASE CONFIG ===== */
 const firebaseConfig = {
 apiKey:"YOUR_KEY",
 authDomain:"YOUR_DOMAIN",
@@ -214,22 +115,18 @@ projectId:"YOUR_ID"
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
+const db = firebase.firestore();
+
 let confirmation;
+let selectedFuel = "";
 
-/* SPLASH */
-setTimeout(()=>switchScreen("login"),2000);
+/* OTP */
+window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha');
 
-/* SCREEN */
-function switchScreen(id){
-document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-}
-
-/* OTP SEND (REAL FIREBASE) */
 function sendOTP(){
 let phone=document.getElementById("phone").value;
 
-auth.signInWithPhoneNumber(phone, new firebase.auth.RecaptchaVerifier('recaptcha'))
+auth.signInWithPhoneNumber(phone, window.recaptchaVerifier)
 .then(res=>{
 confirmation=res;
 switchScreen("otp");
@@ -237,20 +134,33 @@ switchScreen("otp");
 .catch(e=>alert(e.message));
 }
 
-/* VERIFY */
 function verifyOTP(){
 confirmation.confirm(document.getElementById("code").value)
-.then(()=>switchScreen("profile"))
+.then(()=>switchScreen("dashboard"))
 .catch(()=>alert("Wrong OTP"));
 }
 
-/* FLOW */
-function goDashboard(){switchScreen("dashboard");}
-function selectFuel(el){el.classList.toggle("activeFuel");}
-function goTracking(){switchScreen("tracking");}
-function goPayment(){switchScreen("payment");}
-function success(){switchScreen("success");}
-function restart(){switchScreen("login");}
+/* FUEL */
+function selectFuel(f){
+selectedFuel=f;
+alert(f+" selected");
+}
+
+/* ORDER */
+function placeOrder(){
+db.collection("orders").add({
+fuel:selectedFuel,
+time:Date.now()
+});
+
+switchScreen("success");
+}
+
+/* SCREEN */
+function switchScreen(id){
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
 
 </script>
 

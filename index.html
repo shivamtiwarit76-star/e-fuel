@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>E.FUEL Premium App</title>
+<title>E.FUEL PRO</title>
 
 <style>
 body{
 margin:0;
 font-family:Arial;
-background:#070b16;
+background:#060914;
 color:white;
 overflow:hidden;
 }
@@ -34,7 +34,7 @@ font-size:16px;
 }
 
 input{
-background:#1b2235;
+background:#1a2236;
 color:white;
 }
 
@@ -46,6 +46,7 @@ cursor:pointer;
 }
 
 button:active{transform:scale(0.98);}
+button:disabled{opacity:0.5;}
 
 /* SPLASH */
 #splash{
@@ -62,7 +63,6 @@ z-index:9999;
 
 .logo{
 font-size:55px;
-font-weight:bold;
 color:#00ffd5;
 text-shadow:0 0 25px #00ffd5;
 animation:logoAnim 1.5s infinite alternate;
@@ -74,17 +74,12 @@ to{transform:scale(1.05);opacity:1;}
 }
 
 .bar{
-width:220px;
-height:6px;
-background:#222;
-margin-top:25px;
-border-radius:10px;
-overflow:hidden;
+width:220px;height:6px;background:#222;margin-top:20px;border-radius:10px;overflow:hidden;
 }
 
 .bar div{
-width:0%;
 height:100%;
+width:0%;
 background:#00ffd5;
 animation:load 2s forwards;
 }
@@ -106,14 +101,17 @@ to{width:100%;}
 <!-- LOGIN -->
 <div id="login" class="screen center">
 <h2>Login</h2>
+
 <input id="phone" placeholder="10 digit mobile number">
 <div id="recaptcha-container"></div>
-<button onclick="sendOTP()">Send OTP</button>
+
+<button id="otpBtn" onclick="sendOTP()">Send OTP</button>
 </div>
 
 <!-- OTP -->
 <div id="otpScreen" class="screen center">
-<h2>OTP Verification</h2>
+<h2>OTP Verify</h2>
+
 <input id="otp" placeholder="Enter OTP">
 <button onclick="verifyOTP()">Verify OTP</button>
 </div>
@@ -121,6 +119,7 @@ to{width:100%;}
 <!-- PROFILE -->
 <div id="profile" class="screen center">
 <h2>Profile Setup</h2>
+
 <input id="name" placeholder="Full Name">
 <input id="email" placeholder="Email">
 <button onclick="saveProfile()">Continue</button>
@@ -129,16 +128,24 @@ to{width:100%;}
 <!-- VEHICLE -->
 <div id="vehicle" class="screen center">
 <h2>Add Vehicle</h2>
+
 <input id="type" placeholder="Bike / Car">
 <input id="plate" placeholder="Number Plate">
-<button onclick="saveVehicle()">Next</button>
+<button onclick="saveVehicle()">Save Vehicle</button>
 </div>
 
 <!-- LOCATION -->
 <div id="location" class="screen center">
 <h2>Location Access</h2>
+
 <button onclick="getLocation()">Allow Location</button>
 <button onclick="manual()">Manual Entry</button>
+</div>
+
+<!-- HOME -->
+<div id="home" class="screen center">
+<h2>Welcome</h2>
+<p id="userInfo"></p>
 </div>
 
 <script type="module">
@@ -150,6 +157,14 @@ RecaptchaVerifier,
 signInWithPhoneNumber
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+import {
+getFirestore,
+doc,
+setDoc,
+getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* 🔥 FIREBASE CONFIG */
 const firebaseConfig = {
 apiKey: "YOUR_API_KEY",
 authDomain: "YOUR_AUTH_DOMAIN",
@@ -159,85 +174,112 @@ appId: "YOUR_APP_ID"
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 let confirmationResult;
+let userPhone;
 
-// SPLASH AUTO MOVE
-setTimeout(()=>{
-document.getElementById("splash").style.display="none";
-document.getElementById("login").classList.add("active");
-},2000);
+/* SPLASH */
+setTimeout(()=>show("login"),2000);
 
-// RECAPTCHA FIX
+/* SCREEN SWITCH ENGINE */
+function show(id){
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
+
+/* RECAPTCHA FIX */
 window.recaptchaVerifier = new RecaptchaVerifier(
 'recaptcha-container',
 { size:'normal' },
 auth
 );
 
-// SEND OTP
+/* ================= OTP SEND ================= */
 window.sendOTP = async function(){
 
 let phone = document.getElementById("phone").value;
 
-if(phone.length!==10){
+if(!phone || phone.length!==10){
 alert("10 digit number daalo");
 return;
 }
 
-phone = "+91"+phone;
+userPhone = "+91"+phone;
 
 try{
-confirmationResult = await signInWithPhoneNumber(auth,phone,window.recaptchaVerifier);
 
-document.getElementById("login").classList.remove("active");
-document.getElementById("otpScreen").classList.add("active");
+document.getElementById("otpBtn").disabled = true;
+
+confirmationResult = await signInWithPhoneNumber(
+auth,
+userPhone,
+window.recaptchaVerifier
+);
 
 alert("OTP Sent");
+
+show("otpScreen");
+
 }catch(e){
 console.log(e);
 alert("OTP Failed");
+document.getElementById("otpBtn").disabled = false;
 }
 };
 
-// VERIFY OTP
+/* ================= OTP VERIFY ================= */
 window.verifyOTP = async function(){
 
 let otp = document.getElementById("otp").value;
 
 try{
 await confirmationResult.confirm(otp);
-
-document.getElementById("otpScreen").classList.remove("active");
-document.getElementById("profile").classList.add("active");
-
-alert("Login Success");
+show("profile");
 }catch(e){
 alert("Wrong OTP");
 }
 };
 
-// PROFILE
-window.saveProfile = function(){
-document.getElementById("profile").classList.remove("active");
-document.getElementById("vehicle").classList.add("active");
+/* ================= PROFILE ================= */
+window.saveProfile = async function(){
+
+let name = document.getElementById("name").value;
+let email = document.getElementById("email").value;
+
+await setDoc(doc(db,"users",userPhone),{
+name,email,phone:userPhone
+});
+
+show("vehicle");
 };
 
-// VEHICLE
-window.saveVehicle = function(){
-document.getElementById("vehicle").classList.remove("active");
-document.getElementById("location").classList.add("active");
+/* ================= VEHICLE ================= */
+window.saveVehicle = async function(){
+
+let type = document.getElementById("type").value;
+let plate = document.getElementById("plate").value;
+
+await setDoc(doc(db,"vehicles",userPhone),{
+type,plate
+});
+
+show("location");
 };
 
-// LOCATION
+/* ================= LOCATION ================= */
 window.getLocation = function(){
+
 navigator.geolocation.getCurrentPosition(()=>{
 alert("Location Saved");
+show("home");
 });
+
 };
 
 window.manual = function(){
-alert("Manual location feature soon");
+alert("Manual location coming soon");
+show("home");
 };
 
 </script>

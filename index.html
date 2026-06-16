@@ -231,13 +231,25 @@ window.sendOTP = function () {
         Fuel Delivery at Your Doorstep
     </div>
 
-    <div class="input-box">
+    <div style="display:flex;gap:10px;">
+    <div style="
+        background:#161b22;
+        color:white;
+        padding:16px;
+        border-radius:15px;
+        display:flex;
+        align-items:center;
+    ">
+        +91
+    </div>
 
-        <input
-            type="tel"
-            id="phoneNumber"
-            placeholder="+91 9876543210"
-        >
+    <input
+        type="tel"
+        id="phoneNumber"
+        placeholder="9876543210"
+        maxlength="10"
+    >
+</div>
 
         <button onclick="sendOTP()">
             Send OTP

@@ -2,11 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>E-Fuel Ultimate App</title>
+<title>E-Fuel Startup App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <style>
 
+/* ===== BASIC THEME ===== */
 body{
 margin:0;
 font-family:Arial;
@@ -15,19 +21,17 @@ color:white;
 overflow:hidden;
 }
 
-/* SCREEN SYSTEM */
 .screen{
 display:none;
 height:100vh;
-width:100%;
-flex-direction:column;
 justify-content:center;
 align-items:center;
+flex-direction:column;
 }
 
 .active{display:flex;}
 
-/* SPLASH */
+/* ===== SPLASH ===== */
 #splash h1{
 font-size:40px;
 color:#38bdf8;
@@ -35,28 +39,25 @@ animation:glow 1.5s infinite;
 }
 
 @keyframes glow{
-0%{opacity:0.4;}
+0%{opacity:0.3;}
 50%{opacity:1;}
-100%{opacity:0.4;}
+100%{opacity:0.3;}
 }
 
-/* LOADING BAR */
+/* LOADING */
 .bar{
-width:220px;
+width:200px;
 height:5px;
 background:#1e293b;
-margin-top:15px;
-overflow:hidden;
 border-radius:10px;
+overflow:hidden;
 }
-
 .bar div{
-height:100%;
 width:0%;
+height:100%;
 background:#38bdf8;
 animation:load 2s linear forwards;
 }
-
 @keyframes load{100%{width:100%;}}
 
 /* CARD */
@@ -65,7 +66,7 @@ background:#111827;
 padding:20px;
 border-radius:15px;
 width:90%;
-max-width:350px;
+max-width:360px;
 text-align:center;
 }
 
@@ -73,66 +74,39 @@ text-align:center;
 input{
 width:90%;
 padding:10px;
-margin:8px 0;
+margin:8px;
 border-radius:10px;
 border:none;
-outline:none;
 }
 
 /* BUTTON */
 button{
+width:95%;
 padding:12px;
-width:100%;
 border:none;
 border-radius:10px;
-background:#38bdf8;
-color:black;
+background:#22c55e;
 font-weight:bold;
-margin-top:10px;
 cursor:pointer;
+margin-top:10px;
 }
 
-/* FUEL CARDS */
-.fuel{
-display:flex;
-gap:10px;
-}
-
-.fuel-card{
+/* DASHBOARD */
+.fuelCard{
 background:#1f2937;
 padding:15px;
+margin:10px;
 border-radius:12px;
 cursor:pointer;
-transition:0.3s;
 }
 
-.fuel-card.active{
+.activeFuel{
 transform:scale(1.1);
 background:#334155;
 }
 
-/* MAP MOCK */
-.map{
-width:90%;
-height:200px;
-background:linear-gradient(45deg,#0f172a,#1e293b);
-border-radius:15px;
-display:flex;
-justify-content:center;
-align-items:center;
-margin:10px;
-}
-
-/* DRIVER CARD */
-.driver{
-background:#111827;
-padding:10px;
-border-radius:12px;
-width:90%;
-}
-
-/* BOTTOM NAV */
-.bottom{
+/* NAV */
+.nav{
 position:fixed;
 bottom:0;
 width:100%;
@@ -157,9 +131,10 @@ font-size:12px;
 <!-- LOGIN -->
 <div id="login" class="screen">
 <div class="card">
-<h2>Login / Signup</h2>
-<input id="phone" placeholder="10 digit mobile">
+<h2>Login</h2>
+<input id="phone" placeholder="+91XXXXXXXXXX">
 <button onclick="sendOTP()">Send OTP</button>
+<div id="recaptcha"></div>
 </div>
 </div>
 
@@ -167,8 +142,7 @@ font-size:12px;
 <div id="otp" class="screen">
 <div class="card">
 <h2>Verify OTP</h2>
-<p id="showOtp"></p>
-<input id="otpInput" placeholder="Enter OTP">
+<input id="code">
 <button onclick="verifyOTP()">Verify</button>
 </div>
 </div>
@@ -176,21 +150,11 @@ font-size:12px;
 <!-- PROFILE -->
 <div id="profile" class="screen">
 <div class="card">
-<h2>Profile Setup</h2>
+<h2>Profile</h2>
 <input placeholder="Full Name">
 <input placeholder="Email">
-<input placeholder="Referral Code">
 <input placeholder="Vehicle No">
-<button onclick="goLocation()">Next</button>
-</div>
-</div>
-
-<!-- LOCATION -->
-<div id="location" class="screen">
-<div class="card">
-<h2>Location Access</h2>
-<button onclick="goDashboard()">Allow Location</button>
-<button onclick="goDashboard()">Manual</button>
+<button onclick="goDashboard()">Continue</button>
 </div>
 </div>
 
@@ -199,60 +163,39 @@ font-size:12px;
 
 <h2>Fuel Selection</h2>
 
-<div class="fuel">
-<div class="fuel-card" onclick="selectFuel(this,'Petrol')">Petrol ₹105</div>
-<div class="fuel-card" onclick="selectFuel(this,'Diesel')">Diesel ₹95</div>
+<div style="display:flex;gap:10px;">
+<div class="fuelCard" onclick="selectFuel(this)">Petrol ₹105</div>
+<div class="fuelCard" onclick="selectFuel(this)">Diesel ₹95</div>
 </div>
 
-<br>
+<button onclick="goTracking()">Proceed</button>
 
-<button onclick="goCheckout()">Proceed to Delivery</button>
-
-</div>
-
-<!-- CHECKOUT -->
-<div id="checkout" class="screen">
-<div class="card">
-<h2>Checkout</h2>
-<p>UPI / Card / Wallet (Mock UI)</p>
-<button onclick="goTracking()">Pay & Confirm</button>
-</div>
 </div>
 
 <!-- TRACKING -->
 <div id="tracking" class="screen">
-
 <h2>Live Tracking</h2>
-
-<div class="map">🚚 Tanker moving to your location</div>
-
-<div class="driver">
-Driver: Raj 🚚 | Rating ⭐4.5<br>
-<button>Call Driver</button>
+<p>🚚 Tanker is coming...</p>
+<button onclick="goPayment()">Checkout</button>
 </div>
 
-<button onclick="goDeliveryOTP()">Delivery OTP</button>
-
-</div>
-
-<!-- DELIVERY OTP -->
-<div id="delivery" class="screen">
+<!-- PAYMENT -->
+<div id="payment" class="screen">
 <div class="card">
-<h2>Delivery OTP</h2>
-<input placeholder="Enter 4-digit OTP">
-<button onclick="finishOrder()">Confirm Delivery</button>
+<h2>Payment</h2>
+<p>UPI / Card / Wallet</p>
+<button onclick="success()">Pay Now</button>
 </div>
 </div>
 
 <!-- SUCCESS -->
 <div id="success" class="screen">
-<h2>✅ Delivery Successful</h2>
-<p>Invoice Generated</p>
-<button onclick="restart()">Back to Home</button>
+<h2>✅ Order Success</h2>
+<button onclick="restart()">Home</button>
 </div>
 
-<!-- BOTTOM NAV -->
-<div class="bottom">
+<!-- NAV -->
+<div class="nav">
 <div>Home</div>
 <div>Orders</div>
 <div>Wallet</div>
@@ -261,7 +204,17 @@ Driver: Raj 🚚 | Rating ⭐4.5<br>
 
 <script>
 
-let otp="";
+/* ===== FIREBASE CONFIG ===== */
+const firebaseConfig = {
+apiKey:"YOUR_KEY",
+authDomain:"YOUR_DOMAIN",
+projectId:"YOUR_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+let confirmation;
 
 /* SPLASH */
 setTimeout(()=>switchScreen("login"),2000);
@@ -272,32 +225,31 @@ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-/* OTP */
+/* OTP SEND (REAL FIREBASE) */
 function sendOTP(){
 let phone=document.getElementById("phone").value;
-if(phone.length!=10){alert("Invalid");return;}
-otp=Math.floor(1000+Math.random()*9000);
-document.getElementById("showOtp").innerText="OTP: "+otp;
+
+auth.signInWithPhoneNumber(phone, new firebase.auth.RecaptchaVerifier('recaptcha'))
+.then(res=>{
+confirmation=res;
 switchScreen("otp");
+})
+.catch(e=>alert(e.message));
 }
 
+/* VERIFY */
 function verifyOTP(){
-if(document.getElementById("otpInput").value==otp){
-switchScreen("profile");
-}else alert("Wrong OTP");
+confirmation.confirm(document.getElementById("code").value)
+.then(()=>switchScreen("profile"))
+.catch(()=>alert("Wrong OTP"));
 }
 
 /* FLOW */
-function goLocation(){switchScreen("location");}
 function goDashboard(){switchScreen("dashboard");}
-function selectFuel(el,type){
-document.querySelectorAll(".fuel-card").forEach(c=>c.classList.remove("active"));
-el.classList.add("active");
-}
-function goCheckout(){switchScreen("checkout");}
+function selectFuel(el){el.classList.toggle("activeFuel");}
 function goTracking(){switchScreen("tracking");}
-function goDeliveryOTP(){switchScreen("delivery");}
-function finishOrder(){switchScreen("success");}
+function goPayment(){switchScreen("payment");}
+function success(){switchScreen("success");}
 function restart(){switchScreen("login");}
 
 </script>

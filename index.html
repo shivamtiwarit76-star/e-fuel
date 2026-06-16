@@ -73,11 +73,7 @@ button {
     <div class="card">
         <h3>OTP Login</h3>
 
-        <input id="phone" placeholder="Mobile Number (10 digit)">
-
-        <!-- invisible captcha container -->
-        <div id="recaptcha-container"></div>
-
+        <input id="phone" placeholder="10 digit mobile number">
         <button onclick="sendOTP()">Send OTP</button>
 
         <input id="otp" placeholder="Enter OTP">
@@ -113,20 +109,27 @@ button {
     </div>
 </div>
 
+<script>
+/* SCREEN SWITCH */
+function show(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
 
+/* SPLASH AUTO MOVE */
+setTimeout(()=>show('onboard'),2000);
 
-
-</script>
-    <script>
+/* MSG91 CONFIG */
 const AUTH_KEY = "532531ARDDbXW56a31158eP1";
 const TEMPLATE_ID = "6a311a02df1da373b006ed93";
 
 /* SEND OTP */
 function sendOTP(){
+
     let phone = document.getElementById("phone").value;
 
     if(phone.length !== 10){
-        alert("10 digit number enter karo");
+        alert("Enter 10 digit number");
         return;
     }
 
@@ -143,13 +146,18 @@ function sendOTP(){
     })
     .then(res=>res.json())
     .then(data=>{
-        alert("OTP Sent 📩");
         console.log(data);
+        alert("OTP Sent 📩");
+    })
+    .catch(err=>{
+        console.log(err);
+        alert("OTP Error");
     });
 }
 
 /* VERIFY OTP */
 function verifyOTP(){
+
     let phone = document.getElementById("phone").value;
     let otp = document.getElementById("otp").value;
 
@@ -166,14 +174,31 @@ function verifyOTP(){
     })
     .then(res=>res.json())
     .then(data=>{
+
+        console.log(data);
+
         if(data.type==="success"){
             alert("Login Success ✅");
             show('profile');
         } else {
             alert("Wrong OTP ❌");
         }
+
+    })
+    .catch(err=>{
+        console.log(err);
+        alert("Verification error");
     });
 }
+
+/* LOCATION */
+function getLocation(){
+    navigator.geolocation.getCurrentPosition(()=>{
+        alert("Location saved ✅");
+        show('vehicle');
+    });
+}
+
 </script>
 
 </body>

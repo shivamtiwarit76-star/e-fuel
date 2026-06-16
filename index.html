@@ -3,278 +3,242 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>E.FUEL</title>
+<title>E.FUEL Premium App</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
-
 body{
-    background:#0d1117;
-    color:white;
-    overflow:hidden;
+margin:0;
+font-family:Arial;
+background:#070b16;
+color:white;
+overflow:hidden;
 }
 
-/* Splash Screen */
-#splash{
-    position:fixed;
-    width:100%;
-    height:100vh;
-    background:linear-gradient(135deg,#000000,#001f4d,#003366);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
+.screen{display:none;padding:20px;}
+.active{display:block;}
+
+.center{
+display:flex;
+flex-direction:column;
+justify-content:center;
+height:100vh;
 }
 
-.logo{
-    font-size:45px;
-    font-weight:bold;
-    color:#00ff88;
-    text-shadow:0 0 20px #00ff88;
-    animation:glow 1.5s infinite alternate;
-}
-
-@keyframes glow{
-    from{
-        text-shadow:0 0 10px #00ff88;
-    }
-    to{
-        text-shadow:0 0 30px #00ff88,
-                     0 0 50px #00ff88;
-    }
-}
-
-.loading-container{
-    width:220px;
-    height:6px;
-    background:#222;
-    border-radius:10px;
-    overflow:hidden;
-    margin-top:30px;
-}
-
-.loading-bar{
-    width:0%;
-    height:100%;
-    background:#00ff88;
-    animation:loading 2s linear forwards;
-}
-
-@keyframes loading{
-    from{
-        width:0%;
-    }
-    to{
-        width:100%;
-    }
-}
-
-/* Login Screen */
-#loginScreen{
-    display:none;
-    width:100%;
-    height:100vh;
-    padding:25px;
-    background:#0d1117;
-}
-
-.brand{
-    text-align:center;
-    margin-top:60px;
-    font-size:35px;
-    font-weight:bold;
-    color:#00ff88;
-}
-
-.subtitle{
-    text-align:center;
-    color:#ccc;
-    margin-top:10px;
-}
-
-.input-box{
-    width:100%;
-    margin-top:60px;
+input,button{
+width:100%;
+padding:14px;
+margin-top:12px;
+border-radius:12px;
+border:none;
+font-size:16px;
 }
 
 input{
-    width:100%;
-    padding:16px;
-    border:none;
-    border-radius:15px;
-    background:#161b22;
-    color:white;
-    font-size:16px;
+background:#1b2235;
+color:white;
 }
 
 button{
-    width:100%;
-    padding:16px;
-    margin-top:20px;
-    border:none;
-    border-radius:15px;
-    background:#00c853;
-    color:white;
-    font-size:18px;
-    font-weight:bold;
-    cursor:pointer;
+background:#00d084;
+color:white;
+font-weight:bold;
+cursor:pointer;
 }
 
-button:hover{
-    opacity:0.9;
+button:active{transform:scale(0.98);}
+
+/* SPLASH */
+#splash{
+position:fixed;
+width:100%;
+height:100%;
+background:linear-gradient(135deg,#000814,#001d3d,#003566);
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:9999;
 }
 
-#recaptcha-container{
-    margin-top:20px;
+.logo{
+font-size:55px;
+font-weight:bold;
+color:#00ffd5;
+text-shadow:0 0 25px #00ffd5;
+animation:logoAnim 1.5s infinite alternate;
+}
+
+@keyframes logoAnim{
+from{transform:scale(0.95);opacity:0.6;}
+to{transform:scale(1.05);opacity:1;}
+}
+
+.bar{
+width:220px;
+height:6px;
+background:#222;
+margin-top:25px;
+border-radius:10px;
+overflow:hidden;
+}
+
+.bar div{
+width:0%;
+height:100%;
+background:#00ffd5;
+animation:load 2s forwards;
+}
+
+@keyframes load{
+to{width:100%;}
 }
 </style>
 </head>
+
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+<div class="logo">E.FUEL</div>
+<div class="bar"><div></div></div>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="screen center">
+<h2>Login</h2>
+<input id="phone" placeholder="10 digit mobile number">
+<div id="recaptcha-container"></div>
+<button onclick="sendOTP()">Send OTP</button>
+</div>
+
+<!-- OTP -->
+<div id="otpScreen" class="screen center">
+<h2>OTP Verification</h2>
+<input id="otp" placeholder="Enter OTP">
+<button onclick="verifyOTP()">Verify OTP</button>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="screen center">
+<h2>Profile Setup</h2>
+<input id="name" placeholder="Full Name">
+<input id="email" placeholder="Email">
+<button onclick="saveProfile()">Continue</button>
+</div>
+
+<!-- VEHICLE -->
+<div id="vehicle" class="screen center">
+<h2>Add Vehicle</h2>
+<input id="type" placeholder="Bike / Car">
+<input id="plate" placeholder="Number Plate">
+<button onclick="saveVehicle()">Next</button>
+</div>
+
+<!-- LOCATION -->
+<div id="location" class="screen center">
+<h2>Location Access</h2>
+<button onclick="getLocation()">Allow Location</button>
+<button onclick="manual()">Manual Entry</button>
+</div>
+
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-    getAuth,
-    RecaptchaVerifier,
-    signInWithPhoneNumber
+getAuth,
+RecaptchaVerifier,
+signInWithPhoneNumber
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAnUvEASVakh94YcokSkUmcKYYEdY5a1zs",
-    authDomain: "efuel-app-10399.firebaseapp.com",
-    projectId: "efuel-app-10399",
-    storageBucket: "efuel-app-10399.firebasestorage.app",
-    messagingSenderId: "272330806335",
-    appId: "1:272330806335:web:dfddcb70e1322f4b1f548a",
-    measurementId: "G-XC0WCD6FZF"
+apiKey: "YOUR_API_KEY",
+authDomain: "YOUR_AUTH_DOMAIN",
+projectId: "YOUR_PROJECT_ID",
+appId: "YOUR_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-window.recaptchaVerifier = new RecaptchaVerifier(auth,
-    'recaptcha-container',
-    {
-        size: 'normal'
-    }
+let confirmationResult;
+
+// SPLASH AUTO MOVE
+setTimeout(()=>{
+document.getElementById("splash").style.display="none";
+document.getElementById("login").classList.add("active");
+},2000);
+
+// RECAPTCHA FIX
+window.recaptchaVerifier = new RecaptchaVerifier(
+'recaptcha-container',
+{ size:'normal' },
+auth
 );
 
-window.sendOTP = function () {
+// SEND OTP
+window.sendOTP = async function(){
 
-    let phone = "+91" + document.getElementById("phoneNumber").value;
+let phone = document.getElementById("phone").value;
 
-    if (phone.length !== 13) {
-        alert("Sahi 10 digit number daalo");
-        return;
-    }
+if(phone.length!==10){
+alert("10 digit number daalo");
+return;
+}
 
-    signInWithPhoneNumber(
-        auth,
-        phone,
-        window.recaptchaVerifier
-    )
-    .then((confirmationResult) => {
+phone = "+91"+phone;
 
-        window.confirmationResult = confirmationResult;
+try{
+confirmationResult = await signInWithPhoneNumber(auth,phone,window.recaptchaVerifier);
 
-        let otp = prompt("OTP enter karo");
+document.getElementById("login").classList.remove("active");
+document.getElementById("otpScreen").classList.add("active");
 
-        if (!otp) return;
-
-        confirmationResult.confirm(otp)
-        .then((result) => {
-
-            alert("Login Successful");
-
-            console.log(result.user);
-
-        })
-        .catch((error) => {
-
-            alert("Galat OTP");
-
-            console.error(error);
-
-        });
-
-    })
-    .catch((error) => {
-
-        alert("OTP bhejne me problem aayi");
-
-        console.error(error);
-
-    });
+alert("OTP Sent");
+}catch(e){
+console.log(e);
+alert("OTP Failed");
+}
 };
 
-    });
+// VERIFY OTP
+window.verifyOTP = async function(){
+
+let otp = document.getElementById("otp").value;
+
+try{
+await confirmationResult.confirm(otp);
+
+document.getElementById("otpScreen").classList.remove("active");
+document.getElementById("profile").classList.add("active");
+
+alert("Login Success");
+}catch(e){
+alert("Wrong OTP");
+}
 };
-</script>
-<body>
 
-<!-- Splash Screen -->
-<div id="splash">
-    <div class="logo">E.FUEL</div>
+// PROFILE
+window.saveProfile = function(){
+document.getElementById("profile").classList.remove("active");
+document.getElementById("vehicle").classList.add("active");
+};
 
-    <div class="loading-container">
-        <div class="loading-bar"></div>
-    </div>
-</div>
+// VEHICLE
+window.saveVehicle = function(){
+document.getElementById("vehicle").classList.remove("active");
+document.getElementById("location").classList.add("active");
+};
 
-<!-- Login Screen -->
-<div id="loginScreen">
+// LOCATION
+window.getLocation = function(){
+navigator.geolocation.getCurrentPosition(()=>{
+alert("Location Saved");
+});
+};
 
-    <div class="brand">E.FUEL</div>
-
-    <div class="subtitle">
-        Fuel Delivery at Your Doorstep
-    </div>
-
-    <div style="display:flex;gap:10px;">
-    <div style="
-        background:#161b22;
-        color:white;
-        padding:16px;
-        border-radius:15px;
-        display:flex;
-        align-items:center;
-    ">
-        +91
-    </div>
-
-    <input
-        type="tel"
-        id="phoneNumber"
-        placeholder="9876543210"
-        maxlength="10"
-    >
-</div>
-
-        <button onclick="sendOTP()">
-            Send OTP
-        </button>
-
-        <div id="recaptcha-container"></div>
-
-    </div>
-
-</div></div>
-
-<script>
-
-setTimeout(()=>{
-
-    document.getElementById("splash").style.display="none";
-
-    document.getElementById("loginScreen").style.display="block";
-
-    document.body.style.overflow="auto";
-
-},2000);
+window.manual = function(){
+alert("Manual location feature soon");
+};
 
 </script>
 

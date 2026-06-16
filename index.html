@@ -165,12 +165,12 @@ window.recaptchaVerifier = new RecaptchaVerifier(auth,
 
 window.sendOTP = function () {
 
-    lif (phone.length !== 13) {
-    alert("Sahi 10 digit number daalo");
-    return;
-}
+    let phone = "+91" + document.getElementById("phoneNumber").value;
 
-    
+    if (phone.length !== 13) {
+        alert("Sahi 10 digit number daalo");
+        return;
+    }
 
     signInWithPhoneNumber(
         auth,
@@ -207,6 +207,9 @@ window.sendOTP = function () {
         alert("OTP bhejne me problem aayi");
 
         console.error(error);
+
+    });
+};
 
     });
 };

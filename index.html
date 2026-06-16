@@ -175,14 +175,31 @@ document.getElementById(id).classList.add("active");
 }
 
 /* SPLASH */
-setTimeout(()=>show("login"),2000);
+window.verifyOTP = async function(){
 
-/* RECAPTCHA (ONLY ONCE) */
-window.recaptchaVerifier = new RecaptchaVerifier(
-'recaptcha-container',
-{ size:'normal' },
-auth
-);
+let otp = document.getElementById("otp").value;
+
+if(!otp){
+alert("OTP daalo");
+return;
+}
+
+try{
+
+if(!confirmationResult){
+alert("OTP session expired. Dobara try karo");
+return;
+}
+
+await confirmationResult.confirm(otp);
+
+window.show("profile");
+
+}catch(e){
+console.log(e);
+alert("OTP wrong ya expired");
+}
+};
 
 /* ================= OTP SEND ================= */
 window.sendOTP = async function(){
@@ -228,10 +245,19 @@ return;
 }
 
 try{
+
+if(!confirmationResult){
+alert("OTP session expired. Dobara try karo");
+return;
+}
+
 await confirmationResult.confirm(otp);
-show("profile");
+
+window.show("profile");
+
 }catch(e){
-alert("Wrong OTP");
+console.log(e);
+alert("OTP wrong ya expired");
 }
 };
 
@@ -270,7 +296,10 @@ let snap = await getDoc(doc(db,"users",userPhone));
 document.getElementById("userInfo").innerText =
 "Welcome " + snap.data().name + " | " + userPhone;
 }
-
+window.show = function(id){
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+};
 </script>
 
 </body>

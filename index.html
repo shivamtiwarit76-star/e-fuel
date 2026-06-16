@@ -2,120 +2,303 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>E-Fuel App</title>
+<title>E-Fuel Ultimate App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
 body{
 margin:0;
 font-family:Arial;
-background:#0f172a;
+background:#050816;
 color:white;
+overflow:hidden;
 }
 
+/* SCREEN SYSTEM */
 .screen{
 display:none;
 height:100vh;
+width:100%;
+flex-direction:column;
 justify-content:center;
 align-items:center;
-flex-direction:column;
 }
 
 .active{display:flex;}
 
-.card{
+/* SPLASH */
+#splash h1{
+font-size:40px;
+color:#38bdf8;
+animation:glow 1.5s infinite;
+}
+
+@keyframes glow{
+0%{opacity:0.4;}
+50%{opacity:1;}
+100%{opacity:0.4;}
+}
+
+/* LOADING BAR */
+.bar{
+width:220px;
+height:5px;
 background:#1e293b;
+margin-top:15px;
+overflow:hidden;
+border-radius:10px;
+}
+
+.bar div{
+height:100%;
+width:0%;
+background:#38bdf8;
+animation:load 2s linear forwards;
+}
+
+@keyframes load{100%{width:100%;}}
+
+/* CARD */
+.card{
+background:#111827;
 padding:20px;
-border-radius:12px;
+border-radius:15px;
 width:90%;
-max-width:320px;
+max-width:350px;
+text-align:center;
 }
 
+/* INPUT */
 input{
-width:100%;
+width:90%;
 padding:10px;
-margin:5px 0;
-border-radius:6px;
+margin:8px 0;
+border-radius:10px;
 border:none;
+outline:none;
 }
 
+/* BUTTON */
 button{
+padding:12px;
 width:100%;
-padding:10px;
-margin-top:8px;
 border:none;
-border-radius:6px;
-background:#22c55e;
-color:white;
+border-radius:10px;
+background:#38bdf8;
+color:black;
+font-weight:bold;
+margin-top:10px;
 cursor:pointer;
 }
+
+/* FUEL CARDS */
+.fuel{
+display:flex;
+gap:10px;
+}
+
+.fuel-card{
+background:#1f2937;
+padding:15px;
+border-radius:12px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.fuel-card.active{
+transform:scale(1.1);
+background:#334155;
+}
+
+/* MAP MOCK */
+.map{
+width:90%;
+height:200px;
+background:linear-gradient(45deg,#0f172a,#1e293b);
+border-radius:15px;
+display:flex;
+justify-content:center;
+align-items:center;
+margin:10px;
+}
+
+/* DRIVER CARD */
+.driver{
+background:#111827;
+padding:10px;
+border-radius:12px;
+width:90%;
+}
+
+/* BOTTOM NAV */
+.bottom{
+position:fixed;
+bottom:0;
+width:100%;
+display:flex;
+justify-content:space-around;
+background:#0f172a;
+padding:10px;
+font-size:12px;
+}
+
 </style>
 </head>
 
 <body>
-<body>
 
-<div id="sendScreen">
-    <h2>Send OTP</h2>
-    <input type="text" id="phone" placeholder="Enter Mobile Number">
-    <button onclick="sendOTP()">Send OTP</button>
+<!-- SPLASH -->
+<div id="splash" class="screen active">
+<h1>⛽ E-FUEL</h1>
+<div class="bar"><div></div></div>
 </div>
 
-<div id="verifyScreen" style="display:none;">
-    <h2>Verify OTP</h2>
-    <input type="text" id="otpInput" placeholder="Enter OTP">
-    <button onclick="verifyOTP()">Verify OTP</button>
+<!-- LOGIN -->
+<div id="login" class="screen">
+<div class="card">
+<h2>Login / Signup</h2>
+<input id="phone" placeholder="10 digit mobile">
+<button onclick="sendOTP()">Send OTP</button>
+</div>
 </div>
 
-<script>
-let generatedOTP = "";
-
-
-
+<!-- OTP -->
+<div id="otp" class="screen">
+<div class="card">
+<h2>Verify OTP</h2>
+<p id="showOtp"></p>
+<input id="otpInput" placeholder="Enter OTP">
+<button onclick="verifyOTP()">Verify</button>
+</div>
+</div>
 
 <!-- PROFILE -->
 <div id="profile" class="screen">
 <div class="card">
-<h3>Profile Setup</h3>
-<input placeholder="Name">
+<h2>Profile Setup</h2>
+<input placeholder="Full Name">
 <input placeholder="Email">
-<button onclick="show('vehicle')">Next</button>
-</div>
-</div>
-
-<!-- VEHICLE -->
-<div id="vehicle" class="screen">
-<div class="card">
-<h3>Add Vehicle</h3>
-<input placeholder="Vehicle Name">
-<input placeholder="Number Plate">
-<button onclick="show('location')">Next</button>
+<input placeholder="Referral Code">
+<input placeholder="Vehicle No">
+<button onclick="goLocation()">Next</button>
 </div>
 </div>
 
 <!-- LOCATION -->
 <div id="location" class="screen">
 <div class="card">
-<h3>Location Permission</h3>
-<button onclick="getLocation()">Allow Location</button>
+<h2>Location Access</h2>
+<button onclick="goDashboard()">Allow Location</button>
+<button onclick="goDashboard()">Manual</button>
 </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="screen">
+
+<h2>Fuel Selection</h2>
+
+<div class="fuel">
+<div class="fuel-card" onclick="selectFuel(this,'Petrol')">Petrol ₹105</div>
+<div class="fuel-card" onclick="selectFuel(this,'Diesel')">Diesel ₹95</div>
+</div>
+
+<br>
+
+<button onclick="goCheckout()">Proceed to Delivery</button>
+
+</div>
+
+<!-- CHECKOUT -->
+<div id="checkout" class="screen">
+<div class="card">
+<h2>Checkout</h2>
+<p>UPI / Card / Wallet (Mock UI)</p>
+<button onclick="goTracking()">Pay & Confirm</button>
+</div>
+</div>
+
+<!-- TRACKING -->
+<div id="tracking" class="screen">
+
+<h2>Live Tracking</h2>
+
+<div class="map">🚚 Tanker moving to your location</div>
+
+<div class="driver">
+Driver: Raj 🚚 | Rating ⭐4.5<br>
+<button>Call Driver</button>
+</div>
+
+<button onclick="goDeliveryOTP()">Delivery OTP</button>
+
+</div>
+
+<!-- DELIVERY OTP -->
+<div id="delivery" class="screen">
+<div class="card">
+<h2>Delivery OTP</h2>
+<input placeholder="Enter 4-digit OTP">
+<button onclick="finishOrder()">Confirm Delivery</button>
+</div>
+</div>
+
+<!-- SUCCESS -->
+<div id="success" class="screen">
+<h2>✅ Delivery Successful</h2>
+<p>Invoice Generated</p>
+<button onclick="restart()">Back to Home</button>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom">
+<div>Home</div>
+<div>Orders</div>
+<div>Wallet</div>
+<div>Profile</div>
 </div>
 
 <script>
 
-/* SCREEN CONTROL */
-function show(id){
-document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-document.getElementById(id).classList.add('active');
+let otp="";
+
+/* SPLASH */
+setTimeout(()=>switchScreen("login"),2000);
+
+/* SCREEN */
+function switchScreen(id){
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
 }
 
-/* LOCATION */
-function getLocation(){
-navigator.geolocation.getCurrentPosition(()=>{
-alert("Location Saved ✅");
-show('vehicle');
-});
+/* OTP */
+function sendOTP(){
+let phone=document.getElementById("phone").value;
+if(phone.length!=10){alert("Invalid");return;}
+otp=Math.floor(1000+Math.random()*9000);
+document.getElementById("showOtp").innerText="OTP: "+otp;
+switchScreen("otp");
 }
+
+function verifyOTP(){
+if(document.getElementById("otpInput").value==otp){
+switchScreen("profile");
+}else alert("Wrong OTP");
+}
+
+/* FLOW */
+function goLocation(){switchScreen("location");}
+function goDashboard(){switchScreen("dashboard");}
+function selectFuel(el,type){
+document.querySelectorAll(".fuel-card").forEach(c=>c.classList.remove("active"));
+el.classList.add("active");
+}
+function goCheckout(){switchScreen("checkout");}
+function goTracking(){switchScreen("tracking");}
+function goDeliveryOTP(){switchScreen("delivery");}
+function finishOrder(){switchScreen("success");}
+function restart(){switchScreen("login");}
 
 </script>
 

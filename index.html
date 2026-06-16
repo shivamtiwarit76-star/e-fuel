@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>E.FUEL PRO</title>
+<title>E.FUEL STABLE</title>
 
 <style>
 body{
 margin:0;
 font-family:Arial;
-background:#060914;
+background:#050914;
 color:white;
 overflow:hidden;
 }
@@ -33,22 +33,19 @@ border:none;
 font-size:16px;
 }
 
-input{
-background:#1a2236;
-color:white;
-}
+input{background:#1a2235;color:white;}
 
 button{
 background:#00d084;
 color:white;
 font-weight:bold;
 cursor:pointer;
+transition:0.2s;
 }
 
 button:active{transform:scale(0.98);}
 button:disabled{opacity:0.5;}
 
-/* SPLASH */
 #splash{
 position:fixed;
 width:100%;
@@ -65,12 +62,12 @@ z-index:9999;
 font-size:55px;
 color:#00ffd5;
 text-shadow:0 0 25px #00ffd5;
-animation:logoAnim 1.5s infinite alternate;
+animation:logo 1.5s infinite alternate;
 }
 
-@keyframes logoAnim{
-from{transform:scale(0.95);opacity:0.6;}
-to{transform:scale(1.05);opacity:1;}
+@keyframes logo{
+from{transform:scale(0.95);}
+to{transform:scale(1.05);}
 }
 
 .bar{
@@ -102,44 +99,36 @@ to{width:100%;}
 <div id="login" class="screen center">
 <h2>Login</h2>
 
-<input id="phone" placeholder="10 digit mobile number">
+<input id="phone" placeholder="10 digit mobile">
 <div id="recaptcha-container"></div>
 
-<button id="otpBtn" onclick="sendOTP()">Send OTP</button>
+<button id="sendBtn" onclick="sendOTP()">Send OTP</button>
 </div>
 
 <!-- OTP -->
 <div id="otpScreen" class="screen center">
-<h2>OTP Verify</h2>
+<h2>Verify OTP</h2>
 
 <input id="otp" placeholder="Enter OTP">
-<button onclick="verifyOTP()">Verify OTP</button>
+<button onclick="verifyOTP()">Verify</button>
 </div>
 
 <!-- PROFILE -->
 <div id="profile" class="screen center">
-<h2>Profile Setup</h2>
+<h2>Profile</h2>
 
 <input id="name" placeholder="Full Name">
 <input id="email" placeholder="Email">
-<button onclick="saveProfile()">Continue</button>
+<button onclick="saveProfile()">Next</button>
 </div>
 
 <!-- VEHICLE -->
 <div id="vehicle" class="screen center">
-<h2>Add Vehicle</h2>
+<h2>Vehicle</h2>
 
 <input id="type" placeholder="Bike / Car">
 <input id="plate" placeholder="Number Plate">
-<button onclick="saveVehicle()">Save Vehicle</button>
-</div>
-
-<!-- LOCATION -->
-<div id="location" class="screen center">
-<h2>Location Access</h2>
-
-<button onclick="getLocation()">Allow Location</button>
-<button onclick="manual()">Manual Entry</button>
+<button onclick="saveVehicle()">Next</button>
 </div>
 
 <!-- HOME -->
@@ -164,7 +153,7 @@ setDoc,
 getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* 🔥 FIREBASE CONFIG */
+/* FIREBASE CONFIG */
 const firebaseConfig = {
 apiKey: "YOUR_API_KEY",
 authDomain: "YOUR_AUTH_DOMAIN",
@@ -179,16 +168,16 @@ const db = getFirestore(app);
 let confirmationResult;
 let userPhone;
 
-/* SPLASH */
-setTimeout(()=>show("login"),2000);
-
-/* SCREEN SWITCH ENGINE */
+/* SCREEN SWITCH */
 function show(id){
 document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-/* RECAPTCHA FIX */
+/* SPLASH */
+setTimeout(()=>show("login"),2000);
+
+/* RECAPTCHA (ONLY ONCE) */
 window.recaptchaVerifier = new RecaptchaVerifier(
 'recaptcha-container',
 { size:'normal' },
@@ -209,7 +198,7 @@ userPhone = "+91"+phone;
 
 try{
 
-document.getElementById("otpBtn").disabled = true;
+document.getElementById("sendBtn").disabled = true;
 
 confirmationResult = await signInWithPhoneNumber(
 auth,
@@ -224,7 +213,7 @@ show("otpScreen");
 }catch(e){
 console.log(e);
 alert("OTP Failed");
-document.getElementById("otpBtn").disabled = false;
+document.getElementById("sendBtn").disabled = false;
 }
 };
 
@@ -232,6 +221,11 @@ document.getElementById("otpBtn").disabled = false;
 window.verifyOTP = async function(){
 
 let otp = document.getElementById("otp").value;
+
+if(!otp){
+alert("OTP daalo");
+return;
+}
 
 try{
 await confirmationResult.confirm(otp);
@@ -264,23 +258,18 @@ await setDoc(doc(db,"vehicles",userPhone),{
 type,plate
 });
 
-show("location");
-};
-
-/* ================= LOCATION ================= */
-window.getLocation = function(){
-
-navigator.geolocation.getCurrentPosition(()=>{
-alert("Location Saved");
-show("home");
-});
-
-};
-
-window.manual = function(){
-alert("Manual location coming soon");
+loadHome();
 show("home");
 };
+
+/* ================= HOME ================= */
+async function loadHome(){
+
+let snap = await getDoc(doc(db,"users",userPhone));
+
+document.getElementById("userInfo").innerText =
+"Welcome " + snap.data().name + " | " + userPhone;
+}
 
 </script>
 

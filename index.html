@@ -3,332 +3,188 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>E-Fuel Super App</title>
+<title>E.FUEL</title>
 
 <style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
 body{
-margin:0;
-font-family:Arial;
-background:#1c1c1c;
-color:white;
+    background:#0d1117;
+    color:white;
+    overflow:hidden;
 }
 
-.header{
-background:#0f2027;
-padding:15px;
-text-align:center;
-position:relative;
+/* Splash Screen */
+#splash{
+    position:fixed;
+    width:100%;
+    height:100vh;
+    background:linear-gradient(135deg,#000000,#001f4d,#003366);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
 }
 
-.menuBtn{
-position:absolute;
-right:10px;
-top:10px;
-font-size:24px;
-cursor:pointer;
+.logo{
+    font-size:45px;
+    font-weight:bold;
+    color:#00ff88;
+    text-shadow:0 0 20px #00ff88;
+    animation:glow 1.5s infinite alternate;
 }
 
-.sidebar{
-position:fixed;
-top:0;
-right:-260px;
-width:230px;
-height:100%;
-background:#222;
-padding:10px;
-transition:0.3s;
-z-index:999;
+@keyframes glow{
+    from{
+        text-shadow:0 0 10px #00ff88;
+    }
+    to{
+        text-shadow:0 0 30px #00ff88,
+                     0 0 50px #00ff88;
+    }
 }
 
-.sidebar button{
-width:100%;
-margin:6px 0;
-padding:10px;
-background:#007BFF;
-color:white;
-border:none;
-border-radius:5px;
-cursor:pointer;
+.loading-container{
+    width:220px;
+    height:6px;
+    background:#222;
+    border-radius:10px;
+    overflow:hidden;
+    margin-top:30px;
 }
 
-.card{
-background:white;
-color:black;
-max-width:380px;
-margin:10px auto;
-padding:15px;
-border-radius:10px;
+.loading-bar{
+    width:0%;
+    height:100%;
+    background:#00ff88;
+    animation:loading 2s linear forwards;
 }
 
-input,select,button{
-width:95%;
-padding:10px;
-margin:6px 0;
+@keyframes loading{
+    from{
+        width:0%;
+    }
+    to{
+        width:100%;
+    }
+}
+
+/* Login Screen */
+#loginScreen{
+    display:none;
+    width:100%;
+    height:100vh;
+    padding:25px;
+    background:#0d1117;
+}
+
+.brand{
+    text-align:center;
+    margin-top:60px;
+    font-size:35px;
+    font-weight:bold;
+    color:#00ff88;
+}
+
+.subtitle{
+    text-align:center;
+    color:#ccc;
+    margin-top:10px;
+}
+
+.input-box{
+    width:100%;
+    margin-top:60px;
+}
+
+input{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:15px;
+    background:#161b22;
+    color:white;
+    font-size:16px;
 }
 
 button{
-background:#007BFF;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
+    width:100%;
+    padding:16px;
+    margin-top:20px;
+    border:none;
+    border-radius:15px;
+    background:#00c853;
+    color:white;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
-.hidden{display:none;}
-ul{text-align:left;}
+button:hover{
+    opacity:0.9;
+}
+
+#recaptcha-container{
+    margin-top:20px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="header">
-⛽ E-Fuel Super App
-<div class="menuBtn" onclick="toggleMenu()">☰</div>
+<!-- Splash Screen -->
+<div id="splash">
+    <div class="logo">E.FUEL</div>
+
+    <div class="loading-container">
+        <div class="loading-bar"></div>
+    </div>
 </div>
 
-<!-- SIDEBAR -->
-<div class="sidebar" id="menu">
-<h3>Menu</h3>
+<!-- Login Screen -->
+<div id="loginScreen">
 
-<button onclick="showOrders()">📦 Orders</button>
-<button onclick="showHistory()">📜 History</button>
-<button onclick="clearHistory()">🗑 Delete History</button>
-<button onclick="logout()">🚪 Logout</button>
-</div>
+    <div class="brand">E.FUEL</div>
 
-<!-- LOGIN -->
-<div class="card" id="auth">
-<h3>Login / Signup</h3>
+    <div class="subtitle">
+        Fuel Delivery at Your Doorstep
+    </div>
 
-<input id="name" placeholder="Name">
-<input id="email" placeholder="Email">
-<input id="phone" placeholder="Phone">
-<input id="pass" type="password" placeholder="Password">
+    <div class="input-box">
 
-<button onclick="signup()">Signup</button>
-<button onclick="login()">Login</button>
-</div>
+        <input
+            type="tel"
+            id="phoneNumber"
+            placeholder="+91 9876543210"
+        >
 
-<!-- BOOKING -->
-<div class="card hidden" id="book">
+        <button onclick="sendOTP()">
+            Send OTP
+        </button>
 
-<input id="fuelName" placeholder="Customer Name">
-<input id="litres" type="number" placeholder="Litres">
+        <div id="recaptcha-container"></div>
 
-<select id="fuelType">
-<option>Petrol</option>
-<option>Diesel</option>
-<option>CNG</option>
-</select>
+    </div>
 
-<input id="locationInput" placeholder="Enter Location (optional)">
-
-<button onclick="autoLocation()">📍 Auto Location</button>
-<button onclick="bookFuel()">🚚 Book Fuel</button>
-<button onclick="getLocation()">🌍 Full Location</button>
-<button onclick="payUPI()">💳 Pay UPI</button>
-
-<p id="time"></p>
-<p id="loc"></p>
-<p id="eta"></p>
-<h3 id="price"></h3>
-
-<ul id="list"></ul>
-</div>
+</div></div>
 
 <script>
 
-let currentUser=null;
+setTimeout(()=>{
 
-/* MENU */
-function toggleMenu(){
-let m=document.getElementById("menu");
-m.style.right=(m.style.right=="0px")?"-260px":"0px";
-}
+    document.getElementById("splash").style.display="none";
 
-/* SIGNUP */
-function signup(){
-let n=document.getElementById("name").value;
-let e=document.getElementById("email").value;
-let p=document.getElementById("phone").value;
-let pass=document.getElementById("pass").value;
+    document.getElementById("loginScreen").style.display="block";
 
-if(!n||!e||!p||!pass){alert("Fill all fields");return;}
+    document.body.style.overflow="auto";
 
-let users=JSON.parse(localStorage.getItem("users"))||[];
-users.push({n,e,p,pass});
-localStorage.setItem("users",JSON.stringify(users));
-
-alert("Signup done");
-}
-
-/* LOGIN */
-function login(){
-let n=document.getElementById("name").value;
-let pass=document.getElementById("pass").value;
-
-let users=JSON.parse(localStorage.getItem("users"))||[];
-let u=users.find(x=>x.n===n&&x.pass===pass);
-
-if(!u){alert("Wrong login");return;}
-
-currentUser=n;
-
-document.getElementById("auth").classList.add("hidden");
-document.getElementById("book").classList.remove("hidden");
-
-setDateTime();
-}
-
-/* LOGOUT */
-function logout(){
-currentUser=null;
-document.getElementById("auth").classList.remove("hidden");
-document.getElementById("book").classList.add("hidden");
-toggleMenu();
-}
-
-/* DATE TIME */
-function setDateTime(){
-document.getElementById("time").innerText="📅 "+new Date().toLocaleString();
-}
-
-/* BOOK ORDER */
-function bookFuel(){
-
-if(!currentUser){alert("Login first");return;}
-
-let name=document.getElementById("fuelName").value;
-let litres=document.getElementById("litres").value;
-let fuel=document.getElementById("fuelType").value;
-let loc=document.getElementById("locationInput").value;
-
-if(!name||!litres||!loc){alert("Fill all details");return;}
-
-let price=fuel=="Petrol"?litres*150:fuel=="Diesel"?litres*120:litres*105;
-
-document.getElementById("price").innerText="₹"+price;
-
-let orders=JSON.parse(localStorage.getItem("orders"))||[];
-
-orders.push({
-id:Date.now(),
-user:currentUser,
-name,
-litres,
-fuel,
-price,
-loc,
-status:"Order Confirmed"
-});
-
-localStorage.setItem("orders",JSON.stringify(orders));
-
-showOrders();
-}
-
-/* SHOW ORDERS */
-function showOrders(){
-let list=document.getElementById("list");
-list.innerHTML="";
-
-let orders=JSON.parse(localStorage.getItem("orders"))||[];
-
-orders.forEach(o=>{
-let li=document.createElement("li");
-li.innerHTML=`
-<b>${o.name}</b> | ${o.fuel} | ₹${o.price}<br>
-📍 ${o.loc}<br>
-📦 Status: ${o.status}<br>
-
-<button onclick="updateStatus(${o.id},'Received')">Received</button>
-<button onclick="updateStatus(${o.id},'Delivered')">Delivered</button>
-<button onclick="cancelOrder(${o.id})">Cancel</button>
-<hr>
-`;
-list.appendChild(li);
-});
-}
-
-/* UPDATE STATUS */
-function updateStatus(id,status){
-let orders=JSON.parse(localStorage.getItem("orders"))||[];
-orders=orders.map(o=>{
-if(o.id===id){o.status=status;}
-return o;
-});
-localStorage.setItem("orders",JSON.stringify(orders));
-showOrders();
-}
-
-/* CANCEL ORDER */
-function cancelOrder(id){
-let orders=JSON.parse(localStorage.getItem("orders"))||[];
-orders=orders.map(o=>{
-if(o.id===id){o.status="Cancelled";}
-return o;
-});
-localStorage.setItem("orders",JSON.stringify(orders));
-showOrders();
-}
-
-/* HISTORY */
-function showHistory(){
-let list=document.getElementById("list");
-list.innerHTML="";
-
-let orders=JSON.parse(localStorage.getItem("orders"))||[];
-
-orders.forEach(o=>{
-let li=document.createElement("li");
-li.innerText=o.name+" | "+o.status+" | ₹"+o.price;
-list.appendChild(li);
-});
-}
-
-/* DELETE HISTORY */
-function clearHistory(){
-localStorage.removeItem("orders");
-showOrders();
-}
-
-/* LOCATION */
-function getLocation(){
-navigator.geolocation.getCurrentPosition(async pos=>{
-
-let lat=pos.coords.latitude;
-let lon=pos.coords.longitude;
-
-document.getElementById("loc").innerText="Lat:"+lat+" Lon:"+lon;
-
-let res=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-let data=await res.json();
-
-document.getElementById("loc").innerText=data.display_name;
-
-let eta=(Math.sqrt(lat+lon)<10)?"10-20 min":"30-40 min";
-document.getElementById("eta").innerText="ETA: "+eta;
-
-});
-}
-
-/* AUTO LOCATION */
-function autoLocation(){
-getLocation();
-}
-
-/* UPI */
-function payUPI(){
-let litres=document.getElementById("litres").value;
-let fuel=document.getElementById("fuelType").value;
-
-let price=fuel=="Petrol"?litres*150:fuel=="Diesel"?litres*120:litres*105;
-
-let upi="upi://pay?pa=6202307387-n456@ybl&pn=E-Fuel&am="+price+"&cu=INR";
-
-window.location.href=upi;
-}
+},2000);
 
 </script>
 

@@ -2,87 +2,68 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>E-Fuel App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>E.FUEL STABLE</title>
 
 <style>
-body{
-margin:0;
-font-family:Arial;
-background:#050914;
-color:white;
-overflow:hidden;
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
 }
 
-.screen{display:none;padding:20px;}
-.active{display:block;}
+/* Screens */
+.screen {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.active { display: flex; }
 
-.center{
-display:flex;
-flex-direction:column;
-justify-content:center;
-height:100vh;
+/* Splash */
+#splash {
+    background: linear-gradient(45deg,#22c55e,#0ea5e9);
+    font-size: 35px;
+    font-weight: bold;
+    animation: fade 2s;
 }
 
-input,button{
-width:100%;
-padding:14px;
-margin-top:12px;
-border-radius:12px;
-border:none;
-font-size:16px;
+@keyframes fade {
+    from {opacity:0;}
+    to {opacity:1;}
 }
 
-input{background:#1a2235;color:white;}
-
-button{
-background:#00d084;
-color:white;
-font-weight:bold;
-cursor:pointer;
-transition:0.2s;
+/* Card */
+.card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 320px;
 }
 
-button:active{transform:scale(0.98);}
-button:disabled{opacity:0.5;}
-
-#splash{
-position:fixed;
-width:100%;
-height:100%;
-background:linear-gradient(135deg,#000814,#001d3d,#003566);
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-z-index:9999;
+/* Inputs */
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 6px;
+    border: none;
 }
 
-.logo{
-font-size:55px;
-color:#00ffd5;
-text-shadow:0 0 25px #00ffd5;
-animation:logo 1.5s infinite alternate;
-}
-
-@keyframes logo{
-from{transform:scale(0.95);}
-to{transform:scale(1.05);}
-}
-
-.bar{
-width:220px;height:6px;background:#222;margin-top:20px;border-radius:10px;overflow:hidden;
-}
-
-.bar div{
-height:100%;
-width:0%;
-background:#00ffd5;
-animation:load 2s forwards;
-}
-
-@keyframes load{
-to{width:100%;}
+/* Buttons */
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 6px;
+    background: #22c55e;
+    color: white;
+    cursor: pointer;
 }
 </style>
 </head>
@@ -90,216 +71,151 @@ to{width:100%;}
 <body>
 
 <!-- SPLASH -->
-<div id="splash">
-<div class="logo">E.FUEL</div>
-<div class="bar"><div></div></div>
+<div id="splash" class="screen active">
+⛽ E-FUEL
+</div>
+
+<!-- ONBOARD -->
+<div id="onboard" class="screen">
+    <h2>Welcome</h2>
+    <p>Fuel booking system</p>
+    <button onclick="show('login')">Start</button>
 </div>
 
 <!-- LOGIN -->
-<div id="login" class="screen center">
-<h2>Login</h2>
-
-<input id="phone" placeholder="10 digit mobile">
-<div id="recaptcha-container"></div>
-
-<button id="sendBtn" onclick="sendOTP()">Send OTP</button>
-</div>
-
-<!-- OTP -->
-<div id="otpScreen" class="screen center">
-<h2>Verify OTP</h2>
-
-<input id="otp" placeholder="Enter OTP">
-<button onclick="verifyOTP()">Verify</button>
+<div id="login" class="screen">
+    <div class="card">
+        <h3>OTP Login</h3>
+        <input id="phone" placeholder="+91XXXXXXXXXX">
+        <div id="recaptcha-container"></div>
+        <button onclick="sendOTP()">Send OTP</button>
+        <input id="otp" placeholder="Enter OTP">
+        <button onclick="verifyOTP()">Verify OTP</button>
+    </div>
 </div>
 
 <!-- PROFILE -->
-<div id="profile" class="screen center">
-<h2>Profile</h2>
-
-<input id="name" placeholder="Full Name">
-<input id="email" placeholder="Email">
-<button onclick="saveProfile()">Next</button>
+<div id="profile" class="screen">
+    <div class="card">
+        <h3>Profile Setup</h3>
+        <input placeholder="Name">
+        <input placeholder="Email">
+        <button onclick="show('vehicle')">Next</button>
+    </div>
 </div>
 
 <!-- VEHICLE -->
-<div id="vehicle" class="screen center">
-<h2>Vehicle</h2>
-
-<input id="type" placeholder="Bike / Car">
-<input id="plate" placeholder="Number Plate">
-<button onclick="saveVehicle()">Next</button>
+<div id="vehicle" class="screen">
+    <div class="card">
+        <h3>Add Vehicle</h3>
+        <input placeholder="Vehicle Name">
+        <input placeholder="Number Plate">
+        <button onclick="show('location')">Next</button>
+    </div>
 </div>
 
-<!-- HOME -->
-<div id="home" class="screen center">
-<h2>Welcome</h2>
-<p id="userInfo"></p>
+<!-- LOCATION -->
+<div id="location" class="screen">
+    <div class="card">
+        <h3>Location Permission</h3>
+        <button onclick="getLocation()">Allow Location</button>
+    </div>
 </div>
 
-<script type="module">
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-getAuth,
-RecaptchaVerifier,
-signInWithPhoneNumber
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+<script>
+// 🔥 YOUR FIREBASE CONFIG (paste yours)
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-import {
-getFirestore,
-doc,
-setDoc,
-getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-/* FIREBASE CONFIG */
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-apiKey: "YOUR_API_KEY",
-authDomain: "YOUR_AUTH_DOMAIN",
-projectId: "YOUR_PROJECT_ID",
-appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAnUvEASVakh94YcokSkUmcKYYEdY5a1zs",
+  authDomain: "efuel-app-10399.firebaseapp.com",
+  databaseURL: "https://efuel-app-10399-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "efuel-app-10399",
+  storageBucket: "efuel-app-10399.firebasestorage.app",
+  messagingSenderId: "272330806335",
+  appId: "1:272330806335:web:dfddcb70e1322f4b1f548a",
+  measurementId: "G-XC0WCD6FZF"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const analytics = getAnalytics(app);
 
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+let recaptchaVerifier;
 let confirmationResult;
-let userPhone;
 
-/* SCREEN SWITCH */
+/* SCREEN CONTROL */
 function show(id){
-document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
 }
 
 /* SPLASH */
-window.verifyOTP = async function(){
+setTimeout(()=>show('onboard'),2000);
 
-let otp = document.getElementById("otp").value;
-
-if(!otp){
-alert("OTP daalo");
-return;
-}
-
-try{
-
-if(!confirmationResult){
-alert("OTP session expired. Dobara try karo");
-return;
-}
-
-await confirmationResult.confirm(otp);
-
-window.show("profile");
-
-}catch(e){
-console.log(e);
-alert("OTP wrong ya expired");
-}
+/* RECAPTCHA INIT */
+window.onload = function(){
+    recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+        'recaptcha-container',
+        { size: 'normal' }
+    );
+    recaptchaVerifier.render();
 };
 
-/* ================= OTP SEND ================= */
-window.sendOTP = async function(){
+/* SEND OTP (REAL) */
+function sendOTP(){
+    let phone = document.getElementById("phone").value;
 
-let phone = document.getElementById("phone").value;
+    if(!phone.startsWith("+91")){
+        alert("Number +91 ke sath likho");
+        return;
+    }
 
-if(!phone || phone.length!==10){
-alert("10 digit number daalo");
-return;
+    auth.signInWithPhoneNumber(phone, recaptchaVerifier)
+    .then((result)=>{
+        confirmationResult = result;
+        alert("OTP sent 📩");
+    })
+    .catch((err)=>{
+        alert(err.message);
+        console.log(err);
+    });
 }
 
-userPhone = "+91"+phone;
+/* VERIFY OTP */
+function verifyOTP(){
+    let otp = document.getElementById("otp").value;
 
-try{
-
-document.getElementById("sendBtn").disabled = true;
-
-confirmationResult = await signInWithPhoneNumber(
-auth,
-userPhone,
-window.recaptchaVerifier
-);
-
-alert("OTP Sent");
-
-show("otpScreen");
-
-}catch(e){
-console.log(e);
-alert("OTP Failed");
-document.getElementById("sendBtn").disabled = false;
-}
-};
-
-/* ================= OTP VERIFY ================= */
-window.verifyOTP = async function(){
-
-let otp = document.getElementById("otp").value;
-
-if(!otp){
-alert("OTP daalo");
-return;
+    confirmationResult.confirm(otp)
+    .then(()=>{
+        alert("Login Success ✅");
+        show('profile');
+    })
+    .catch(()=>{
+        alert("Wrong OTP ❌");
+    });
 }
 
-try{
-
-if(!confirmationResult){
-alert("OTP session expired. Dobara try karo");
-return;
+/* LOCATION */
+function getLocation(){
+    navigator.geolocation.getCurrentPosition(()=>{
+        alert("Location saved ✅");
+        alert("Setup Complete 🚀");
+    });
 }
-
-await confirmationResult.confirm(otp);
-
-window.show("profile");
-
-}catch(e){
-console.log(e);
-alert("OTP wrong ya expired");
-}
-};
-
-/* ================= PROFILE ================= */
-window.saveProfile = async function(){
-
-let name = document.getElementById("name").value;
-let email = document.getElementById("email").value;
-
-await setDoc(doc(db,"users",userPhone),{
-name,email,phone:userPhone
-});
-
-show("vehicle");
-};
-
-/* ================= VEHICLE ================= */
-window.saveVehicle = async function(){
-
-let type = document.getElementById("type").value;
-let plate = document.getElementById("plate").value;
-
-await setDoc(doc(db,"vehicles",userPhone),{
-type,plate
-});
-
-loadHome();
-show("home");
-};
-
-/* ================= HOME ================= */
-async function loadHome(){
-
-let snap = await getDoc(doc(db,"users",userPhone));
-
-document.getElementById("userInfo").innerText =
-"Welcome " + snap.data().name + " | " + userPhone;
-}
-window.show = function(id){
-document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-};
 </script>
 
 </body>

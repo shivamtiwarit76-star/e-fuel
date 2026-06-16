@@ -6,53 +6,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial;
-    background: #0f172a;
-    color: white;
+body{
+margin:0;
+font-family:Arial;
+background:#0f172a;
+color:white;
 }
 
-.screen {
-    display: none;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-.active { display: flex; }
-
-#splash {
-    background: linear-gradient(45deg,#22c55e,#0ea5e9);
-    font-size: 35px;
-    font-weight: bold;
+.screen{
+display:none;
+height:100vh;
+justify-content:center;
+align-items:center;
+flex-direction:column;
 }
 
-.card {
-    background: #1e293b;
-    padding: 20px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 320px;
+.active{display:flex;}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+width:90%;
+max-width:320px;
 }
 
-input {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 6px;
-    border: none;
+input{
+width:100%;
+padding:10px;
+margin:5px 0;
+border-radius:6px;
+border:none;
 }
 
-button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 8px;
-    border: none;
-    border-radius: 6px;
-    background: #22c55e;
-    color: white;
-    cursor: pointer;
+button{
+width:100%;
+padding:10px;
+margin-top:8px;
+border:none;
+border-radius:6px;
+background:#22c55e;
+color:white;
+cursor:pointer;
 }
 </style>
 </head>
@@ -64,108 +59,158 @@ button {
 
 <!-- ONBOARD -->
 <div id="onboard" class="screen">
-    <h2>Welcome</h2>
-    <button onclick="show('login')">Start</button>
+<h2>Welcome</h2>
+<button onclick="show('sendotp')">Start</button>
 </div>
 
-<!-- LOGIN -->
-<div id="login" class="screen">
-    <div class="card">
-        <h3>OTP Login</h3>
+<!-- STEP 1: SEND OTP -->
+<div id="sendotp" class="screen">
+<div class="card">
+<h3>Send OTP</h3>
+<input id="phone" placeholder="10 digit mobile number">
+<button onclick="sendOTP()">Send OTP</button>
+</div>
+</div>
 
-        <input id="phone" placeholder="10 digit mobile number">
-        <button onclick="sendOTP()">Send OTP</button>
-
-        <input id="otp" placeholder="Enter OTP">
-        <button onclick="verifyOTP()">Verify OTP</button>
-    </div>
+<!-- STEP 2: VERIFY OTP -->
+<div id="verifyotp" class="screen">
+<div class="card">
+<h3>Verify OTP</h3>
+<input id="otp" placeholder="Enter OTP">
+<button onclick="verifyOTP()">Verify OTP</button>
+</div>
 </div>
 
 <!-- PROFILE -->
 <div id="profile" class="screen">
-    <div class="card">
-        <h3>Profile Setup</h3>
-        <input placeholder="Name">
-        <input placeholder="Email">
-        <button onclick="show('vehicle')">Next</button>
-    </div>
+<div class="card">
+<h3>Profile Setup</h3>
+<input placeholder="Name">
+<input placeholder="Email">
+<button onclick="show('vehicle')">Next</button>
+</div>
 </div>
 
 <!-- VEHICLE -->
 <div id="vehicle" class="screen">
-    <div class="card">
-        <h3>Add Vehicle</h3>
-        <input placeholder="Vehicle Name">
-        <input placeholder="Number Plate">
-        <button onclick="show('location')">Next</button>
-    </div>
+<div class="card">
+<h3>Add Vehicle</h3>
+<input placeholder="Vehicle Name">
+<input placeholder="Number Plate">
+<button onclick="show('location')">Next</button>
+</div>
 </div>
 
 <!-- LOCATION -->
 <div id="location" class="screen">
-    <div class="card">
-        <h3>Location Permission</h3>
-        <button onclick="getLocation()">Allow Location</button>
-    </div>
+<div class="card">
+<h3>Location Permission</h3>
+<button onclick="getLocation()">Allow Location</button>
+</div>
 </div>
 
 <script>
-/* SCREEN SWITCH */
+
+/* SCREEN CONTROL */
 function show(id){
-    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
 }
 
-/* SPLASH AUTO MOVE */
+/* SPLASH */
 setTimeout(()=>show('onboard'),2000);
 
 /* MSG91 CONFIG */
 const AUTH_KEY = "532531ARDDbXW56a31158eP1";
 const TEMPLATE_ID = "6a311a02df1da373b006ed93";
 
+let userPhone = "";
+
+/* STEP 1: SEND OTP */
 function sendOTP(){
 
-    let phone = document.getElementById("phone").value;
+let phone = document.getElementById("phone").value;
 
-    if(phone.length !== 10){
-        alert("Enter 10 digit number");
-        return;
-    }
-
-    fetch("https://control.msg91.com/api/v5/otp", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "authkey": AUTH_KEY
-        },
-        body: JSON.stringify({
-            template_id: TEMPLATE_ID,
-            mobile: "91" + phone,
-            otp_length: 6,
-            otp_expiry: 10
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log("SEND RESPONSE:", data);
-
-        if(data.type === "success"){
-            alert("OTP Sent 📩");
-        } else {
-            alert(JSON.stringify(data));
-        }
-    })
-    .catch(err => {
-        console.log(err);
-        alert("OTP Error");
-    });
+if(phone.length !== 10){
+alert("Enter 10 digit number");
+return;
 }
+
+userPhone = phone;
+
+fetch("https://control.msg91.com/api/v5/otp", {
+method: "POST",
+headers:{
+"Content-Type":"application/json",
+"authkey":AUTH_KEY
+},
+body:JSON.stringify({
+template_id:TEMPLATE_ID,
+mobile:"91"+phone
+})
+})
+.then(res=>res.json())
+.then(data=>{
+console.log(data);
+
+if(data.type==="success"){
+alert("OTP Sent 📩");
+show('verifyotp');   // 👉 next page
+}
+else{
+alert(JSON.stringify(data));
+}
+})
+.catch(err=>{
+console.log(err);
+alert("OTP Error");
+});
+
+}
+
+/* STEP 2: VERIFY OTP */
+function verifyOTP(){
+
+let otp = document.getElementById("otp").value;
+
+fetch("https://control.msg91.com/api/v5/otp/verify", {
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+"authkey":AUTH_KEY
+},
+body:JSON.stringify({
+mobile:"91"+userPhone,
+otp:otp
+})
+})
+.then(res=>res.json())
+.then(data=>{
+
+console.log(data);
+
+if(data.type==="success"){
+alert("Login Success ✅");
+show('profile');
+}
+else{
+alert("Wrong OTP ❌");
+}
+
+})
+.catch(err=>{
+console.log(err);
+alert("Verification Error");
+});
+
+}
+
 /* LOCATION */
 function getLocation(){
-    navigator.geolocation.getCurrentPosition(()=>{
-        alert("Location saved ✅");
-        show('vehicle');
-    });
+navigator.geolocation.getCurrentPosition(()=>{
+alert("Location Saved ✅");
+show('vehicle');
+});
 }
 
 </script>

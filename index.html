@@ -165,12 +165,12 @@ window.recaptchaVerifier = new RecaptchaVerifier(auth,
 
 window.sendOTP = function () {
 
-    let phone = document.getElementById("phoneNumber").value;
+    lif (phone.length !== 13) {
+    alert("Sahi 10 digit number daalo");
+    return;
+}
 
-    if (!phone.startsWith("+91")) {
-        alert("Number +91 se shuru hona chahiye");
-        return;
-    }
+    
 
     signInWithPhoneNumber(
         auth,

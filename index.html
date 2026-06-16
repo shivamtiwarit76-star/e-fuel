@@ -53,33 +53,25 @@ cursor:pointer;
 </head>
 
 <body>
+<body>
 
-<!-- SPLASH -->
-<div id="splash" class="screen active">⛽ E-FUEL</div>
-
-<!-- ONBOARD -->
-<div id="onboard" class="screen">
-<h2>Welcome</h2>
-<button onclick="show('sendotp')">Start</button>
+<div id="sendScreen">
+    <h2>Send OTP</h2>
+    <input type="text" id="phone" placeholder="Enter Mobile Number">
+    <button onclick="sendOTP()">Send OTP</button>
 </div>
 
-<!-- STEP 1: SEND OTP -->
-<div id="sendotp" class="screen">
-<div class="card">
-<h3>Send OTP</h3>
-<input id="phone" placeholder="10 digit mobile number">
-<button onclick="sendOTP()">Send OTP</button>
-</div>
+<div id="verifyScreen" style="display:none;">
+    <h2>Verify OTP</h2>
+    <input type="text" id="otpInput" placeholder="Enter OTP">
+    <button onclick="verifyOTP()">Verify OTP</button>
 </div>
 
-<!-- STEP 2: VERIFY OTP -->
-<div id="verifyotp" class="screen">
-<div class="card">
-<h3>Verify OTP</h3>
-<input id="otp" placeholder="Enter OTP">
-<button onclick="verifyOTP()">Verify OTP</button>
-</div>
-</div>
+<script>
+let generatedOTP = "";
+
+
+
 
 <!-- PROFILE -->
 <div id="profile" class="screen">
@@ -115,94 +107,6 @@ cursor:pointer;
 function show(id){
 document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
 document.getElementById(id).classList.add('active');
-}
-
-/* SPLASH */
-setTimeout(()=>show('onboard'),2000);
-
-/* MSG91 CONFIG */
-const AUTH_KEY = "532531ARDDbXW56a31158eP1";
-const TEMPLATE_ID = "6a311a02df1da373b006ed93";
-
-let userPhone = "";
-
-/* STEP 1: SEND OTP */
-function sendOTP(){
-
-let phone = document.getElementById("phone").value;
-
-if(phone.length !== 10){
-alert("Enter 10 digit number");
-return;
-}
-
-userPhone = phone;
-
-fetch("https://control.msg91.com/api/v5/otp", {
-method: "POST",
-headers:{
-"Content-Type":"application/json",
-"authkey":AUTH_KEY
-},
-body:JSON.stringify({
-template_id:TEMPLATE_ID,
-mobile:"91"+phone
-})
-})
-.then(res=>res.json())
-.then(data=>{
-console.log(data);
-
-if(data.type==="success"){
-alert("OTP Sent 📩");
-show('verifyotp');   // 👉 next page
-}
-else{
-alert(JSON.stringify(data));
-}
-})
-.catch(err=>{
-console.log(err);
-alert("OTP Error");
-});
-
-}
-
-/* STEP 2: VERIFY OTP */
-function verifyOTP(){
-
-let otp = document.getElementById("otp").value;
-
-fetch("https://control.msg91.com/api/v5/otp/verify", {
-method:"POST",
-headers:{
-"Content-Type":"application/json",
-"authkey":AUTH_KEY
-},
-body:JSON.stringify({
-mobile:"91"+userPhone,
-otp:otp
-})
-})
-.then(res=>res.json())
-.then(data=>{
-
-console.log(data);
-
-if(data.type==="success"){
-alert("Login Success ✅");
-show('profile');
-}
-else{
-alert("Wrong OTP ❌");
-}
-
-})
-.catch(err=>{
-console.log(err);
-alert("Verification Error");
-});
-
 }
 
 /* LOCATION */

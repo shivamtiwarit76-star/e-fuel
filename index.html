@@ -133,64 +133,54 @@ function sendOTP(){
         return;
     }
 
-    fetch("https://control.msg91.com/api/v5/otp", {
-        method: "POST",
+    fetch("https://control.msg91.com/api/v5/otp?template_id="+TEMPLATE_ID+"&mobile=91"+phone, {
+        method: "GET",
         headers: {
-            "Content-Type": "application/json",
             "authkey": AUTH_KEY
-        },
-        body: JSON.stringify({
-            template_id: TEMPLATE_ID,
-            mobile: "91" + phone
-        })
+        }
     })
     .then(res=>res.json())
     .then(data=>{
-        console.log(data);
-        alert("OTP Sent 📩");
+        console.log("SEND OTP RESPONSE:", data);
+
+        if(data.type === "success"){
+            alert("OTP Sent 📩");
+        } else {
+            alert(JSON.stringify(data));
+        }
     })
     .catch(err=>{
         console.log(err);
         alert("OTP Error");
     });
 }
-
-/* VERIFY OTP */
 function verifyOTP(){
 
     let phone = document.getElementById("phone").value;
     let otp = document.getElementById("otp").value;
 
-    fetch("https://control.msg91.com/api/v5/otp/verify", {
-        method: "POST",
+    fetch("https://control.msg91.com/api/v5/otp/verify?mobile=91"+phone+"&otp="+otp, {
+        method: "GET",
         headers: {
-            "Content-Type": "application/json",
             "authkey": AUTH_KEY
-        },
-        body: JSON.stringify({
-            mobile: "91"+phone,
-            otp: otp
-        })
+        }
     })
     .then(res=>res.json())
     .then(data=>{
+        console.log("VERIFY RESPONSE:", data);
 
-        console.log(data);
-
-        if(data.type==="success"){
+        if(data.type === "success"){
             alert("Login Success ✅");
             show('profile');
         } else {
-            alert("Wrong OTP ❌");
+            alert(JSON.stringify(data));
         }
-
     })
     .catch(err=>{
         console.log(err);
-        alert("Verification error");
+        alert("Verification Error");
     });
 }
-
 /* LOCATION */
 function getLocation(){
     navigator.geolocation.getCurrentPosition(()=>{

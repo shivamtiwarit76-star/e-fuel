@@ -135,7 +135,82 @@ button:hover{
 }
 </style>
 </head>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+    getAuth,
+    RecaptchaVerifier,
+    signInWithPhoneNumber
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+const firebaseConfig = {
+    apiKey: "AIzaSyAnUvEASVakh94YcokSkUmcKYYEdY5a1zs",
+    authDomain: "efuel-app-10399.firebaseapp.com",
+    projectId: "efuel-app-10399",
+    storageBucket: "efuel-app-10399.firebasestorage.app",
+    messagingSenderId: "272330806335",
+    appId: "1:272330806335:web:dfddcb70e1322f4b1f548a",
+    measurementId: "G-XC0WCD6FZF"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.recaptchaVerifier = new RecaptchaVerifier(auth,
+    'recaptcha-container',
+    {
+        size: 'normal'
+    }
+);
+
+window.sendOTP = function () {
+
+    let phone = document.getElementById("phoneNumber").value;
+
+    if (!phone.startsWith("+91")) {
+        alert("Number +91 se shuru hona chahiye");
+        return;
+    }
+
+    signInWithPhoneNumber(
+        auth,
+        phone,
+        window.recaptchaVerifier
+    )
+    .then((confirmationResult) => {
+
+        window.confirmationResult = confirmationResult;
+
+        let otp = prompt("OTP enter karo");
+
+        if (!otp) return;
+
+        confirmationResult.confirm(otp)
+        .then((result) => {
+
+            alert("Login Successful");
+
+            console.log(result.user);
+
+        })
+        .catch((error) => {
+
+            alert("Galat OTP");
+
+            console.error(error);
+
+        });
+
+    })
+    .catch((error) => {
+
+        alert("OTP bhejne me problem aayi");
+
+        console.error(error);
+
+    });
+};
+</script>
 <body>
 
 <!-- Splash Screen -->

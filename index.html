@@ -4,170 +4,120 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>E.Fuel Premium</title>
-
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
-body{
-background:#0b1220;
-color:white;
-}
-
-/* Splash */
-#splash{
-position:fixed;
-width:100%;
-height:100vh;
-background:linear-gradient(135deg,#000,#001f3f,#00c853);
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-z-index:9999;
-}
-
-.logo{
-font-size:40px;
-font-weight:bold;
-animation:pulse 1.5s infinite;
-}
-
-@keyframes pulse{
-50%{transform:scale(1.1);}
-}
-
-.loader{
-width:250px;
-height:8px;
-background:#222;
-border-radius:20px;
-margin-top:20px;
-overflow:hidden;
-}
-
-.loader span{
-display:block;
-height:100%;
-width:0%;
-background:#00ff88;
-animation:load 3s linear forwards;
-}
-
-@keyframes load{
-100%{width:100%;}
-}
-
-/* Login */
-.screen{
-display:none;
-padding:20px;
-}
-
-.card{
-background:white;
-color:black;
-max-width:350px;
-margin:auto;
-padding:20px;
-border-radius:12px;
-margin-top:40px;
-}
-
-input,select{
-width:100%;
-padding:12px;
-margin:10px 0;
-}
-
-button{
-width:100%;
-padding:12px;
-border:none;
-border-radius:8px;
-background:#007bff;
-color:white;
-margin-top:8px;
-cursor:pointer;
-}
+body{font-family:Arial;margin:0;background:#0b1220;color:white;text-align:center}
+#splash{position:fixed;inset:0;background:linear-gradient(135deg,#000,#003366,#00c853);display:flex;flex-direction:column;justify-content:center;align-items:center}
+.logo{font-size:42px;font-weight:bold;animation:pulse 1.5s infinite}
+@keyframes pulse{50%{transform:scale(1.1)}}
+.bar{width:260px;height:8px;background:#222;border-radius:10px;overflow:hidden}
+.bar div{height:100%;background:#00ff88;width:0;animation:load 3s forwards}
+@keyframes load{to{width:100%}}
+.screen{display:none;padding:20px}
+.card{background:white;color:black;max-width:360px;margin:20px auto;padding:20px;border-radius:12px}
+input,select,button{width:100%;padding:12px;margin:6px 0;box-sizing:border-box}
+button{background:#007bff;color:#fff;border:none;border-radius:8px}
 </style>
 </head>
-
 <body>
 
 <div id="splash">
 <div class="logo">⛽ E.FUEL</div>
-<div class="loader"><span></span></div>
+<div class="bar"><div></div></div>
 </div>
 
-<div id="loginScreen" class="screen">
+<div id="login" class="screen">
 <div class="card">
-<h2>Send OTP</h2>
-
-<input type="tel" id="phone"
-placeholder="+91XXXXXXXXXX">
-
+<h3>Send OTP</h3>
+<input id="phone" placeholder="+91XXXXXXXXXX">
 <div id="recaptcha-container"></div>
-
-<button onclick="sendOTP()">
-Send OTP
-</button>
+<button onclick="sendOTP()">Send OTP</button>
 </div>
 </div>
 
-<div id="otpScreen" class="screen">
+<div id="otp" class="screen">
 <div class="card">
-<h2>Verify OTP</h2>
-
-<input type="text" id="otp"
-placeholder="Enter OTP">
-
-<button onclick="verifyOTP()">
-Verify OTP
-</button>
+<h3>Verify OTP</h3>
+<input id="otpCode" placeholder="OTP">
+<button onclick="verifyOTP()">Verify OTP</button>
 </div>
 </div>
 
-<div id="appScreen" class="screen">
+<div id="app" class="screen">
 <div class="card">
-
 <h2>⛽ E.Fuel</h2>
-
 <input id="name" placeholder="Name">
-
-<input id="litres"
-type="number"
-placeholder="Litres">
-
-<select id="fuelType">
-<option>Petrol</option>
-<option>Diesel</option>
-<option>CNG</option>
-</select>
-
-<button onclick="calculate()">
-🚚 Book Fuel
-</button>
-
-<button onclick="getLocation()">
-📍 Get Location
-</button>
-
+<input id="litres" type="number" placeholder="Litres">
+<select id="fuelType"><option>Petrol</option><option>Diesel</option><option>CNG</option></select>
+<button onclick="calculate()">Book Fuel</button>
+<button onclick="getLocation()">Get Location</button>
 <p id="locationText"></p>
 <p id="deliveryTime"></p>
-
-<button onclick="payUPI()">
-💳 Pay via UPI
-</button>
-
+<button onclick="payUPI()">Pay via UPI</button>
 <h3 id="result"></h3>
 <p id="orderStatus"></p>
-
 <ul id="history"></ul>
+</div>
+</div>
 
-</div>
-</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig={apiKey:"AIzaSyAnUvEASVakh94YcokSkUmcKYYEdY5a1zs",authDomain:"efuel-app-10399.firebaseapp.com",projectId:"efuel-app-10399",storageBucket:"efuel-app-10399.firebasestorage.app",messagingSenderId:"272330806335",appId:"1:272330806335:web:dfddcb70e1322f4b1f548a"};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+
+setTimeout(()=>{
+document.getElementById('splash').style.display='none';
+if(localStorage.getItem('loggedIn')==='yes') appScreen(); else document.getElementById('login').style.display='block';
+},3000);
+
+window.recaptchaVerifier=new RecaptchaVerifier(auth,'recaptcha-container',{});
+
+window.sendOTP=()=>{
+signInWithPhoneNumber(auth,document.getElementById('phone').value,window.recaptchaVerifier)
+.then(r=>{window.confirmationResult=r;login.style.display='none';otp.style.display='block';})
+.catch(e=>alert(e.message));
+}
+
+window.verifyOTP=()=>{
+confirmationResult.confirm(document.getElementById('otpCode').value)
+.then(()=>{localStorage.setItem('loggedIn','yes');appScreen();})
+.catch(()=>alert('Wrong OTP'));
+}
+
+function appScreen(){otp.style.display='none';login.style.display='none';app.style.display='block';}
+
+window.calculate=()=>{
+let n=name.value,l=parseFloat(litres.value||0),f=fuelType.value;
+if(!n||!l)return alert('Fill details');
+let p=f==='Petrol'?l*150:f==='Diesel'?l*120:l*105;
+result.innerText='Total Price ₹'+p;
+orderStatus.innerText='📦 Order Received';
+setTimeout(()=>orderStatus.innerText='🚚 Rider On The Way',5000);
+let d=JSON.parse(localStorage.getItem('fuel')||'[]');
+d.push({n,l,f,p});localStorage.setItem('fuel',JSON.stringify(d));showHistory();
+}
+
+window.getLocation=()=>navigator.geolocation.getCurrentPosition(pos=>{
+locationText.innerText=`📍 ${pos.coords.latitude}, ${pos.coords.longitude}`;
+deliveryTime.innerText='🚚 ETA: 20 Minutes';
+});
+
+window.payUPI=()=>{
+let l=parseFloat(litres.value||0),f=fuelType.value;
+let a=f==='Petrol'?l*150:f==='Diesel'?l*120:l*105;
+location.href=`upi://pay?pa=6202307387-n456@ybl&pn=E.Fuel&am=${a}&cu=INR`;
+}
+
+window.showHistory=()=>{
+history.innerHTML='';
+(JSON.parse(localStorage.getItem('fuel')||'[]')).forEach(i=>{
+let li=document.createElement('li');
+li.textContent=`${i.n} | ${i.l}L | ₹${i.p}`;
+history.appendChild(li);
+});
+}
+showHistory();
+</script>
+</body></html>

@@ -1,131 +1,248 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>E.Fuel Premium</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E.Fuel</title>
+
 <style>
-body{font-family:Arial;margin:0;background:#0b1220;color:white;text-align:center}
-#splash{position:fixed;inset:0;background:linear-gradient(135deg,#000,#003366,#00c853);display:flex;flex-direction:column;justify-content:center;align-items:center}
-.logo{font-size:42px;font-weight:bold;animation:pulse 1.5s infinite}
-@keyframes pulse{50%{transform:scale(1.1)}}
-.bar{width:260px;height:8px;background:#222;border-radius:10px;overflow:hidden}
-.bar div{height:100%;background:#00ff88;width:0;animation:load 3s forwards}
-@keyframes load{to{width:100%}}
-.screen{display:none;padding:20px}
-.card{background:white;color:black;max-width:360px;margin:20px auto;padding:20px;border-radius:12px}
-input,select,button{width:100%;padding:12px;margin:6px 0;box-sizing:border-box}
-button{background:#007bff;color:#fff;border:none;border-radius:8px}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#0b1220;
+color:white;
+text-align:center;
+}
+
+#splash{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#000,#0033cc,#00cc66);
+}
+
+.logo{
+font-size:42px;
+font-weight:bold;
+animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+50%{transform:scale(1.1);}
+}
+
+.loader{
+width:260px;
+height:10px;
+background:#222;
+border-radius:20px;
+overflow:hidden;
+margin-top:20px;
+}
+
+.progress{
+height:100%;
+width:0%;
+background:#00ff88;
+animation:load 3s forwards;
+}
+
+@keyframes load{
+to{width:100%;}
+}
+
+.card{
+background:white;
+color:black;
+width:90%;
+max-width:350px;
+margin:30px auto;
+padding:20px;
+border-radius:12px;
+box-sizing:border-box;
+}
+
+input,select,button{
+width:100%;
+padding:12px;
+margin:8px 0;
+box-sizing:border-box;
+}
+
+button{
+background:#007bff;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+button:hover{
+opacity:0.9;
+}
 </style>
 </head>
+
 <body>
 
 <div id="splash">
-<div class="logo">⛽ E.FUEL</div>
-<div class="bar"><div></div></div>
+<h1 class="logo">⛽ E.FUEL</h1>
+
+<div class="loader">
+<div class="progress"></div>
 </div>
 
-<div id="login" class="screen">
+<p>Loading...</p>
+</div>
+
+<div id="loginScreen" style="display:none;">
+
 <div class="card">
-<h3>Send OTP</h3>
-<input id="phone" placeholder="+91XXXXXXXXXX">
-<div id="recaptcha-container"></div>
+
+<h2>Login</h2>
+
+<input type="text" id="phone" placeholder="Mobile Number">
+
 <button onclick="sendOTP()">Send OTP</button>
-</div>
+
 </div>
 
-<div id="otp" class="screen">
+</div>
+
+<div id="otpScreen" style="display:none;">
+
 <div class="card">
-<h3>Verify OTP</h3>
-<input id="otpCode" placeholder="OTP">
+
+<h2>Verify OTP</h2>
+
+<input type="text" id="otpInput" placeholder="Enter OTP">
+
 <button onclick="verifyOTP()">Verify OTP</button>
-</div>
+
 </div>
 
-<div id="app" class="screen">
+</div>
+
+<div id="dashboard" style="display:none;">
+
 <div class="card">
-<h2>⛽ E.Fuel</h2>
-<input id="name" placeholder="Name">
-<input id="litres" type="number" placeholder="Litres">
-<select id="fuelType"><option>Petrol</option><option>Diesel</option><option>CNG</option></select>
-<button onclick="calculate()">Book Fuel</button>
-<button onclick="getLocation()">Get Location</button>
-<p id="locationText"></p>
-<p id="deliveryTime"></p>
-<button onclick="payUPI()">Pay via UPI</button>
+
+<h2>⛽ E.Fuel Dashboard</h2>
+
+<input type="text" id="name" placeholder="Apna Naam">
+
+<input type="number" id="litres" placeholder="Litres">
+
+<select id="fuelType">
+<option>Petrol</option>
+<option>Diesel</option>
+<option>CNG</option>
+</select>
+
+<button onclick="calculate()">🚚 Book Fuel</button>
+
 <h3 id="result"></h3>
-<p id="orderStatus"></p>
-<ul id="history"></ul>
-</div>
+
 </div>
 
-// DEMO OTP SYSTEM
+</div>
 
-window.sendOTP = function () {
+<script>
 
-    let phone = document.getElementById("phone").value;
+setTimeout(function(){
 
-    if (!phone) {
-        alert("Phone number enter karo");
-        return;
-    }
+document.getElementById("splash").style.display="none";
 
-    alert("Demo OTP Sent\n\nOTP = 123456");
+document.getElementById("loginScreen").style.display="block";
 
-    document.getElementById("login").style.display = "none";
-    document.getElementById("otp").style.display = "block";
-};
+},3000);
 
-window.verifyOTP = function () {
+function sendOTP(){
 
-    let otp = document.getElementById("otpCode").value;
+let phone=document.getElementById("phone").value;
 
-    if (otp === "123456") {
+if(phone.length<10){
 
-        localStorage.setItem("loggedIn", "yes");
+alert("Valid Mobile Number Dalo");
 
-        document.getElementById("otp").style.display = "none";
-        document.getElementById("app").style.display = "block";
+return;
 
-        alert("Login Successful ✅");
-
-    } else {
-
-        alert("Wrong OTP ❌");
-    }
-};
-function appScreen(){otp.style.display='none';login.style.display='none';app.style.display='block';}
-
-window.calculate=()=>{
-let n=name.value,l=parseFloat(litres.value||0),f=fuelType.value;
-if(!n||!l)return alert('Fill details');
-let p=f==='Petrol'?l*150:f==='Diesel'?l*120:l*105;
-result.innerText='Total Price ₹'+p;
-orderStatus.innerText='📦 Order Received';
-setTimeout(()=>orderStatus.innerText='🚚 Rider On The Way',5000);
-let d=JSON.parse(localStorage.getItem('fuel')||'[]');
-d.push({n,l,f,p});localStorage.setItem('fuel',JSON.stringify(d));showHistory();
 }
 
-window.getLocation=()=>navigator.geolocation.getCurrentPosition(pos=>{
-locationText.innerText=`📍 ${pos.coords.latitude}, ${pos.coords.longitude}`;
-deliveryTime.innerText='🚚 ETA: 20 Minutes';
-});
+alert("Demo OTP Sent\n\nOTP = 123456");
 
-window.payUPI=()=>{
-let l=parseFloat(litres.value||0),f=fuelType.value;
-let a=f==='Petrol'?l*150:f==='Diesel'?l*120:l*105;
-location.href=`upi://pay?pa=6202307387-n456@ybl&pn=E.Fuel&am=${a}&cu=INR`;
+document.getElementById("loginScreen").style.display="none";
+
+document.getElementById("otpScreen").style.display="block";
+
 }
 
-window.showHistory=()=>{
-history.innerHTML='';
-(JSON.parse(localStorage.getItem('fuel')||'[]')).forEach(i=>{
-let li=document.createElement('li');
-li.textContent=`${i.n} | ${i.l}L | ₹${i.p}`;
-history.appendChild(li);
-});
+function verifyOTP(){
+
+let otp=document.getElementById("otpInput").value;
+
+if(otp==="123456"){
+
+document.getElementById("otpScreen").style.display="none";
+
+document.getElementById("dashboard").style.display="block";
+
+alert("Login Successful ✅");
+
 }
-showHistory();
+else{
+
+alert("Wrong OTP ❌");
+
+}
+
+}
+
+function calculate(){
+
+let litres=parseFloat(
+document.getElementById("litres").value
+);
+
+let fuelType=
+document.getElementById("fuelType").value;
+
+if(!litres){
+
+alert("Litres Enter Karo");
+
+return;
+
+}
+
+let price;
+
+if(fuelType==="Petrol"){
+
+price=litres*150;
+
+}
+else if(fuelType==="Diesel"){
+
+price=litres*120;
+
+}
+else{
+
+price=litres*105;
+
+}
+
+document.getElementById("result").innerText=
+"Total Price: ₹"+price;
+
+}
+
 </script>
-</body></html>
+
+</body>
+</html>
+```

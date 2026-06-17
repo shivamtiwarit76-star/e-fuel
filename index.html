@@ -59,33 +59,41 @@ button{background:#007bff;color:#fff;border:none;border-radius:8px}
 </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+// DEMO OTP SYSTEM
 
-const firebaseConfig={apiKey:"AIzaSyAnUvEASVakh94YcokSkUmcKYYEdY5a1zs",authDomain:"efuel-app-10399.firebaseapp.com",projectId:"efuel-app-10399",storageBucket:"efuel-app-10399.firebasestorage.app",messagingSenderId:"272330806335",appId:"1:272330806335:web:dfddcb70e1322f4b1f548a"};
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
+window.sendOTP = function () {
 
-setTimeout(()=>{
-document.getElementById('splash').style.display='none';
-if(localStorage.getItem('loggedIn')==='yes') appScreen(); else document.getElementById('login').style.display='block';
-},3000);
+    let phone = document.getElementById("phone").value;
 
-window.recaptchaVerifier=new RecaptchaVerifier(auth,'recaptcha-container',{});
+    if (!phone) {
+        alert("Phone number enter karo");
+        return;
+    }
 
-window.sendOTP=()=>{
-signInWithPhoneNumber(auth,document.getElementById('phone').value,window.recaptchaVerifier)
-.then(r=>{window.confirmationResult=r;login.style.display='none';otp.style.display='block';})
-.catch(e=>alert(e.message));
-}
+    alert("Demo OTP Sent\n\nOTP = 123456");
 
-window.verifyOTP=()=>{
-confirmationResult.confirm(document.getElementById('otpCode').value)
-.then(()=>{localStorage.setItem('loggedIn','yes');appScreen();})
-.catch(()=>alert('Wrong OTP'));
-}
+    document.getElementById("login").style.display = "none";
+    document.getElementById("otp").style.display = "block";
+};
 
+window.verifyOTP = function () {
+
+    let otp = document.getElementById("otpCode").value;
+
+    if (otp === "123456") {
+
+        localStorage.setItem("loggedIn", "yes");
+
+        document.getElementById("otp").style.display = "none";
+        document.getElementById("app").style.display = "block";
+
+        alert("Login Successful ✅");
+
+    } else {
+
+        alert("Wrong OTP ❌");
+    }
+};
 function appScreen(){otp.style.display='none';login.style.display='none';app.style.display='block';}
 
 window.calculate=()=>{

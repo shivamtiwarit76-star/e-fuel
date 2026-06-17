@@ -272,6 +272,7 @@ alert("Wrong OTP");
 }
 
 /* Profile */
+
 function saveProfile(){
 
 let name=
@@ -285,15 +286,6 @@ return;
 
 }
 
-document.getElementById(
-"profileScreen"
-).style.display="none";
-
-document.getElementById(
-"locationScreen"
-).style.display="flex";
-
-}
 alert("Profile Saved ✅");
 
 console.log("Ready for Part 2");
@@ -301,106 +293,6 @@ console.log("Ready for Part 2");
 }
 
 </script>
-<!-- LOCATION SCREEN -->
 
-<div id="locationScreen" class="screen">
-
-<div class="card">
-
-<h2>📍 Location Access</h2>
-
-<p>
-We need your location to deliver fuel accurately.
-</p>
-
-<button onclick="allowLocation()">
-Allow Location
-</button>
-
-<button onclick="manualLocation()">
-Locate Manually
-</button>
-
-<p id="locationText"></p>
-
-</div>
-
-</div>
-
-<!-- DASHBOARD -->
-
-<div id="dashboard" class="screen">
-
-<div class="card">
-
-<h2>⛽ Fuel Booking</h2>
-
-<p id="userLocation">
-Current Location
-</p>
-
-<div id="petrolCard"
-onclick="selectFuel('Petrol')"
-style="
-padding:15px;
-border:2px solid #ff6600;
-border-radius:10px;
-margin:10px 0;
-cursor:pointer;
-">
-
-⛽ Petrol
-
-<br>
-
-₹150/L
-
-</div>
-
-<div id="dieselCard"
-onclick="selectFuel('Diesel')"
-style="
-padding:15px;
-border:2px solid #0099ff;
-border-radius:10px;
-margin:10px 0;
-cursor:pointer;
-">
-
-🚛 Diesel
-
-<br>
-
-₹120/L
-
-</div>
-
-<h3 id="selectedFuel">
-Selected: Petrol
-</h3>
-
-<input
-type="range"
-id="fuelSlider"
-min="1"
-max="100"
-value="5"
-oninput="updateAmount()">
-
-<p id="litreText">
-5 Litres
-</p>
-
-<h2 id="totalAmount">
-₹750
-</h2>
-
-<button onclick="proceedDelivery()">
-Proceed To Delivery
-</button>
-
-</div>
-
-</div>
 </body>
 </html>

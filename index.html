@@ -272,7 +272,6 @@ alert("Wrong OTP");
 }
 
 /* Profile */
-
 function saveProfile(){
 
 let name=
@@ -286,10 +285,23 @@ return;
 
 }
 
+document.getElementById(
+"profileScreen"
+).style.display="none";
+
+document.getElementById(
+"locationScreen"
+).style.display="flex";
+
+}
 alert("Profile Saved ✅");
 
 console.log("Ready for Part 2");
-  <!-- LOCATION SCREEN -->
+
+}
+
+</script>
+<!-- LOCATION SCREEN -->
 
 <div id="locationScreen" class="screen">
 
@@ -390,10 +402,5 @@ Proceed To Delivery
 </div>
 
 </div>
-
-}
-
-</script>
-
 </body>
 </html>

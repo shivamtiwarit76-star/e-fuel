@@ -1,368 +1,173 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>E-Fuel SaaS System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>E.Fuel Premium</title>
 
 <style>
-body{
+*{
 margin:0;
-font-family:Arial;
-background:linear-gradient(135deg,#050816,#0b1220);
-color:white;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
 }
-
-.container{
-text-align:center;
-padding:40px 20px;
-}
-
-h1{
-font-size:32px;
-margin-top:40px;
-color:#22c55e;
-}
-
-p{
-color:#cbd5e1;
-font-size:16px;
-max-width:600px;
-margin:auto;
-}
-
-.card{
-background:#111827;
-padding:20px;
-margin-top:30px;
-border-radius:15px;
-max-width:400px;
-margin-left:auto;
-margin-right:auto;
-}
-
-button{
-width:90%;
-padding:12px;
-margin:10px 0;
-border:none;
-border-radius:10px;
-font-weight:bold;
-cursor:pointer;
-}
-
-.demo{
-background:#3b82f6;
-color:white;
-}
-
-.buy{
-background:#22c55e;
-color:white;
-}
-
-.features{
-text-align:left;
-margin-top:20px;
-color:#cbd5e1;
-}
-
-.price{
-font-size:22px;
-color:#facc15;
-margin-top:10px;
-}
-
-.footer{
-margin-top:40px;
-font-size:12px;
-color:gray;
-}
-
-</style>
-</head>
-
-<body>
-<button onclick="openDemo()">Try Live Demo</button>
-<div class="container">
-
-<h1>⛽ E-Fuel SaaS System</h1>
-
-<p>
-Complete Fuel Delivery Booking System with Firebase backend, OTP login, order management and clean UI. Ready to deploy and sell.
-</p>
-
-<div class="card">
-
-<div class="price">💰 Price: ₹2999 - ₹6999</div>
-
-<button class="demo" onclick="openDemo()">▶ Try Live Demo</button>
-
-<button class="buy" onclick="contact()">💬 Buy Now / Contact</button>
-
-<div class="features">
-✔ Firebase OTP Login<br>
-✔ Fuel Booking System<br>
-✔ Order Management<br>
-✔ Mobile Responsive UI<br>
-✔ Ready-to-Deploy SaaS Template
-</div>
-
-</div>
-
-<div class="footer">
-© E-Fuel SaaS | Digital Product Template
-</div>
-
-</div>
-
-<script>
-
-function openDemo(){
-window.location.href = "https://shivamtiwarit76-star.github.io/e-fuel/";
-}
-
-function contact(){
-window.open("https://wa.me/916202307387?text=Hi%20I%20want%20to%20buy%20E-Fuel%20SaaS");
-}
-
-</script>
-<script>
-function openDemo(){
-window.location.href = "https://shivamtiwarit76-star.github.io/e-fuel/";
-}
-</script>
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>E-Fuel Business MVP</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
-<style>
 
 body{
-margin:0;
-font-family:Arial;
-background:#050816;
+background:#0b1220;
 color:white;
 }
 
-.screen{
-display:none;
+/* Splash */
+#splash{
+position:fixed;
+width:100%;
 height:100vh;
+background:linear-gradient(135deg,#000,#001f3f,#00c853);
+display:flex;
+flex-direction:column;
 justify-content:center;
 align-items:center;
-flex-direction:column;
+z-index:9999;
 }
 
-.active{display:flex;}
+.logo{
+font-size:40px;
+font-weight:bold;
+animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+50%{transform:scale(1.1);}
+}
+
+.loader{
+width:250px;
+height:8px;
+background:#222;
+border-radius:20px;
+margin-top:20px;
+overflow:hidden;
+}
+
+.loader span{
+display:block;
+height:100%;
+width:0%;
+background:#00ff88;
+animation:load 3s linear forwards;
+}
+
+@keyframes load{
+100%{width:100%;}
+}
+
+/* Login */
+.screen{
+display:none;
+padding:20px;
+}
 
 .card{
-background:#111827;
+background:white;
+color:black;
+max-width:350px;
+margin:auto;
 padding:20px;
-border-radius:15px;
-width:90%;
-max-width:360px;
-text-align:center;
+border-radius:12px;
+margin-top:40px;
 }
 
-input{
-width:90%;
-padding:10px;
-margin:8px 0;
-border-radius:10px;
-border:none;
+input,select{
+width:100%;
+padding:12px;
+margin:10px 0;
 }
 
 button{
-width:95%;
+width:100%;
 padding:12px;
 border:none;
-border-radius:10px;
-background:#22c55e;
-font-weight:bold;
-cursor:pointer;
-margin-top:10px;
-}
-
-.fuel{
-display:flex;
-gap:10px;
-justify-content:center;
-}
-
-.fuelBox{
-background:#1f2937;
-padding:15px;
-border-radius:10px;
+border-radius:8px;
+background:#007bff;
+color:white;
+margin-top:8px;
 cursor:pointer;
 }
-
-.nav{
-position:fixed;
-bottom:0;
-width:100%;
-display:flex;
-justify-content:space-around;
-background:#0f172a;
-padding:10px;
-font-size:12px;
-}
-
 </style>
 </head>
-<script>
-function openDemo(){
-window.location.href = "https://shivamtiwarit76-star.github.io/e-fuel/";
-}
-</script>
+
 <body>
 
-<!-- LOGIN -->
-<div id="login" class="screen active">
+<div id="splash">
+<div class="logo">⛽ E.FUEL</div>
+<div class="loader"><span></span></div>
+</div>
+
+<div id="loginScreen" class="screen">
 <div class="card">
-<h2>E-Fuel Login</h2>
-<input id="phone" placeholder="+91XXXXXXXXXX">
-<div id="recaptcha"></div>
-<button onclick="sendOTP()">Send OTP</button>
+<h2>Send OTP</h2>
+
+<input type="tel" id="phone"
+placeholder="+91XXXXXXXXXX">
+
+<div id="recaptcha-container"></div>
+
+<button onclick="sendOTP()">
+Send OTP
+</button>
 </div>
 </div>
 
-<!-- OTP -->
-<div id="otp" class="screen">
+<div id="otpScreen" class="screen">
 <div class="card">
 <h2>Verify OTP</h2>
-<input id="code">
-<button onclick="verifyOTP()">Verify</button>
+
+<input type="text" id="otp"
+placeholder="Enter OTP">
+
+<button onclick="verifyOTP()">
+Verify OTP
+</button>
 </div>
 </div>
 
-<!-- PROFILE -->
-<div id="profile" class="screen">
+<div id="appScreen" class="screen">
 <div class="card">
-<h2>Profile Setup</h2>
-<input id="name" placeholder="Full Name">
-<input id="vehicle" placeholder="Vehicle Number">
-<button onclick="saveProfile()">Continue</button>
+
+<h2>⛽ E.Fuel</h2>
+
+<input id="name" placeholder="Name">
+
+<input id="litres"
+type="number"
+placeholder="Litres">
+
+<select id="fuelType">
+<option>Petrol</option>
+<option>Diesel</option>
+<option>CNG</option>
+</select>
+
+<button onclick="calculate()">
+🚚 Book Fuel
+</button>
+
+<button onclick="getLocation()">
+📍 Get Location
+</button>
+
+<p id="locationText"></p>
+<p id="deliveryTime"></p>
+
+<button onclick="payUPI()">
+💳 Pay via UPI
+</button>
+
+<h3 id="result"></h3>
+<p id="orderStatus"></p>
+
+<ul id="history"></ul>
+
 </div>
 </div>
-
-<!-- DASHBOARD -->
-<div id="dashboard" class="screen">
-<h2>Select Fuel</h2>
-
-<div class="fuel">
-<div class="fuelBox" onclick="selectFuel('Petrol')">Petrol ₹105</div>
-<div class="fuelBox" onclick="selectFuel('Diesel')">Diesel ₹95</div>
-</div>
-
-<button onclick="createOrder()">Place Order</button>
-</div>
-
-<!-- SUCCESS -->
-<div id="success" class="screen">
-<h2>Order Placed ✅</h2>
-<p>Tracking Started</p>
-<button onclick="home()">Home</button>
-</div>
-
-<!-- NAV -->
-<div class="nav">
-<div>Home</div>
-<div>Orders</div>
-<div>Wallet</div>
-<div>Profile</div>
-</div>
-
-<script>
-
-/* 🔥 FIREBASE CONFIG */
-const firebaseConfig = {
-apiKey: "YOUR_API_KEY",
-authDomain: "YOUR_DOMAIN",
-projectId: "YOUR_ID"
-};
-
-firebase.initializeApp(firebaseConfig);
-
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-let confirmation;
-let selectedFuel = "";
-let userId = "";
-
-/* OTP */
-window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha');
-
-function sendOTP(){
-let phone = document.getElementById("phone").value;
-
-auth.signInWithPhoneNumber(phone, window.recaptchaVerifier)
-.then(res=>{
-confirmation = res;
-switchScreen("otp");
-})
-.catch(err=>alert(err.message));
-}
-
-function verifyOTP(){
-confirmation.confirm(document.getElementById("code").value)
-.then(result=>{
-userId = result.user.uid;
-switchScreen("profile");
-})
-.catch(()=>alert("Wrong OTP"));
-}
-
-/* PROFILE SAVE */
-function saveProfile(){
-db.collection("users").doc(userId).set({
-name: document.getElementById("name").value,
-vehicle: document.getElementById("vehicle").value
-});
-
-switchScreen("dashboard");
-}
-
-/* FUEL */
-function selectFuel(f){
-selectedFuel = f;
-alert(f + " selected");
-}
-
-/* ORDER */
-function createOrder(){
-
-db.collection("orders").add({
-userId,
-fuel: selectedFuel,
-status: "placed",
-time: Date.now()
-});
-
-switchScreen("success");
-}
-
-/* NAV */
-function home(){
-switchScreen("dashboard");
-}
-
-function switchScreen(id){
-document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-}
-
-</script>
-
-</body>
-</html>

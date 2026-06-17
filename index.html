@@ -286,23 +286,9 @@ return;
 
 }
 
-document.getElementById(
-"profileScreen"
-).style.display="none";
-
-document.getElementById(
-"locationScreen"
-).style.display="flex";
-
-}
-
 alert("Profile Saved ✅");
 
 console.log("Ready for Part 2");
-
-}
-
-</script>
   <!-- LOCATION SCREEN -->
 
 <div id="locationScreen" class="screen">
@@ -404,141 +390,10 @@ Proceed To Delivery
 </div>
 
 </div>
-  let fuelPrice = 150;
-
-function allowLocation(){
-
-if(navigator.geolocation){
-
-navigator.geolocation.getCurrentPosition(
-
-function(position){
-
-document.getElementById(
-"locationText"
-).innerText =
-"Location Access Granted ✅";
-
-document.getElementById(
-"userLocation"
-).innerText =
-"📍 Live Location Connected";
-
-setTimeout(function(){
-
-document.getElementById(
-"locationScreen"
-).style.display="none";
-
-document.getElementById(
-"dashboard"
-).style.display="flex";
-
-},1000);
 
 }
 
-);
-
-}
-
-}
-
-function manualLocation(){
-
-let city =
-prompt("Enter Your Area");
-
-document.getElementById(
-"userLocation"
-).innerText =
-"📍 " + city;
-
-document.getElementById(
-"locationScreen"
-).style.display="none";
-
-document.getElementById(
-"dashboard"
-).style.display="flex";
-
-}
-
-function selectFuel(type){
-
-if(type==="Petrol"){
-
-fuelPrice=150;
-
-document.getElementById(
-"selectedFuel"
-).innerText=
-"Selected: Petrol";
-
-document.getElementById(
-"petrolCard"
-).style.transform=
-"scale(1.05)";
-
-document.getElementById(
-"dieselCard"
-).style.transform=
-"scale(1)";
-
-}
-else{
-
-fuelPrice=120;
-
-document.getElementById(
-"selectedFuel"
-).innerText=
-"Selected: Diesel";
-
-document.getElementById(
-"dieselCard"
-).style.transform=
-"scale(1.05)";
-
-document.getElementById(
-"petrolCard"
-).style.transform=
-"scale(1)";
-
-}
-
-updateAmount();
-
-}
-
-function updateAmount(){
-
-let litre =
-document.getElementById(
-"fuelSlider"
-).value;
-
-document.getElementById(
-"litreText"
-).innerText =
-litre + " Litres";
-
-document.getElementById(
-"totalAmount"
-).innerText =
-"₹" + (litre * fuelPrice);
-
-}
-
-function proceedDelivery(){
-
-alert(
-"Delivery Scheduling Screen Part 3 me aayegi 🚚"
-);
-
-}
-
-updateAmount();
+</script>
 
 </body>
- </html>
+</html>

@@ -208,7 +208,23 @@ type="text"
 id="vehicleNumber"
 placeholder="Vehicle Number">
 
-<button onclick="saveProfile()">
+<button onclick="saveProfile()">function saveProfile(){
+
+let name =
+document.getElementById("fullname").value;
+
+if(!name){
+
+alert("Full Name dalo");
+return;
+
+}
+
+document.getElementById("profileScreen").style.display="none";
+
+document.getElementById("locationScreen").style.display="flex";
+
+}
 Continue
 </button>
 
@@ -216,7 +232,94 @@ Continue
 
 </div>
 
-<script>
+<script>let fuelPrice = 150;
+
+function allowLocation(){
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(
+
+function(position){
+
+document.getElementById("locationText").innerText =
+"Location Connected ✅";
+
+document.getElementById("userLocation").innerText =
+"📍 Live Location Connected";
+
+setTimeout(function(){
+
+document.getElementById("locationScreen").style.display="none";
+
+document.getElementById("dashboard").style.display="flex";
+
+},1000);
+
+}
+
+);
+
+}
+
+}
+
+function manualLocation(){
+
+let area = prompt("Enter Your Area");
+
+document.getElementById("userLocation").innerText =
+"📍 " + area;
+
+document.getElementById("locationScreen").style.display="none";
+
+document.getElementById("dashboard").style.display="flex";
+
+}
+
+function selectFuel(type){
+
+if(type==="Petrol"){
+
+fuelPrice = 150;
+
+document.getElementById("selectedFuel").innerText =
+"Selected: Petrol";
+
+}
+else{
+
+fuelPrice = 120;
+
+document.getElementById("selectedFuel").innerText =
+"Selected: Diesel";
+
+}
+
+updateAmount();
+
+}
+
+function updateAmount(){
+
+let litre =
+document.getElementById("fuelSlider").value;
+
+document.getElementById("litreText").innerText =
+litre + " Litres";
+
+document.getElementById("totalAmount").innerText =
+"₹" + (litre * fuelPrice);
+
+}
+
+function proceedDelivery(){
+
+alert("Part 3 me Delivery Scheduling add karenge 🚚");
+
+}
+
+updateAmount();
 
 /* Splash */
 
@@ -293,6 +396,107 @@ console.log("Ready for Part 2");
 }
 
 </script>
+  <!-- LOCATION SCREEN -->
+
+<div id="locationScreen" class="screen">
+
+<div class="card">
+
+<h2>📍 Location Access</h2>
+
+<p>
+We need your location to deliver fuel accurately.
+</p>
+
+<button onclick="allowLocation()">
+Allow Location
+</button>
+
+<button onclick="manualLocation()">
+Locate Manually
+</button>
+
+<p id="locationText"></p>
+
+</div>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div id="dashboard" class="screen">
+
+<div class="card">
+
+<h2>⛽ Fuel Booking</h2>
+
+<p id="userLocation">
+Current Location
+</p>
+
+<div id="petrolCard"
+onclick="selectFuel('Petrol')"
+style="
+padding:15px;
+border:2px solid orange;
+border-radius:10px;
+margin:10px 0;
+cursor:pointer;
+">
+
+⛽ Petrol
+
+<br>
+
+₹150/L
+
+</div>
+
+<div id="dieselCard"
+onclick="selectFuel('Diesel')"
+style="
+padding:15px;
+border:2px solid #0099ff;
+border-radius:10px;
+margin:10px 0;
+cursor:pointer;
+">
+
+🚛 Diesel
+
+<br>
+
+₹120/L
+
+</div>
+
+<h3 id="selectedFuel">
+Selected: Petrol
+</h3>
+
+<input
+type="range"
+id="fuelSlider"
+min="1"
+max="100"
+value="5"
+oninput="updateAmount()">
+
+<p id="litreText">
+5 Litres
+</p>
+
+<h2 id="totalAmount">
+₹750
+</h2>
+
+<button onclick="proceedDelivery()">
+Proceed To Delivery
+</button>
+
+</div>
+
+</div>
 
 </body>
 </html>

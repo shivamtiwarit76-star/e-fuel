@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +16,16 @@ font-family:Arial,sans-serif;
 
 body{
 background:#0b1220;
-overflow-x:hidden;
+}
+
+/* Screens */
+
+.screen{
+display:none;
+min-height:100vh;
+justify-content:center;
+align-items:center;
+padding:20px;
 }
 
 /* Splash */
@@ -31,7 +41,7 @@ color:white;
 }
 
 .logo{
-font-size:50px;
+font-size:52px;
 font-weight:bold;
 animation:pulse 1.5s infinite;
 }
@@ -64,15 +74,7 @@ width:100%;
 }
 }
 
-/* Screens */
-
-.screen{
-display:none;
-min-height:100vh;
-justify-content:center;
-align-items:center;
-padding:20px;
-}
+/* Card */
 
 .card{
 background:white;
@@ -107,8 +109,20 @@ font-size:16px;
 cursor:pointer;
 }
 
-button:hover{
-opacity:.9;
+.fuel-card{
+padding:15px;
+border-radius:10px;
+margin:10px 0;
+cursor:pointer;
+font-weight:bold;
+}
+
+.petrol{
+border:2px solid orange;
+}
+
+.diesel{
+border:2px solid #0099ff;
 }
 </style>
 </head>
@@ -182,20 +196,11 @@ Verify OTP
 
 <h2>Complete Profile</h2>
 
-<input
-type="text"
-id="fullname"
-placeholder="Full Name">
+<input type="text" id="fullname" placeholder="Full Name">
 
-<input
-type="email"
-id="email"
-placeholder="Email Address">
+<input type="email" id="email" placeholder="Email">
 
-<input
-type="text"
-id="referral"
-placeholder="Referral Code (Optional)">
+<input type="text" id="referral" placeholder="Referral Code">
 
 <select id="vehicleType">
 <option>Bike</option>
@@ -203,12 +208,165 @@ placeholder="Referral Code (Optional)">
 <option>Truck</option>
 </select>
 
-<input
-type="text"
-id="vehicleNumber"
-placeholder="Vehicle Number">
+<input type="text" id="vehicleNumber" placeholder="Vehicle Number">
 
-<button onclick="saveProfile()">function saveProfile(){
+<button onclick="saveProfile()">
+Continue
+</button>
+
+</div>
+
+</div>
+
+<!-- LOCATION -->
+
+<div id="locationScreen" class="screen">
+
+<div class="card">
+
+<h2>📍 Location Access</h2>
+
+<p>
+We need your location to deliver fuel accurately.
+</p>
+
+<button onclick="allowLocation()">
+Allow Location
+</button>
+
+<button onclick="manualLocation()">
+Locate Manually
+</button>
+
+<p id="locationText"></p>
+
+</div>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div id="dashboard" class="screen">
+
+<div class="card">
+
+<h2>⛽ Fuel Booking</h2>
+
+<p id="userLocation">
+Current Location
+</p>
+
+<div
+class="fuel-card petrol"
+onclick="selectFuel('Petrol')">
+
+⛽ Petrol
+
+<br>
+
+₹150/L
+
+</div>
+
+<div
+class="fuel-card diesel"
+onclick="selectFuel('Diesel')">
+
+🚛 Diesel
+
+<br>
+
+₹120/L
+
+</div>
+
+<h3 id="selectedFuel">
+Selected: Petrol
+</h3>
+
+<input
+type="range"
+id="fuelSlider"
+min="1"
+max="100"
+value="5"
+oninput="updateAmount()">
+
+<p id="litreText">
+5 Litres
+</p>
+
+<h2 id="totalAmount">
+₹750
+</h2>
+
+<button onclick="proceedDelivery()">
+Proceed To Delivery
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+let fuelPrice = 150;
+
+/* Splash */
+
+setTimeout(function(){
+
+document.getElementById("splash").style.display="none";
+
+document.getElementById("loginScreen").style.display="flex";
+
+},2000);
+
+/* OTP */
+
+function sendOTP(){
+
+let phone =
+document.getElementById("phone").value;
+
+if(phone.length !== 10){
+
+alert("10 digit mobile number dalo");
+return;
+
+}
+
+alert("Demo OTP Sent\nOTP = 123456");
+
+document.getElementById("loginScreen").style.display="none";
+
+document.getElementById("otpScreen").style.display="flex";
+
+}
+
+function verifyOTP(){
+
+let otp =
+document.getElementById("otp").value;
+
+if(otp === "123456"){
+
+document.getElementById("otpScreen").style.display="none";
+
+document.getElementById("profileScreen").style.display="flex";
+
+}
+else{
+
+alert("Wrong OTP");
+
+}
+
+}
+
+/* Profile */
+
+function saveProfile(){
 
 let name =
 document.getElementById("fullname").value;
@@ -225,14 +383,8 @@ document.getElementById("profileScreen").style.display="none";
 document.getElementById("locationScreen").style.display="flex";
 
 }
-Continue
-</button>
 
-</div>
-
-</div>
-
-<script>let fuelPrice = 150;
+/* Location */
 
 function allowLocation(){
 
@@ -240,13 +392,10 @@ if(navigator.geolocation){
 
 navigator.geolocation.getCurrentPosition(
 
-function(position){
+function(){
 
 document.getElementById("locationText").innerText =
 "Location Connected ✅";
-
-document.getElementById("userLocation").innerText =
-"📍 Live Location Connected";
 
 setTimeout(function(){
 
@@ -277,9 +426,11 @@ document.getElementById("dashboard").style.display="flex";
 
 }
 
+/* Dashboard */
+
 function selectFuel(type){
 
-if(type==="Petrol"){
+if(type === "Petrol"){
 
 fuelPrice = 150;
 
@@ -321,182 +472,8 @@ alert("Part 3 me Delivery Scheduling add karenge 🚚");
 
 updateAmount();
 
-/* Splash */
-
-setTimeout(function(){
-
-document.getElementById("splash").style.display="none";
-
-document.getElementById("loginScreen").style.display="flex";
-
-},2000);
-
-/* OTP */
-
-function sendOTP(){
-
-let phone=
-document.getElementById("phone").value;
-
-if(phone.length!==10){
-
-alert("10 digit mobile number dalo");
-
-return;
-
-}
-
-alert("Demo OTP Sent\n\nOTP = 123456");
-
-document.getElementById("loginScreen").style.display="none";
-
-document.getElementById("otpScreen").style.display="flex";
-
-}
-
-function verifyOTP(){
-
-let otp=
-document.getElementById("otp").value;
-
-if(otp==="123456"){
-
-document.getElementById("otpScreen").style.display="none";
-
-document.getElementById("profileScreen").style.display="flex";
-
-}
-else{
-
-alert("Wrong OTP");
-
-}
-
-}
-
-/* Profile */
-
-function saveProfile(){
-
-let name=
-document.getElementById("fullname").value;
-
-if(!name){
-
-alert("Full Name dalo");
-
-return;
-
-}
-
-alert("Profile Saved ✅");
-
-console.log("Ready for Part 2");
-
-}
-
 </script>
-  <!-- LOCATION SCREEN -->
-
-<div id="locationScreen" class="screen">
-
-<div class="card">
-
-<h2>📍 Location Access</h2>
-
-<p>
-We need your location to deliver fuel accurately.
-</p>
-
-<button onclick="allowLocation()">
-Allow Location
-</button>
-
-<button onclick="manualLocation()">
-Locate Manually
-</button>
-
-<p id="locationText"></p>
-
-</div>
-
-</div>
-
-<!-- DASHBOARD -->
-
-<div id="dashboard" class="screen">
-
-<div class="card">
-
-<h2>⛽ Fuel Booking</h2>
-
-<p id="userLocation">
-Current Location
-</p>
-
-<div id="petrolCard"
-onclick="selectFuel('Petrol')"
-style="
-padding:15px;
-border:2px solid orange;
-border-radius:10px;
-margin:10px 0;
-cursor:pointer;
-">
-
-⛽ Petrol
-
-<br>
-
-₹150/L
-
-</div>
-
-<div id="dieselCard"
-onclick="selectFuel('Diesel')"
-style="
-padding:15px;
-border:2px solid #0099ff;
-border-radius:10px;
-margin:10px 0;
-cursor:pointer;
-">
-
-🚛 Diesel
-
-<br>
-
-₹120/L
-
-</div>
-
-<h3 id="selectedFuel">
-Selected: Petrol
-</h3>
-
-<input
-type="range"
-id="fuelSlider"
-min="1"
-max="100"
-value="5"
-oninput="updateAmount()">
-
-<p id="litreText">
-5 Litres
-</p>
-
-<h2 id="totalAmount">
-₹750
-</h2>
-
-<button onclick="proceedDelivery()">
-Proceed To Delivery
-</button>
-
-</div>
-
-</div>
 
 </body>
 </html>
+```

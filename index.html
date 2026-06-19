@@ -365,7 +365,23 @@ alert("Wrong OTP");
 }
 
 /* Profile */
+function saveProfile(){
 
+let name =
+document.getElementById("fullname").value;
+
+if(!name){
+
+alert("Full Name dalo");
+return;
+
+}
+
+document.getElementById("profileScreen").style.display="none";
+
+document.getElementById("locationScreen").style.display="flex";
+
+}
 
 
 /* Location */

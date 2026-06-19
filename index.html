@@ -450,7 +450,9 @@ document.getElementById("totalAmount").innerText =
 
 function proceedDelivery(){
 
-alert("Part 3 me Delivery Scheduling add karenge 🚚");
+document.getElementById("dashboard").style.display="none";
+
+document.getElementById("deliveryScreen").style.display="flex";
 
 }
 
@@ -484,6 +486,59 @@ appId: "1:272330806335:web:dfddcb70e1322f4b1f548a"
 const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
+  window.placeOrder = function(){
+
+let address =
+document.getElementById("deliveryAddress").value;
+
+let deliveryType =
+document.getElementById("deliveryType").value;
+
+let deliveryTime =
+document.getElementById("deliveryTime").value;
+
+let fuelType =
+document.getElementById("selectedFuel").innerText;
+
+let litres =
+document.getElementById("fuelSlider").value;
+
+let amount =
+document.getElementById("totalAmount").innerText;
+
+if(!address){
+
+alert("Address dalo");
+return;
+
+}
+
+push(ref(db,"orders"),{
+
+fuelType:fuelType,
+litres:litres,
+amount:amount,
+address:address,
+deliveryType:deliveryType,
+deliveryTime:deliveryTime,
+status:"Pending",
+createdAt:new Date().toISOString()
+
+})
+
+.then(()=>{
+
+alert("Order Saved Successfully ✅");
+
+})
+
+.catch((error)=>{
+
+alert(error.message);
+
+});
+
+}
 
 window.saveProfile = function(){
 
@@ -535,6 +590,44 @@ alert(error.message);
 }
 
 </script>
+```
+```html
+<!-- DELIVERY SCREEN -->
+
+<div id="deliveryScreen" class="screen">
+
+<div class="card">
+
+<h2>🚚 Delivery Scheduling</h2>
+
+<select id="deliveryType">
+
+<option value="Instant">
+Instant Delivery (30-40 mins)
+</option>
+
+<option value="Scheduled">
+Schedule For Later
+</option>
+
+</select>
+
+<input
+type="text"
+id="deliveryAddress"
+placeholder="Enter Delivery Address">
+
+<input
+type="datetime-local"
+id="deliveryTime">
+
+<button onclick="placeOrder()">
+Confirm Order
+</button>
+
+</div>
+
+</div>
 ```
 
 </body>

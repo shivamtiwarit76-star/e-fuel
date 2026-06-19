@@ -558,7 +558,26 @@ appId: "1:272330806335:web:dfddcb70e1322f4b1f548a"
 const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
-  window.placeOrder = function(){
+window.placeOrder = function(){
+
+let address = document.getElementById("deliveryAddress").value;
+
+if(!address){
+alert("Address dalo");
+return;
+}
+
+document.getElementById("deliveryScreen").style.display="none";
+document.getElementById("checkoutScreen").style.display="flex";
+
+};
+
+window.payNow = function(){
+
+alert("Order Confirmed ✅");
+
+};
+
    
 window.payNow = function(){
 

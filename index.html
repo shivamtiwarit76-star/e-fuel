@@ -455,6 +455,62 @@ document.getElementById("dashboard").style.display="none";
 document.getElementById("deliveryScreen").style.display="flex";
 
 }
+  ```html
+<!-- CHECKOUT SCREEN -->
+
+<div id="checkoutScreen" class="screen">
+
+<div class="card">
+
+<h2>💳 Checkout</h2>
+
+<input type="text" id="customerName" placeholder="Full Name">
+
+<input type="tel" id="customerPhone" placeholder="Mobile Number">
+
+<input type="tel" id="altPhone" placeholder="Alternate Mobile Number">
+
+<input type="email" id="customerEmail" placeholder="Email">
+
+<input type="text" id="houseNo" placeholder="House / Flat No">
+
+<input type="text" id="street" placeholder="Area / Street">
+
+<input type="text" id="landmark" placeholder="Landmark">
+
+<input type="text" id="city" placeholder="City">
+
+<input type="text" id="state" placeholder="State">
+
+<input type="text" id="pincode" placeholder="PIN Code">
+
+<h3>Payment Method</h3>
+
+<select id="paymentMethod">
+
+<option value="UPI">
+UPI (6202307387-n456@ybl)
+</option>
+
+<option value="CARD">
+Credit / Debit Card
+</option>
+
+<option value="COD">
+Cash On Delivery
+</option>
+
+</select>
+
+<button onclick="payNow()">
+Pay & Confirm Order
+</button>
+
+</div>
+
+</div>
+```
+
 
 updateAmount();
 
@@ -487,6 +543,76 @@ const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
   window.placeOrder = function(){
+    ```javascript
+window.payNow = function(){
+
+let customerName =
+document.getElementById("customerName").value;
+
+let customerPhone =
+document.getElementById("customerPhone").value;
+
+let customerEmail =
+document.getElementById("customerEmail").value;
+
+let city =
+document.getElementById("city").value;
+
+let state =
+document.getElementById("state").value;
+
+let pincode =
+document.getElementById("pincode").value;
+
+let paymentMethod =
+document.getElementById("paymentMethod").value;
+
+if(!customerName || !customerPhone){
+
+alert("Name aur Mobile Number dalo");
+return;
+
+}
+
+push(ref(db,"customerOrders"),{
+
+customerName,
+customerPhone,
+customerEmail,
+city,
+state,
+pincode,
+paymentMethod,
+orderStatus:"Pending Payment",
+createdAt:new Date().toISOString()
+
+})
+
+.then(()=>{
+
+if(paymentMethod==="UPI"){
+
+window.location.href =
+"upi://pay?pa=6202307387-n456@ybl&pn=EFUEL";
+
+}
+else{
+
+alert("Order Confirmed ✅");
+
+}
+
+})
+
+.catch((error)=>{
+
+alert(error.message);
+
+});
+
+}
+```
+
 
 let address =
 document.getElementById("deliveryAddress").value;
@@ -528,9 +654,15 @@ createdAt:new Date().toISOString()
 
 .then(()=>{
 
-alert("Order Saved Successfully ✅");
+```javascript
+.then(()=>{
+
+document.getElementById("deliveryScreen").style.display="none";
+
+document.getElementById("checkoutScreen").style.display="flex";
 
 })
+```
 
 .catch((error)=>{
 

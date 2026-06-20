@@ -608,6 +608,18 @@ alert("Name aur Mobile Number dalo");
 return;
 
 }
+ ```javascript
+let orderId =
+"EF" + Date.now();
+
+document.getElementById("orderIdText").innerText =
+"Order ID: " + orderId;
+
+document.getElementById("checkoutScreen").style.display="none";
+
+document.getElementById("successScreen").style.display="flex";
+```
+
 
 push(ref(db,"customerOrders"),{
 
@@ -740,7 +752,25 @@ createdAt:new Date().toISOString()
 
 .then(()=>{
 
-alert("Profile Saved In Firebase ✅");
+alert("Profile Saved In Firebase 
+      ```javascript
+window.openMyOrders = function(){
+
+document.getElementById("successScreen").style.display="none";
+
+document.getElementById("myOrdersScreen").style.display="flex";
+
+};
+
+window.backHome = function(){
+
+document.getElementById("myOrdersScreen").style.display="none";
+
+document.getElementById("dashboard").style.display="flex";
+
+};
+```
+
 
 document.getElementById("profileScreen").style.display="none";
 
@@ -790,6 +820,50 @@ id="deliveryTime">
 
 <button onclick="placeOrder()">
 Confirm Order
+</button>
+
+</div>
+
+</div>
+```
+```html
+<!-- SUCCESS SCREEN -->
+
+<div id="successScreen" class="screen">
+
+<div class="card">
+
+<h1>✅</h1>
+
+<h2>Order Confirmed</h2>
+
+<p id="orderIdText"></p>
+
+<button onclick="openMyOrders()">
+My Orders
+</button>
+
+</div>
+
+</div>
+```
+```html
+<!-- MY ORDERS -->
+
+<div id="myOrdersScreen" class="screen">
+
+<div class="card">
+
+<h2>📦 My Orders</h2>
+
+<div id="ordersList">
+
+Loading...
+
+</div>
+
+<button onclick="backHome()">
+Home
 </button>
 
 </div>

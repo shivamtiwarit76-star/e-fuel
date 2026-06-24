@@ -35,7 +35,70 @@ color:white;
 cursor:pointer;
 }
 </style>
-</head>
+</head
+  <script>
+
+document.getElementById("splash").style.display="flex";
+
+setTimeout(function(){
+
+document.getElementById("splash").style.display="none";
+document.getElementById("loginScreen").style.display="flex";
+
+},2000);
+
+function sendOTP(){
+
+let phone =
+document.getElementById("phone").value;
+
+if(phone.length !== 10){
+
+alert("10 digit mobile number dalo");
+return;
+
+}
+
+document.getElementById("loginScreen").style.display="none";
+document.getElementById("otpScreen").style.display="flex";
+
+}
+
+function verifyOTP(){
+
+let otp =
+document.getElementById("otp").value;
+
+if(otp === "123456"){
+
+document.getElementById("otpScreen").style.display="none";
+document.getElementById("profileScreen").style.display="flex";
+
+}else{
+
+alert("Wrong OTP");
+
+}
+
+}
+
+function saveProfile(){
+
+let name =
+document.getElementById("fullname").value;
+
+if(!name){
+
+alert("Name dalo");
+return;
+
+}
+
+alert("Profile Saved ✅");
+
+}
+
+</script>
 
 <body>
 
@@ -45,23 +108,48 @@ cursor:pointer;
 </div>
 
 <div id="loginScreen" class="screen">
-<h2>Login Screen</h2>
-<button onclick="alert('Working ✅')">
-Test Button
+
+<h2>E.FUEL Login</h2>
+
+<input
+type="tel"
+id="phone"
+maxlength="10"
+placeholder="Mobile Number"
+style="padding:12px;margin:10px;width:250px;">
+
+<button onclick="sendOTP()">
+Send OTP
+  <div id="otpScreen" class="screen">
+
+<h2>Verify OTP</h2>
+
+<p>Demo OTP = 123456</p>
+
+<input
+type="number"
+id="otp"
+placeholder="Enter OTP"
+style="padding:12px;margin:10px;width:250px;">
+
+<button onclick="verifyOTP()">
+Verify OTP
+  <div id="profileScreen" class="screen">
+
+<h2>Complete Profile</h2>
+
+<input type="text" id="fullname" placeholder="Full Name">
+
+<input type="email" id="email" placeholder="Email">
+
+<button onclick="saveProfile()">
+Continue
 </button>
+
 </div>
+</button>
 
-<script>
-document.getElementById("splash").style.display="flex";
+</div>
+</button>
 
-setTimeout(function(){
-
-document.getElementById("splash").style.display="none";
-
-document.getElementById("loginScreen").style.display="flex";
-
-},2000);
-</script>
-
-</body>
-</html>
+</div>

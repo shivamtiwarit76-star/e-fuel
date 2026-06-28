@@ -1,155 +1,160 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>E.FUEL</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E.FUEL</title>
 
-<style>
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#0b1220;
-color:white;
-}
-
-.screen{
-display:none;
-height:100vh;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-}
-
-#splash{
-display:flex;
-background:linear-gradient(135deg,#000,#002b80,#00a651);
-}
-
-button{
-padding:12px 20px;
-border:none;
-border-radius:8px;
-background:#00a651;
-color:white;
-cursor:pointer;
-}
-</style>
-</head
-  <script>
-
-document.getElementById("splash").style.display="flex";
-
-setTimeout(function(){
-
-document.getElementById("splash").style.display="none";
-document.getElementById("loginScreen").style.display="flex";
-
-},2000);
-
-function sendOTP(){
-
-let phone =
-document.getElementById("phone").value;
-
-if(phone.length !== 10){
-
-alert("10 digit mobile number dalo");
-return;
-
-}
-
-document.getElementById("loginScreen").style.display="none";
-document.getElementById("otpScreen").style.display="flex";
-
-}
-
-function verifyOTP(){
-
-let otp =
-document.getElementById("otp").value;
-
-if(otp === "123456"){
-
-document.getElementById("otpScreen").style.display="none";
-document.getElementById("profileScreen").style.display="flex";
-
-}else{
-
-alert("Wrong OTP");
-
-}
-
-}
-
-function saveProfile(){
-
-let name =
-document.getElementById("fullname").value;
-
-if(!name){
-
-alert("Name dalo");
-return;
-
-}
-
-alert("Profile Saved ✅");
-
-}
-
-</script>
+    <link rel="stylesheet" href="style.css">
+</head>
 
 <body>
 
-<div id="splash" class="screen">
-<h1>⛽ E.FUEL</h1>
-<p>Loading...</p>
-</div>
+<!-- Splash Screen -->
 
-<div id="loginScreen" class="screen">
+<section id="splashScreen" class="screen active">
 
-<h2>E.FUEL Login</h2>
+    <div class="logoBox">
+        <h1>E.FUEL</h1>
+        <p>Premium Fuel Delivery</p>
 
-<input
-type="tel"
-id="phone"
-maxlength="10"
-placeholder="Mobile Number"
-style="padding:12px;margin:10px;width:250px;">
+        <div class="loader">
+            <div class="loaderFill"></div>
+        </div>
+    </div>
 
-<button onclick="sendOTP()">
-Send OTP
-  <div id="otpScreen" class="screen">
+</section>
 
-<h2>Verify OTP</h2>
+<!-- Login Screen -->
 
-<p>Demo OTP = 123456</p>
+<section id="loginScreen" class="screen">
 
-<input
-type="number"
-id="otp"
-placeholder="Enter OTP"
-style="padding:12px;margin:10px;width:250px;">
+    <div class="card">
 
-<button onclick="verifyOTP()">
-Verify OTP
-  <div id="profileScreen" class="screen">
+        <h2>Welcome</h2>
 
-<h2>Complete Profile</h2>
+        <p>Login with Mobile Number</p>
 
-<input type="text" id="fullname" placeholder="Full Name">
+        <input
+            type="tel"
+            id="phone"
+            maxlength="10"
+            placeholder="Enter Mobile Number">
 
-<input type="email" id="email" placeholder="Email">
+        <button id="sendOtpBtn">
+            Send OTP
+        </button>
 
-<button onclick="saveProfile()">
-Continue
-</button>
+    </div>
 
-</div>
-</button>
+</section>
 
-</div>
-</button>
+<!-- OTP -->
 
-</div>
+<section id="otpScreen" class="screen">
+
+    <div class="card">
+
+        <h2>Verify OTP</h2>
+
+        <p>Demo OTP : 123456</p>
+
+        <input
+            type="number"
+            id="otp"
+            maxlength="6"
+            placeholder="Enter OTP">
+
+        <button id="verifyOtpBtn">
+            Verify OTP
+        </button>
+
+    </div>
+
+</section>
+
+<!-- Profile -->
+
+<section id="profileScreen" class="screen">
+
+    <div class="card">
+
+        <h2>Create Profile</h2>
+
+        <input
+            type="text"
+            id="fullName"
+            placeholder="Full Name">
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Email">
+
+        <input
+            type="text"
+            id="referral"
+            placeholder="Referral Code (Optional)">
+
+        <select id="vehicleType">
+
+            <option value="">Select Vehicle</option>
+
+            <option>Bike</option>
+
+            <option>Car</option>
+
+            <option>Truck</option>
+
+        </select>
+
+        <input
+            type="text"
+            id="vehicleNumber"
+            placeholder="Vehicle Number">
+
+        <button id="saveProfileBtn">
+            Continue
+        </button>
+
+    </div>
+
+</section>
+
+<!-- Location -->
+
+<section id="locationScreen" class="screen">
+
+    <div class="card">
+
+        <h2>Location Permission</h2>
+
+        <p>
+
+            We need your live location
+            to deliver fuel accurately.
+
+        </p>
+
+        <button id="allowLocationBtn">
+
+            Allow Location
+
+        </button>
+
+        <button id="manualLocationBtn">
+
+            Enter Manually
+
+        </button>
+
+        <p id="locationStatus"></p>
+
+    </div>
+
+</section>
+
+<script src="app.js"></script>
+
+</body>
+</html>

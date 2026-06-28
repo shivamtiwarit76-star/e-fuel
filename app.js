@@ -161,3 +161,101 @@ locationStatus.innerHTML =
 }
 
 };
+// =========================
+// DASHBOARD
+// =========================
+
+const dashboardScreen = document.getElementById("dashboardScreen");
+
+const petrolBtn = document.getElementById("petrolBtn");
+const dieselBtn = document.getElementById("dieselBtn");
+
+const selectedFuel = document.getElementById("selectedFuel");
+
+const fuelSlider = document.getElementById("fuelSlider");
+const litreText = document.getElementById("litreText");
+const totalPrice = document.getElementById("totalPrice");
+const currentLocation = document.getElementById("currentLocation");
+
+let fuelRate = 150;
+
+// Location milne ke baad Dashboard kholo
+allowLocationBtn.onclick = function(){
+
+if(!navigator.geolocation){
+
+alert("GPS Not Supported");
+return;
+
+}
+
+locationStatus.innerHTML="Getting Live Location...";
+
+navigator.geolocation.getCurrentPosition(
+
+function(position){
+
+let lat = position.coords.latitude;
+let lng = position.coords.longitude;
+
+currentLocation.innerHTML =
+"📍 " + lat.toFixed(5) + ", " + lng.toFixed(5);
+
+locationScreen.classList.remove("active");
+dashboardScreen.classList.add("active");
+
+},
+
+function(){
+
+alert("Location Permission Denied");
+
+}
+
+);
+
+};
+
+// Petrol
+
+petrolBtn.onclick = function(){
+
+fuelRate = 150;
+
+selectedFuel.innerHTML =
+"Selected : Petrol";
+
+updatePrice();
+
+};
+
+// Diesel
+
+dieselBtn.onclick = function(){
+
+fuelRate = 120;
+
+selectedFuel.innerHTML =
+"Selected : Diesel";
+
+updatePrice();
+
+};
+
+// Slider
+
+fuelSlider.oninput = updatePrice;
+
+function updatePrice(){
+
+let litre = fuelSlider.value;
+
+litreText.innerHTML =
+litre + " Litres";
+
+totalPrice.innerHTML =
+"₹" + (litre * fuelRate);
+
+}
+
+updatePrice();

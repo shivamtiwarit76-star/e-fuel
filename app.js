@@ -104,61 +104,7 @@ profileScreen.classList.remove("active");
 locationScreen.classList.add("active");
 
 };
-// =========================
-// REAL LOCATION
-// =========================
 
-const allowLocationBtn = document.getElementById("allowLocationBtn");
-const manualLocationBtn = document.getElementById("manualLocationBtn");
-const locationStatus = document.getElementById("locationStatus");
-
-allowLocationBtn.onclick = function(){
-
-if(!navigator.geolocation){
-
-alert("Your browser does not support GPS.");
-return;
-
-}
-
-locationStatus.innerHTML = "Getting your live location...";
-
-navigator.geolocation.getCurrentPosition(
-
-function(position){
-
-let lat = position.coords.latitude;
-let lng = position.coords.longitude;
-
-locationStatus.innerHTML =
-"✅ Location Connected<br><br>Latitude : "
-+ lat +
-"<br>Longitude : " +
-lng;
-
-},
-
-function(){
-
-locationStatus.innerHTML =
-"❌ Location Permission Denied";
-
-}
-
-);
-
-};
-
-manualLocationBtn.onclick = function(){
-
-let area = prompt("Enter Your Area");
-
-if(area){
-
-locationStatus.innerHTML =
-"📍 " + area;
-
-}
 
 };
 // =========================

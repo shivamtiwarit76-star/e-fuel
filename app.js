@@ -1,6 +1,5 @@
-alert("App JS Loaded");
 // =========================
-// E.FUEL PHASE 1 - PART 3A
+// E.FUEL APP.JS PART 1
 // =========================
 
 const splashScreen = document.getElementById("splashScreen");
@@ -13,11 +12,9 @@ const sendOtpBtn = document.getElementById("sendOtpBtn");
 const verifyOtpBtn = document.getElementById("verifyOtpBtn");
 const saveProfileBtn = document.getElementById("saveProfileBtn");
 
-// Splash
+window.onload = () => {
 
-window.onload = function(){
-
-setTimeout(function(){
+setTimeout(()=>{
 
 splashScreen.classList.remove("active");
 loginScreen.classList.add("active");
@@ -26,13 +23,13 @@ loginScreen.classList.add("active");
 
 };
 
-// Send OTP
+// LOGIN
 
-sendOtpBtn.onclick = function(){
+sendOtpBtn.addEventListener("click",()=>{
 
-let phone = document.getElementById("phone").value.trim();
+const phone=document.getElementById("phone").value.trim();
 
-if(phone.length != 10){
+if(phone.length!==10){
 
 alert("Enter valid 10 digit mobile number");
 return;
@@ -44,15 +41,15 @@ alert("Demo OTP : 123456");
 loginScreen.classList.remove("active");
 otpScreen.classList.add("active");
 
-};
+});
 
-// Verify OTP
+// OTP
 
-verifyOtpBtn.onclick = function(){
+verifyOtpBtn.addEventListener("click",()=>{
 
-let otp = document.getElementById("otp").value.trim();
+const otp=document.getElementById("otp").value.trim();
 
-if(otp != "123456"){
+if(otp!=="123456"){
 
 alert("Wrong OTP");
 return;
@@ -62,39 +59,39 @@ return;
 otpScreen.classList.remove("active");
 profileScreen.classList.add("active");
 
-};
+});
 
-// Save Profile
+// PROFILE
 
-saveProfileBtn.onclick = function(){
+saveProfileBtn.addEventListener("click",()=>{
 
-let name = document.getElementById("fullName").value.trim();
-let email = document.getElementById("email").value.trim();
-let vehicle = document.getElementById("vehicleType").value;
-let number = document.getElementById("vehicleNumber").value.trim();
+const fullName=document.getElementById("fullName").value.trim();
+const email=document.getElementById("email").value.trim();
+const vehicle=document.getElementById("vehicleType").value;
+const vehicleNumber=document.getElementById("vehicleNumber").value.trim();
 
-if(name==""){
+if(fullName===""){
 
 alert("Enter Full Name");
 return;
 
 }
 
-if(email==""){
+if(email===""){
 
 alert("Enter Email");
 return;
 
 }
 
-if(vehicle==""){
+if(vehicle===""){
 
 alert("Select Vehicle");
 return;
 
 }
 
-if(number==""){
+if(vehicleNumber===""){
 
 alert("Enter Vehicle Number");
 return;
@@ -104,105 +101,4 @@ return;
 profileScreen.classList.remove("active");
 locationScreen.classList.add("active");
 
-};
-
-
-};
-// =========================
-// DASHBOARD
-// =========================
-
-const dashboardScreen = document.getElementById("dashboardScreen");
-
-const petrolBtn = document.getElementById("petrolBtn");
-const dieselBtn = document.getElementById("dieselBtn");
-
-const selectedFuel = document.getElementById("selectedFuel");
-
-const fuelSlider = document.getElementById("fuelSlider");
-const litreText = document.getElementById("litreText");
-const totalPrice = document.getElementById("totalPrice");
-const currentLocation = document.getElementById("currentLocation");
-
-let fuelRate = 150;
-
-// Location milne ke baad Dashboard kholo
-allowLocationBtn.onclick = function(){
-
-if(!navigator.geolocation){
-
-alert("GPS Not Supported");
-return;
-
-}
-
-locationStatus.innerHTML="Getting Live Location...";
-
-navigator.geolocation.getCurrentPosition(
-
-function(position){
-
-let lat = position.coords.latitude;
-let lng = position.coords.longitude;
-
-currentLocation.innerHTML =
-"📍 " + lat.toFixed(5) + ", " + lng.toFixed(5);
-
-locationScreen.classList.remove("active");
-dashboardScreen.classList.add("active");
-
-},
-
-function(){
-
-alert("Location Permission Denied");
-
-}
-
-);
-
-};
-
-// Petrol
-
-petrolBtn.onclick = function(){
-
-fuelRate = 150;
-
-selectedFuel.innerHTML =
-"Selected : Petrol";
-
-updatePrice();
-
-};
-
-// Diesel
-
-dieselBtn.onclick = function(){
-
-fuelRate = 120;
-
-selectedFuel.innerHTML =
-"Selected : Diesel";
-
-updatePrice();
-
-};
-
-// Slider
-
-fuelSlider.oninput = updatePrice;
-
-function updatePrice(){
-
-let litre = fuelSlider.value;
-
-litreText.innerHTML =
-litre + " Litres";
-
-totalPrice.innerHTML =
-"₹" + (litre * fuelRate);
-
-}
-
-updatePrice();
+});

@@ -155,5 +155,85 @@ manualLocationBtn.addEventListener("click", () => {
         dashboardScreen.classList.add("active");
 
     }
+    // =====================================
+// DASHBOARD
+// =====================================
+
+const petrolBtn = document.getElementById("petrolBtn");
+const dieselBtn = document.getElementById("dieselBtn");
+
+const selectedFuel = document.getElementById("selectedFuel");
+const fuelSlider = document.getElementById("fuelSlider");
+const litreText = document.getElementById("litreText");
+const totalPrice = document.getElementById("totalPrice");
+const currentLocation = document.getElementById("currentLocation");
+const deliveryBtn = document.getElementById("deliveryBtn");
+
+let fuelRate = 150;
+
+// Show saved location
+
+const manualAddress = localStorage.getItem("manualAddress");
+const latitude = localStorage.getItem("latitude");
+const longitude = localStorage.getItem("longitude");
+
+if(manualAddress){
+
+currentLocation.innerHTML = "📍 " + manualAddress;
+
+}else if(latitude && longitude){
+
+currentLocation.innerHTML =
+"📍 " + latitude + ", " + longitude;
+
+}
+
+// Petrol
+
+petrolBtn.addEventListener("click",()=>{
+
+fuelRate = 150;
+
+selectedFuel.innerHTML = "Selected : Petrol";
+
+updatePrice();
+
+});
+
+// Diesel
+
+dieselBtn.addEventListener("click",()=>{
+
+fuelRate = 120;
+
+selectedFuel.innerHTML = "Selected : Diesel";
+
+updatePrice();
+
+});
+
+// Slider
+
+fuelSlider.addEventListener("input",updatePrice);
+
+function updatePrice(){
+
+const litre = Number(fuelSlider.value);
+
+litreText.innerHTML = litre + " Litres";
+
+totalPrice.innerHTML = "₹" + (litre * fuelRate);
+
+}
+
+updatePrice();
+
+// Checkout
+
+deliveryBtn.addEventListener("click",()=>{
+
+alert("Checkout Page Coming Next ✅");
+
+});
 
 });

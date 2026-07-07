@@ -1,204 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.FUEL</title>
 
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>E.FUEL</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-<!-- Splash Screen -->
+<!-- ========================= -->
+<!-- SPLASH SCREEN -->
+<!-- ========================= -->
 
 <section id="splashScreen" class="screen active">
 
-    <div class="logoBox">
-        <h1>E.FUEL</h1>
-        <p>Premium Fuel Delivery</p>
+<div class="logoBox">
 
-        <div class="loader">
-            <div class="loaderFill"></div>
-        </div>
-    </div>
+<h1>E.FUEL</h1>
+
+<p>Premium Fuel Delivery</p>
+
+<div class="loader">
+<div class="loaderFill"></div>
+</div>
+
+</div>
 
 </section>
 
-<!-- Login Screen -->
+<!-- ========================= -->
+<!-- LOGIN -->
+<!-- ========================= -->
 
 <section id="loginScreen" class="screen">
 
-    <div class="card">
+<div class="card">
 
-        <h2>Welcome</h2>
+<h2>Welcome</h2>
 
-        <p>Login with Mobile Number</p>
+<p>Login with your Mobile Number</p>
 
-        <input
-            type="tel"
-            id="phone"
-            maxlength="10"
-            placeholder="Enter Mobile Number">
+<input
+type="tel"
+id="phone"
+maxlength="10"
+placeholder="Enter Mobile Number">
 
-        <button id="sendOtpBtn">
-            Send OTP
-        </button>
+<button id="sendOtpBtn">
 
-    </div>
+Send OTP
+
+</button>
+
+</div>
 
 </section>
 
+<!-- ========================= -->
 <!-- OTP -->
+<!-- ========================= -->
 
 <section id="otpScreen" class="screen">
 
-    <div class="card">
+<div class="card">
 
-        <h2>Verify OTP</h2>
+<h2>Verify OTP</h2>
 
-        <p>Demo OTP : 123456</p>
+<p>Demo OTP : <b>123456</b></p>
 
-        <input
-            type="number"
-            id="otp"
-            maxlength="6"
-            placeholder="Enter OTP">
+<input
+type="text"
+id="otp"
+maxlength="6"
+placeholder="Enter OTP">
 
-        <button id="verifyOtpBtn">
-            Verify OTP
-        </button>
+<button id="verifyOtpBtn">
 
-    </div>
+Verify OTP
+
+</button>
+
+</div>
 
 </section>
 
-<!-- Profile -->
+<!-- ========================= -->
+<!-- PROFILE -->
+<!-- ========================= -->
 
 <section id="profileScreen" class="screen">
 
-    <div class="card">
+<div class="card">
 
-        <h2>Create Profile</h2>
+<h2>Create Profile</h2>
 
-        <input
-            type="text"
-            id="fullName"
-            placeholder="Full Name">
+<input
+type="text"
+id="fullName"
+placeholder="Full Name">
 
-        <input
-            type="email"
-            id="email"
-            placeholder="Email">
+<input
+type="email"
+id="email"
+placeholder="Email Address">
 
-        <input
-            type="text"
-            id="referral"
-            placeholder="Referral Code (Optional)">
+<input
+type="text"
+id="referral"
+placeholder="Referral Code (Optional)">
 
-        <select id="vehicleType">
+<select id="vehicleType">
 
-            <option value="">Select Vehicle</option>
+<option value="">Select Vehicle</option>
 
-            <option>Bike</option>
+<option value="Bike">Bike</option>
 
-            <option>Car</option>
+<option value="Car">Car</option>
 
-            <option>Truck</option>
+<option value="Truck">Truck</option>
 
-        </select>
+<option value="Bus">Bus</option>
 
-        <input
-            type="text"
-            id="vehicleNumber"
-            placeholder="Vehicle Number">
+</select>
 
-        <button id="saveProfileBtn">
-            Continue
-        </button>
+<input
+type="text"
+id="vehicleNumber"
+placeholder="Vehicle Number (BR01AB1234)">
 
-    </div>
+<button id="saveProfileBtn">
 
-</section>
+Continue
 
-<!-- Location -->
+</button>
 
-<section id="locationScreen" class="screen">
-
-    <div class="card">
-
-        <h2>Location Permission</h2>
-
-        <p>
-
-            We need your live location
-            to deliver fuel accurately.
-
-        </p>
-
-        <button id="allowLocationBtn">
-
-            Allow Location
-
-        </button>
-
-        <button id="manualLocationBtn">
-
-            Enter Manually
-
-        </button>
-
-        <p id="locationStatus"></p>
-
-    </div>
+</div>
 
 </section>
-    <section id="dashboardScreen" class="screen">
-
-    <div class="card">
-
-        <h2>Fuel Booking</h2>
-
-        <p id="currentLocation">
-            Loading...
-        </p>
-
-        <button id="petrolBtn">
-            ⛽ Petrol ₹150/L
-        </button>
-
-        <button id="dieselBtn">
-            🚛 Diesel ₹120/L
-        </button>
-
-        <h3 id="selectedFuel">
-            Selected : Petrol
-        </h3>
-
-        <input
-        type="range"
-        id="fuelSlider"
-        min="1"
-        max="100"
-        value="5">
-
-        <p id="litreText">
-            5 Litres
-        </p>
-
-        <h2 id="totalPrice">
-            ₹750
-        </h2>
-
-        <button id="deliveryBtn">
-            Proceed To Delivery
-        </button>
-
-    </div>
-
-</section>
-
-<script src="app.js"></script>
-
-</body>
-</html>

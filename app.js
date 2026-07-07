@@ -102,3 +102,114 @@ profileScreen.classList.remove("active");
 locationScreen.classList.add("active");
 
 });
+// =========================
+// LOCATION + DASHBOARD
+// =========================
+
+const allowLocationBtn = document.getElementById("allowLocationBtn");
+const manualLocationBtn = document.getElementById("manualLocationBtn");
+const locationStatus = document.getElementById("locationStatus");
+
+const dashboardScreen = document.getElementById("dashboardScreen");
+
+const petrolBtn = document.getElementById("petrolBtn");
+const dieselBtn = document.getElementById("dieselBtn");
+
+const currentLocation = document.getElementById("currentLocation");
+const selectedFuel = document.getElementById("selectedFuel");
+const fuelSlider = document.getElementById("fuelSlider");
+const litreText = document.getElementById("litreText");
+const totalPrice = document.getElementById("totalPrice");
+
+let fuelRate = 150;
+
+// REAL GPS
+
+allowLocationBtn.addEventListener("click",()=>{
+
+if(!navigator.geolocation){
+
+alert("GPS Not Supported");
+return;
+
+}
+
+locationStatus.innerHTML="Getting Live Location...";
+
+navigator.geolocation.getCurrentPosition(
+
+(position)=>{
+
+const lat=position.coords.latitude;
+const lng=position.coords.longitude;
+
+currentLocation.innerHTML=
+"📍 "+lat.toFixed(5)+", "+lng.toFixed(5);
+
+locationScreen.classList.remove("active");
+dashboardScreen.classList.add("active");
+
+},
+
+()=>{
+
+alert("Location Permission Denied");
+
+}
+
+);
+
+});
+
+// MANUAL LOCATION
+
+manualLocationBtn.addEventListener("click",()=>{
+
+const area=prompt("Enter Your Area");
+
+if(!area) return;
+
+currentLocation.innerHTML="📍 "+area;
+
+locationScreen.classList.remove("active");
+dashboardScreen.classList.add("active");
+
+});
+
+// PETROL
+
+petrolBtn.addEventListener("click",()=>{
+
+fuelRate=150;
+selectedFuel.innerHTML="Selected : Petrol";
+
+updatePrice();
+
+});
+
+// DIESEL
+
+dieselBtn.addEventListener("click",()=>{
+
+fuelRate=120;
+selectedFuel.innerHTML="Selected : Diesel";
+
+updatePrice();
+
+});
+
+// PRICE
+
+fuelSlider.addEventListener("input",updatePrice);
+
+function updatePrice(){
+
+const litre=Number(fuelSlider.value);
+
+litreText.innerHTML=litre+" Litres";
+
+totalPrice.innerHTML="₹"+(litre*fuelRate);
+
+}
+
+updatePrice();

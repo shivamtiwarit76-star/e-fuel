@@ -91,3 +91,69 @@ saveProfileBtn.addEventListener("click", () => {
     // Next screen hum Part 2 me open karenge
 
 });
+// =====================================
+// LOCATION
+// =====================================
+
+const locationScreen = document.getElementById("locationScreen");
+
+const allowLocationBtn = document.getElementById("allowLocationBtn");
+const manualLocationBtn = document.getElementById("manualLocationBtn");
+const locationStatus = document.getElementById("locationStatus");
+
+allowLocationBtn.addEventListener("click", () => {
+
+    if (!navigator.geolocation) {
+
+        alert("Geolocation is not supported.");
+        return;
+
+    }
+
+    locationStatus.innerHTML = "Getting your location...";
+
+    navigator.geolocation.getCurrentPosition(
+
+        (position) => {
+
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            localStorage.setItem("latitude", lat);
+            localStorage.setItem("longitude", lng);
+
+            locationStatus.innerHTML = "✅ Location Connected";
+
+            setTimeout(() => {
+
+                locationScreen.classList.remove("active");
+                dashboardScreen.classList.add("active");
+
+            }, 1000);
+
+        },
+
+        () => {
+
+            alert("Location Permission Denied");
+
+        }
+
+    );
+
+});
+
+manualLocationBtn.addEventListener("click", () => {
+
+    const address = prompt("Enter your address");
+
+    if (address) {
+
+        localStorage.setItem("manualAddress", address);
+
+        locationScreen.classList.remove("active");
+        dashboardScreen.classList.add("active");
+
+    }
+
+});

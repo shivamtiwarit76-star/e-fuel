@@ -140,5 +140,90 @@ Continue
 </button>
 
 </div>
+  <!-- ========================= -->
+<!-- LOCATION -->
+<!-- ========================= -->
+
+<section id="locationScreen" class="screen">
+
+<div class="card">
+
+<h2>Allow Location</h2>
+
+<p>
+We need your live location for fuel delivery.
+</p>
+
+<button id="allowLocationBtn">
+📍 Use Current Location
+</button>
+
+<button id="manualLocationBtn">
+Enter Address Manually
+</button>
+
+<p id="locationStatus"></p>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- DASHBOARD -->
+<!-- ========================= -->
+
+<section id="dashboardScreen" class="screen">
+
+<div class="card">
+
+<h2>Fuel Booking</h2>
+
+<p id="currentLocation">
+📍 Location Not Selected
+</p>
+
+<div class="fuelButtons">
+
+<button id="petrolBtn">
+⛽ Petrol ₹150/L
+</button>
+
+<button id="dieselBtn">
+🚛 Diesel ₹120/L
+</button>
+
+</div>
+
+<h3 id="selectedFuel">
+Selected : Petrol
+</h3>
+
+<input
+type="range"
+id="fuelSlider"
+min="1"
+max="100"
+value="5">
+
+<p id="litreText">
+5 Litres
+</p>
+
+<h2 id="totalPrice">
+₹750
+</h2>
+
+<button id="deliveryBtn">
+Proceed To Delivery
+</button>
+
+</div>
+
+</section>
+
+<script src="app.js"></script>
+
+</body>
+</html>
 
 </section>

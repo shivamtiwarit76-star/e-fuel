@@ -1,229 +1,599 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E.FUEL</title>
 
-<title>E.FUEL</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
 
-<link rel="stylesheet" href="style.css">
+    body {
+      background: #f4f7f9;
+      color: #17202a;
+    }
 
+    header {
+      background: #111827;
+      color: white;
+      padding: 18px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      color: #22c55e;
+    }
+
+    main {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      margin-bottom: 20px;
+      border-radius: 16px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+    }
+
+    button {
+      background: #16a34a;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #15803d;
+    }
+
+    .fuel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .fuel button {
+      background: #111827;
+    }
+
+    .fuel button.active {
+      background: #16a34a;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    #app {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- ========================= -->
-<!-- SPLASH SCREEN -->
-<!-- ========================= -->
+<header>
+  <h1>E.FUEL</h1>
+  <button id="logoutBtn" style="width:auto;padding:8px 15px;">
+    Logout
+  </button>
+</header>
 
-<section id="splashScreen" class="screen active">
+<main>
 
-<div class="logoBox">
+  <!-- LOGIN -->
+  <section id="login" class="card">
 
-<h1>E.FUEL</h1>
+    <h2>Login / Sign Up</h2>
 
-<p>Premium Fuel Delivery</p>
+    <input
+      id="email"
+      type="email"
+      placeholder="Email address"
+    >
 
-<div class="loader">
-<div class="loaderFill"></div>
-</div>
+    <input
+      id="password"
+      type="password"
+      placeholder="Password"
+    >
 
-</div>
+    <button id="signupBtn">
+      Create Account
+    </button>
 
-</section>
+    <button id="loginBtn">
+      Login
+    </button>
 
-<!-- ========================= -->
-<!-- LOGIN -->
-<!-- ========================= -->
+    <p id="message"></p>
 
-<section id="loginScreen" class="screen">
+  </section>
 
-<div class="card">
 
-<h2>Welcome</h2>
+  <!-- APPLICATION -->
+  <section id="app">
 
-<p>Login with your Mobile Number</p>
+    <div class="card">
 
-<input
-type="tel"
-id="phone"
-maxlength="10"
-placeholder="Enter Mobile Number">
+      <h2>Your Profile</h2>
 
-<button id="sendOtpBtn">
+      <input
+        id="name"
+        placeholder="Full name"
+      >
 
-Send OTP
+      <input
+        id="phone"
+        placeholder="Phone number"
+      >
 
-</button>
+      <input
+        id="address"
+        placeholder="Delivery address"
+      >
 
-</div>
+      <button id="saveProfile">
+        Save Profile
+      </button>
 
-</section>
+    </div>
 
-<!-- ========================= -->
-<!-- OTP -->
-<!-- ========================= -->
 
-<section id="otpScreen" class="screen">
+    <div class="card">
 
-<div class="card">
+      <h2>Create Order</h2>
 
-<h2>Verify OTP</h2>
+      <div class="fuel">
 
-<p>Demo OTP : <b>123456</b></p>
+        <button id="petrolBtn">
+          Petrol
+        </button>
 
-<input
-type="text"
-id="otp"
-maxlength="6"
-placeholder="Enter OTP">
+        <button id="dieselBtn">
+          Diesel
+        </button>
 
-<button id="verifyOtpBtn">
+      </div>
 
-Verify OTP
+      <input
+        id="litres"
+        type="number"
+        min="1"
+        step="1"
+        placeholder="Quantity in litres"
+      >
 
-</button>
+      <button id="createOrder">
+        Create Order
+      </button>
 
-</div>
+      <p id="orderMessage"></p>
 
-</section>
+    </div>
 
-<!-- ========================= -->
-<!-- PROFILE -->
-<!-- ========================= -->
 
-<section id="profileScreen" class="screen">
+    <div class="card">
 
-<div class="card">
+      <h2>My Orders</h2>
 
-<h2>Create Profile</h2>
+      <div id="orders">
+        Loading...
+      </div>
 
-<input
-type="text"
-id="fullName"
-placeholder="Full Name">
+    </div>
 
-<input
-type="email"
-id="email"
-placeholder="Email Address">
+  </section>
 
-<input
-type="text"
-id="referral"
-placeholder="Referral Code (Optional)">
+</main>
 
-<select id="vehicleType">
 
-<option value="">Select Vehicle</option>
+<script type="module">
 
-<option value="Bike">Bike</option>
+import {
+  auth,
+  db
+} from "./firebase-config.js";
 
-<option value="Car">Car</option>
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from
+"https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
-<option value="Truck">Truck</option>
+import {
+  doc,
+  setDoc,
+  getDoc,
+  addDoc,
+  collection,
+  query,
+  where,
+  orderBy,
+  getDocs,
+  serverTimestamp
+} from
+"https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-<option value="Bus">Bus</option>
 
-</select>
+const loginSection =
+  document.getElementById("login");
 
-<input
-type="text"
-id="vehicleNumber"
-placeholder="Vehicle Number (BR01AB1234)">
+const appSection =
+  document.getElementById("app");
 
-<button id="saveProfileBtn">
+const message =
+  document.getElementById("message");
 
-Continue
+let selectedFuel = "";
 
-</button>
 
-</div>
-  <!-- ========================= -->
-<!-- LOCATION -->
-<!-- ========================= -->
+/* SIGN UP */
 
-<section id="locationScreen" class="screen">
+document
+  .getElementById("signupBtn")
+  .addEventListener("click", async () => {
 
-<div class="card">
+    const email =
+      document.getElementById("email").value.trim();
 
-<h2>Allow Location</h2>
+    const password =
+      document.getElementById("password").value;
 
-<p>
-We need your live location for fuel delivery.
-</p>
+    if (!email || !password) {
+      message.textContent =
+        "Email and password required.";
+      return;
+    }
 
-<button id="allowLocationBtn">
-📍 Use Current Location
-</button>
+    try {
 
-<button id="manualLocationBtn">
-Enter Address Manually
-</button>
+      await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-<p id="locationStatus"></p>
+      message.textContent =
+        "Account created successfully.";
 
-</div>
+    } catch (error) {
 
-</section>
+      message.textContent =
+        error.message;
 
-<!-- ========================= -->
-<!-- DASHBOARD -->
-<!-- ========================= -->
+    }
 
-<section id="dashboardScreen" class="screen">
+  });
 
-<div class="card">
 
-<h2>Fuel Booking</h2>
+/* LOGIN */
 
-<p id="currentLocation">
-📍 Location Not Selected
-</p>
+document
+  .getElementById("loginBtn")
+  .addEventListener("click", async () => {
 
-<div class="fuelButtons">
+    const email =
+      document.getElementById("email").value.trim();
 
-<button id="petrolBtn">
-⛽ Petrol ₹150/L
-</button>
+    const password =
+      document.getElementById("password").value;
 
-<button id="dieselBtn">
-🚛 Diesel ₹120/L
-</button>
+    try {
 
-</div>
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-<h3 id="selectedFuel">
-Selected : Petrol
-</h3>
+    } catch (error) {
 
-<input
-type="range"
-id="fuelSlider"
-min="1"
-max="100"
-value="5">
+      message.textContent =
+        error.message;
 
-<p id="litreText">
-5 Litres
-</p>
+    }
 
-<h2 id="totalPrice">
-₹750
-</h2>
+  });
 
-<button id="deliveryBtn">
-Proceed To Delivery
-</button>
 
-</div>
+/* LOGOUT */
 
-</section>
+document
+  .getElementById("logoutBtn")
+  .addEventListener("click", async () => {
 
-<script src="app.js"></script>
+    await signOut(auth);
+
+  });
+
+
+/* AUTH STATE */
+
+onAuthStateChanged(auth, async (user) => {
+
+  if (user) {
+
+    loginSection.style.display = "none";
+    appSection.style.display = "block";
+
+    await loadProfile();
+    await loadOrders();
+
+  } else {
+
+    loginSection.style.display = "block";
+    appSection.style.display = "none";
+
+  }
+
+});
+
+
+/* PROFILE */
+
+async function loadProfile() {
+
+  const user = auth.currentUser;
+
+  const profileRef =
+    doc(db, "users", user.uid);
+
+  const profile =
+    await getDoc(profileRef);
+
+  if (profile.exists()) {
+
+    const data = profile.data();
+
+    document.getElementById("name").value =
+      data.name || "";
+
+    document.getElementById("phone").value =
+      data.phone || "";
+
+    document.getElementById("address").value =
+      data.address || "";
+
+  }
+
+}
+
+
+document
+  .getElementById("saveProfile")
+  .addEventListener("click", async () => {
+
+    const user = auth.currentUser;
+
+    await setDoc(
+      doc(db, "users", user.uid),
+      {
+        name:
+          document.getElementById("name").value,
+
+        phone:
+          document.getElementById("phone").value,
+
+        address:
+          document.getElementById("address").value,
+
+        email:
+          user.email,
+
+        updatedAt:
+          serverTimestamp()
+      },
+      { merge: true }
+    );
+
+    alert("Profile saved.");
+
+  });
+
+
+/* FUEL SELECTION */
+
+document
+  .getElementById("petrolBtn")
+  .addEventListener("click", () => {
+
+    selectedFuel = "Petrol";
+
+    document
+      .getElementById("petrolBtn")
+      .classList.add("active");
+
+    document
+      .getElementById("dieselBtn")
+      .classList.remove("active");
+
+  });
+
+
+document
+  .getElementById("dieselBtn")
+  .addEventListener("click", () => {
+
+    selectedFuel = "Diesel";
+
+    document
+      .getElementById("dieselBtn")
+      .classList.add("active");
+
+    document
+      .getElementById("petrolBtn")
+      .classList.remove("active");
+
+  });
+
+
+/* CREATE ORDER */
+
+document
+  .getElementById("createOrder")
+  .addEventListener("click", async () => {
+
+    const user = auth.currentUser;
+
+    const litres =
+      Number(
+        document.getElementById("litres").value
+      );
+
+    const address =
+      document.getElementById("address").value.trim();
+
+    if (!selectedFuel) {
+      alert("Select a fuel type.");
+      return;
+    }
+
+    if (!litres || litres <= 0) {
+      alert("Enter a valid quantity.");
+      return;
+    }
+
+    if (!address) {
+      alert("Save your address first.");
+      return;
+    }
+
+    try {
+
+      await addDoc(
+        collection(db, "orders"),
+        {
+          userId: user.uid,
+
+          email: user.email,
+
+          fuelType: selectedFuel,
+
+          litres: litres,
+
+          address: address,
+
+          status: "Placed",
+
+          createdAt:
+            serverTimestamp()
+        }
+      );
+
+      document.getElementById(
+        "orderMessage"
+      ).textContent =
+        "Order created successfully.";
+
+      document.getElementById(
+        "litres"
+      ).value = "";
+
+      await loadOrders();
+
+    } catch (error) {
+
+      document.getElementById(
+        "orderMessage"
+      ).textContent =
+        error.message;
+
+    }
+
+  });
+
+
+/* ORDERS */
+
+async function loadOrders() {
+
+  const user = auth.currentUser;
+
+  const ordersBox =
+    document.getElementById("orders");
+
+  ordersBox.innerHTML = "";
+
+  try {
+
+    const q = query(
+      collection(db, "orders"),
+      where("userId", "==", user.uid),
+      orderBy("createdAt", "desc")
+    );
+
+    const snapshot =
+      await getDocs(q);
+
+    if (snapshot.empty) {
+
+      ordersBox.textContent =
+        "No orders yet.";
+
+      return;
+
+    }
+
+    snapshot.forEach((item) => {
+
+      const data = item.data();
+
+      const div =
+        document.createElement("div");
+
+      div.style.padding = "15px";
+      div.style.marginTop = "10px";
+      div.style.border = "1px solid #ddd";
+      div.style.borderRadius = "10px";
+
+      div.innerHTML = `
+        <strong>${data.fuelType}</strong><br>
+        Quantity: ${data.litres} L<br>
+        Status: <strong>${data.status}</strong>
+      `;
+
+      ordersBox.appendChild(div);
+
+    });
+
+  } catch (error) {
+
+    ordersBox.textContent =
+      "Orders could not be loaded.";
+
+    console.error(error);
+
+  }
+
+}
+
+</script>
 
 </body>
 </html>
-
-</section>
+```
